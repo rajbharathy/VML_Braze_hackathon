@@ -102,6 +102,7 @@ function httpsRequest(options, body) {
         catch (e) { resolve({ status: res.statusCode, body: data }); }
       });
     });
+    req.setTimeout(10000, () => req.destroy(new Error('Request timed out after 10s')));
     req.on('error', reject);
     if (body) req.write(typeof body === 'string' ? body : JSON.stringify(body));
     req.end();
