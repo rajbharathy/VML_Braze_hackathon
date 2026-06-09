@@ -92,7 +92,7 @@ You can build complete Canvases in Braze. When asked to build a Canvas:
 
 // ─── HTTP HELPERS ─────────────────────────────────────────────────────────────
 
-function httpsRequest(options, body) {
+function httpsRequest(options, body, timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
     const req = https.request(options, res => {
       let data = '';
@@ -102,7 +102,7 @@ function httpsRequest(options, body) {
         catch (e) { resolve({ status: res.statusCode, body: data }); }
       });
     });
-    req.setTimeout(10000, () => req.destroy(new Error('Request timed out after 10s')));
+    req.setTimeout(timeoutMs, () => req.destroy(new Error(`Request timed out after ${timeoutMs / 1000}s`)));
     req.on('error', reject);
     if (body) req.write(typeof body === 'string' ? body : JSON.stringify(body));
     req.end();
@@ -392,7 +392,7 @@ async function callClaude(messages, systemPrompt) {
       'Content-Type': 'application/json',
       'Content-Length': Buffer.byteLength(bodyStr)
     }
-  }, bodyStr);
+  }, bodyStr, 60000);
 }
 
 // ─── REQUEST ROUTER ───────────────────────────────────────────────────────────
