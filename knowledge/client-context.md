@@ -47,8 +47,10 @@ Campari Group is a global spirits company with a portfolio of over 50 brands inc
 | Loyalty Bronze | Enrolled in loyalty programme, bronze tier | ~28,000 |
 | Loyalty Silver | Silver tier — 500+ points | ~12,000 |
 | Loyalty Gold | Gold tier — 1,500+ points | ~4,500 |
-| Aperol Enthusiasts | Engaged with Aperol content or recipes 3+ times | ~18,000 |
-| Event Attendees | Attended at least one brand event | ~6,000 |
+| Aperol Enthusiasts | affinity_aperitifs == true | ~18,000 |
+| Dark Spirits Fans | affinity_dark_spirits == true | ~14,000 |
+| Tequila Fans | affinity_tequila == true | ~9,000 |
+| Event Attendees | event_rsvp fired at least once | ~6,000 |
 | Push Opted-In | iOS or Android push enabled | ~22,000 |
 | Email Opted-In | Marketing email subscribed | ~61,000 |
 
@@ -74,13 +76,12 @@ Campari Group is a global spirits company with a portfolio of over 50 brands inc
 | affinity_aperitifs | Boolean | User has demonstrated affinity for aperitif-style drinks | true, false |
 | affinity_dark_spirits | Boolean | User has demonstrated affinity for dark spirits — whiskey, rum, brandy | true, false |
 | affinity_tequila | Boolean | User has demonstrated affinity for tequila — Espolòn targeting | true, false |
-| persona_type | String | Derived persona segment based on engagement behaviour and preferences | cocktail_enthusiast, casual_drinker, brand_loyalist, explorer, gifter |
+| persona_type | String | Derived persona based on engagement behaviour and preferences | cocktail_enthusiast, casual_drinker, brand_loyalist, explorer, gifter |
 | is_loyalty_member | Boolean | User is enrolled in the loyalty programme | true, false |
 | loyalty_points_balance | Number | Current loyalty points balance | 0–5000 |
 | loyalty_tier | String | Current loyalty programme tier | bronze, silver, gold, platinum |
 | last_engagement_date | Date | Date of most recent platform interaction | 2025-05-20 |
 | days_since_last_engagement | Number | Computed daily — days since last activity | 0–365 |
-| market | String | User's primary market — use country_residence where available | uk, us, it, de, au |
 | app_installed | Boolean | Campari app installed and active | true, false |
 | events_attended | Number | Total brand events attended | 0–20 |
 | recipes_saved | Number | Total recipes saved to profile | 0–50 |
@@ -89,16 +90,23 @@ Campari Group is a global spirits company with a portfolio of over 50 brands inc
 ### Key custom events
 | Event name | Description | Key properties |
 |---|---|---|
-| recipe_viewed | User viewed a cocktail recipe | recipe_id, brand, cocktail_name, time_spent_seconds |
-| recipe_saved | User saved a recipe to their profile | recipe_id, brand, cocktail_name |
-| recipe_attempted | User marked a recipe as attempted | recipe_id, brand, cocktail_name, rating |
-| event_registered | User registered for a brand event | event_id, event_name, brand, location, event_date |
-| event_attended | User checked in at a brand event | event_id, event_name, brand, location |
-| loyalty_points_earned | Points awarded for an action | points_awarded, action_type, new_balance, tier |
-| loyalty_tier_upgraded | User moved to a higher tier | previous_tier, new_tier, points_balance |
-| app_session_started | App opened | session_source, device_type, market |
-| profile_completed | User completed their profile | completion_percentage, fields_added |
-| cocktail_quiz_completed | User completed a brand quiz | quiz_id, brand, score, recommended_cocktail |
+| age_gate_passed | User successfully passes the age gate | country, age_gate_version, entry_point |
+| age_gate_failed | User fails the age gate | country, age_gate_version |
+| brand_page_viewed | User views a brand landing page | brand, campaign, channel, locale |
+| product_detail_viewed | User views a product detail page | brand, product_id, product_name, category, abv |
+| recipe_viewed | User views a cocktail recipe | brand, recipe_id, recipe_name, occasion |
+| recipe_saved | User saves a recipe to their profile | recipe_id, brand |
+| store_locator_used | User searches the store locator | country, city, query, intent |
+| location_selected | User selects a specific store or venue | location_id, location_type, city, country |
+| event_viewed | User views an event page | event_id, event_name, city, country, start_at |
+| event_rsvp | User RSVPs to an event | event_id, rsvp_status, guest_count |
+| ticket_purchased | User purchases an event ticket | event_id, value, currency, quantity |
+| newsletter_signup | User submits email signup form | brand, source, double_opt_in |
+| consent_updated | User's consent preferences change | consent_type, consent_state, source |
+| qr_scanned | User scans a QR code from packaging or POS | brand, campaign, placement, qr_id |
+| promotion_redeemed | User redeems a promotional offer | promo_id, brand, value, channel |
+| purchase_completed | Purchase transaction completes | order_id, value, currency, items_count, brand |
+| customer_support_contacted | User initiates a support interaction | topic, channel |
 
 ---
 
@@ -107,77 +115,93 @@ Campari Group is a global spirits company with a portfolio of over 50 brands inc
 ### Connected platforms
 | Platform | Type | Connection method | What it provides |
 |---|---|---|---|
-| Loyalty platform (Antavo) | Loyalty | Webhook + Connected Content API | Points balance, tier status, available rewards, next tier threshold |
+| Salesforce Marketing Cloud | Legacy CRM | REST API nightly sync | Historical contact data, email suppression list |
+| Antavo | Loyalty | Webhook + Connected Content API | Points balance, tier status, available rewards, next tier threshold |
 | Campari brand app (iOS + Android) | Mobile | Braze SDK v9.0 | Events, sessions, push, IAM, content cards |
 | Campari web platform | Web | Braze Web SDK | Recipe views, event registrations, form submissions |
 | Snowflake | Data warehouse | Braze Currents | Full engagement event history, used for BI reporting |
 | Content catalogue | CMS | Braze Catalogs (daily sync) | Recipe name, brand, image URL, difficulty, cocktail type, ingredients |
+| Events catalogue | Events platform | Braze Catalogs (daily sync) | Event name, brand, city, country, date, ticket URL, image |
 
 ### What is technically possible
 - Real-time loyalty points balance and tier status available via Connected Content from Antavo API at message render time — use `:cache_body 300` (5 minute cache)
-- Up to 5 recipe recommendations per message via Braze Catalogs catalog_items lookup
+- Up to 5 recipe recommendations per message via Braze Catalogs `catalog_items` lookup
 - Event details (name, date, location, image) available via Catalogs
 - Push notifications available on iOS and Android — web push not configured
 - In-app messages available on iOS and Android
 - Content cards available on iOS and Android
-- Age verification status available as a custom attribute — always check age_verified == true before any alcohol-related promotional send
-- Market-level targeting available via the `market` custom attribute
+- `is_legal_drinking_age == true` must be validated in every Canvas entry criteria — never skip this
+- Market-level targeting available via `country_residence` — prefer this over any other market attribute for compliance targeting
+- Brand affinity targeting available via `affinity_aperitifs`, `affinity_dark_spirits`, `affinity_tequila`
+- Persona-based routing available via `persona_type`
+- Action-based Canvas entry available on `age_gate_passed`, `recipe_saved`, `event_rsvp`, `qr_scanned`, `newsletter_signup`
 
 ### What is NOT possible
 - SMS — not in current contract
 - WhatsApp — not in current contract
 - Web push — web SDK deployed but push not configured
 - Transactional email — all sends are marketing only, transactional IP not set up
-- Real-time purchase data — Campari does not sell direct to consumer, no purchase events
-- Geofencing — not currently implemented despite events use case
+- Real-time purchase data via Braze purchase object — using `purchase_completed` custom event instead
+- Geofencing — not currently implemented
 
 ---
 
 ## Constraints and Preferences
 
 ### Compliance and legal
-- Age verification required — never send alcohol promotional content to users where age_verified != true
-- GDPR applies to UK, EU markets — consent required before any marketing send
-- US CAN-SPAM compliance required for US market sends
+- `is_legal_drinking_age == true` required on every Canvas entry criteria — non-negotiable, no exceptions
+- GDPR applies to UK and EU markets — `consent_updated` event must be respected immediately
+- US CAN-SPAM compliance required for all US market sends
 - Responsible drinking messaging must be included in all promotional email footers
-- No sends to under-18s under any circumstances — age gate is enforced at registration
+- Market-specific content required — never send UK event invitations to users where `country_residence != uk`
+- Age gate version must be current — flag any Canvas using an outdated age gate flow
 
 ### Brand and tone
-- Tone of voice: sophisticated, celebratory, warm. Never corporate or formal.
-- Aperol: bright, social, optimistic. Summer and aperitivo occasion focused.
-- Campari: bold, artistic, passionate. Negroni culture and cocktail craft focused.
-- Wild Turkey: authentic, rugged, American heritage. Whiskey connoisseur focused.
-- Brand name: always use full brand names — "Aperol" not "A", "Campari" not "C"
-- Emoji: permitted in push and subject lines for Aperol. More restrained for Campari and Wild Turkey.
-- CTA style: always occasion or experience led — "Discover the recipe", "Join the community", never "Click here"
+- Aperol: bright, social, optimistic — summer and aperitivo occasion focused
+- Campari: bold, artistic, passionate — Negroni culture and cocktail craft focused
+- Wild Turkey: authentic, rugged, American heritage — whiskey connoisseur focused
+- Espolòn: vibrant, creative, Mexican heritage — tequila cocktail culture focused
+- Never abbreviate brand names — always "Aperol" not "A", "Campari" not "C"
+- Emoji: permitted in push and subject lines for Aperol and Espolòn — more restrained for Campari and Wild Turkey
+- CTA style: always occasion or experience led — "Discover the recipe", "Join the community" — never "Click here"
+- Always use `preferred_language` attribute for market localisation where available
 
 ### Client preferences and sensitivities
-- Maximum 2 email sends per user per week across all brands
+- Maximum 2 email sends per user per week across all brands combined
 - Maximum 1 push notification per user per day
 - A/B test required on any send to more than 25,000 users
-- Age verification check must be applied to every Canvas entry criteria — no exceptions
-- Events content must be market-specific — never send UK event invitations to US users
+- Events content must always be filtered by `country_residence` — never send cross-market event invitations
 - Responsible drinking footer is non-negotiable on all email sends
+- Loyalty messaging must always reference current `loyalty_points_balance` and next tier threshold
 
 ---
 
 ## Current Programme State
 
-### Active Canvases (high level)
-- Welcome journey — triggers on registration, 3-step email + push series over 7 days
-- Loyalty onboarding — triggers on loyalty enrolment, introduces tier structure and first action prompt
-- Recipe engagement — weekly recipe recommendation based on favourite_brand attribute
-- Event reminder — triggers 48h and 2h before registered events
-- Lapsed re-engagement — triggers at 60 days no engagement, 3-step series
+### Active Canvases
+The copilot reads all active Canvases live from the Braze API. No manual list required.
 
-### Known issues or priorities
-- Welcome Canvas copy has not been updated since Q4 2024 — predates the cocktail quiz feature
-- Lapsed re-engagement Canvas has 8% conversion against a 15% target — step 2 drop-off suspected
-- No post-event Canvas exists — users who attend events receive no follow-up
-- Loyalty tier upgrade moment has no dedicated Canvas — a significant missed engagement opportunity
-- Recipe engagement Canvas does not use the favourite_cocktail attribute — currently brand-level only
+### Segments to be created in sandbox
+> The team will create these in the hackathon sandbox. The copilot will read IDs live from the API once created.
+- `CORE__EMAIL_OPTED_IN` — all email subscribed users with `is_legal_drinking_age == true`
+- `CORE__PUSH_OPTED_IN` — all push enabled users with `is_legal_drinking_age == true`
+- `LIFECYCLE__NEW_REGISTRANTS` — `age_gate_passed` within last 30 days
+- `LIFECYCLE__LAPSED_60` — `days_since_last_engagement` >= 60
+- `LIFECYCLE__LAPSED_90` — `days_since_last_engagement` >= 90
+- `LOYALTY__IS_MEMBER` — `is_loyalty_member == true`
+- `LOYALTY__BRONZE` — `loyalty_tier == bronze`
+- `LOYALTY__SILVER` — `loyalty_tier == silver`
+- `LOYALTY__GOLD` — `loyalty_tier == gold`
+- `AFFINITY__APERITIFS` — `affinity_aperitifs == true`
+- `AFFINITY__DARK_SPIRITS` — `affinity_dark_spirits == true`
+- `AFFINITY__TEQUILA` — `affinity_tequila == true`
+- `BRAND__APEROL_FANS` — `favorite_brand == aperol`
+- `BRAND__CAMPARI_FANS` — `favorite_brand == campari`
+- `MARKET__UK` — `country_residence == uk`
+- `MARKET__US` — `country_residence == us`
 
-### Upcoming campaigns
-- Aperol Spritz Summer 2025 — multi-market activation planned for June, brief not yet finalised
-- Wild Turkey Father's Day campaign — US market, mid-June
-- Negroni Week — global campaign, third week of June, Campari brand lead
+### Catalogs to be created in sandbox
+> The team will create these. The copilot will reference them in Canvas message content.
+- `recipes` — recipe_id, recipe_name, brand, occasion, difficulty, image_url, ingredients_summary, cocktail_url
+- `events` — event_id, event_name, brand, city, country, start_at, ticket_url, image_url, capacity
+- `products` — product_id, product_name, brand, category, abv, description, image_url
