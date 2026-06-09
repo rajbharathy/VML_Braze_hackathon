@@ -28,7 +28,7 @@ const CONFIG = {
   // Braze Dashboard (write operations — grab from DevTools Network tab on demo day)
   brazeSessionId: (process.env.BRAZE_SESSION_ID || 'YOUR_SESSION_ID_COOKIE').trim(),
   brazeCsrfToken: (process.env.BRAZE_CSRF_TOKEN || 'YOUR_CSRF_TOKEN').trim(),
-  brazeDashboardEndpoint: (process.env.BRAZE_DASHBOARD_ENDPOINT || 'dashboard-01.braze.eu').trim(),
+  brazeDashboardEndpoint: (process.env.BRAZE_DASHBOARD_ENDPOINT || 'dashboard-01.braze.eu').replace(/^https?:\/\//, '').trim(),
 
   // Claude API
   anthropicApiKey: (process.env.ANTHROPIC_API_KEY || '').trim(),
@@ -41,7 +41,7 @@ const CONFIG = {
 // ─── KNOWLEDGE LOADER ─────────────────────────────────────────────────────────
 
 function loadKnowledge() {
-  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md'];
+  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md'];
   return files.map(f => {
     try {
       const content = fs.readFileSync(path.join(CONFIG.knowledgeDir, f), 'utf8');
@@ -362,7 +362,7 @@ async function createCanvas(canvasPayload) {
 
   const result = await httpsRequest({
     hostname: CONFIG.brazeDashboardEndpoint,
-    path: `/engagement/canvas?app_group_id=5e8e435643c19d324035c99e`,
+    path: `/engagement/canvas?app_group_id=6a27c8bab79981004762ea60`,
     method: 'POST',
     headers: {
       'Content-Type': `multipart/form-data; boundary=${boundary}`,
