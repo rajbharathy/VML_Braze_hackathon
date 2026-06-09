@@ -380,6 +380,9 @@ async function createCanvas(canvasPayload) {
 
   console.log('Braze response status:', result.status);
   console.log('Braze response body:', JSON.stringify(result.body).slice(0, 500));
+  console.log('Braze session used:', CONFIG.brazeSessionId.slice(0, 8) + '...');
+  console.log('Braze CSRF used:', CONFIG.brazeCsrfToken.slice(0, 10) + '...');
+  console.log('Braze remember token set:', !!CONFIG.brazeRememberToken);
 
   return result;
 }
