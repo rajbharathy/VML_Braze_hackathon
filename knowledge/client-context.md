@@ -182,23 +182,29 @@ Campari Group is a global spirits company with a portfolio of over 50 brands inc
 The copilot reads all active Canvases live from the Braze API. No manual list required.
 
 ### Segments to be created in sandbox
-> The team will create these in the hackathon sandbox. The copilot will read IDs live from the API once created.
-- `CORE__EMAIL_OPTED_IN` — all email subscribed users with `is_legal_drinking_age == true`
-- `CORE__PUSH_OPTED_IN` — all push enabled users with `is_legal_drinking_age == true`
-- `LIFECYCLE__NEW_REGISTRANTS` — `age_gate_passed` within last 30 days
-- `LIFECYCLE__LAPSED_60` — `days_since_last_engagement` >= 60
-- `LIFECYCLE__LAPSED_90` — `days_since_last_engagement` >= 90
-- `LOYALTY__IS_MEMBER` — `is_loyalty_member == true`
-- `LOYALTY__BRONZE` — `loyalty_tier == bronze`
-- `LOYALTY__SILVER` — `loyalty_tier == silver`
-- `LOYALTY__GOLD` — `loyalty_tier == gold`
-- `AFFINITY__APERITIFS` — `affinity_aperitifs == true`
-- `AFFINITY__DARK_SPIRITS` — `affinity_dark_spirits == true`
-- `AFFINITY__TEQUILA` — `affinity_tequila == true`
-- `BRAND__APEROL_FANS` — `favorite_brand == aperol`
-- `BRAND__CAMPARI_FANS` — `favorite_brand == campari`
-- `MARKET__UK` — `country_residence == uk`
-- `MARKET__US` — `country_residence == us`
+> These segments will be created in the hackathon sandbox. The copilot will read IDs live from the API once created.
+
+| Segment name | Definition | Use cases |
+|---|---|---|
+| `CORE__EMAIL_OPTED_IN` | `is_legal_drinking_age == true` AND `consent_type == marketing` AND `consent_state == opted_in` AND subscribed to email subscription group | Base email audience — apply to all marketing email sends |
+| `CORE__PUSH_OPTED_IN` | `is_legal_drinking_age == true` AND push enabled | Base push audience — apply to all push sends |
+| `NEW_LEADS` | `newsletter_signup` in last 7 days AND NOT `brand_page_viewed` in last 7 days AND NOT `product_detail_viewed` in last 7 days | Welcome series, preference capture, first recipe or find-a-bar nudge, starter offer |
+| `BRAND_ENTHUSIAST_APEROL` | `brand_page_viewed` where `brand == aperol` 2+ times in last 30 days OR `recipe_viewed` where `brand == aperol` in last 30 days | Brand-specific launches, Aperol seasonal campaigns |
+| `LOYALTY_IS_MEMBER` | `is_loyalty_member == true` | All loyalty member communications |
+| `LOYALTY_GOLD` | `loyalty_points_balance >= 500` | Points reminders, early access |
+| `LOYALTY_SILVER` | `loyalty_points_balance >= 200` AND `loyalty_points_balance < 500` | Points reminders, relevant offers |
+| `LOYALTY_BRONZE` | `loyalty_points_balance >= 1` AND `loyalty_points_balance < 200` | Points reminders, relevant offers |
+| `LOYALTY_ZERO` | `loyalty_points_balance == 0` | Prompt for first loyalty task, points activation |
+| `LIFECYCLE__NEW_REGISTRANTS` | `age_gate_passed` in last 30 days | Welcome series, preference capture, first find-a-bar or try-a-recipe nudge, starter offer |
+| `LIFECYCLE__LAPSED_60` | `days_since_last_engagement >= 60` | Reactivation with new-season content, what's new roundup, light incentive test, push permission primer |
+| `LIFECYCLE__LAPSED_90` | `days_since_last_engagement >= 90` | Stronger winback, we miss you message, bigger incentive, survey to reset preferences |
+| `AFFINITY_APERITIFS` | `affinity_aperitifs == true` | Spritz recipes, aperitif hour content, Aperol-focused launches, summer event invites |
+| `AFFINITY_DARK_SPIRITS` | `affinity_dark_spirits == true` | Neat and classic cocktail content, nighttime occasions, premium storytelling, aged-spirit product drops |
+| `AFFINITY_TEQUILA` | `affinity_tequila == true` | Margarita and paloma recipes, fiesta occasions, tequila brand launches, Cinco de Mayo moments |
+| `BRAND__APEROL_FANS` | `favorite_brand == aperol` | Early access to Aperol campaigns, Aperol event invites, limited-edition merch drops, Aperol recipe packs |
+| `BRAND__CAMPARI_FANS` | `favorite_brand == campari` | Negroni Week content, Campari event access, bartender-led recipe series, premium seasonal launches |
+| `MARKET_UK` | `country_residence == uk` | UK legal lines and availability, UK events and venues, GBP offers, UK retailer and store-locator CTAs |
+| `MARKET_US` | `country_residence == us` | US legal lines and availability, US events and venues, USD offers, US retailer and store-locator CTAs |
 
 ### Catalogs to be created in sandbox
 > The team will create these. The copilot will reference them in Canvas message content.
