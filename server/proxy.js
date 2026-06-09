@@ -26,8 +26,9 @@ const CONFIG = {
   brazeRestEndpoint: (process.env.BRAZE_REST_ENDPOINT || 'rest.fra-01.braze.eu').replace(/^https?:\/\//, '').trim(),
 
   // Braze Dashboard (write operations — grab from DevTools Network tab on demo day)
-  brazeSessionId: (process.env.BRAZE_SESSION_ID || 'YOUR_SESSION_ID_COOKIE').trim(),
-  brazeCsrfToken: (process.env.BRAZE_CSRF_TOKEN || 'YOUR_CSRF_TOKEN').trim(),
+  brazeSessionId: (process.env.BRAZE_SESSION_ID || '').trim(),
+  brazeCsrfToken: (process.env.BRAZE_CSRF_TOKEN || '').trim(),
+  brazeRememberToken: (process.env.BRAZE_REMEMBER_TOKEN || '').trim(),
   brazeDashboardEndpoint: (process.env.BRAZE_DASHBOARD_ENDPOINT || 'dashboard-01.braze.eu').replace(/^https?:\/\//, '').trim(),
 
   // Claude API
@@ -367,7 +368,7 @@ async function createCanvas(canvasPayload) {
     headers: {
       'Content-Type': `multipart/form-data; boundary=${boundary}`,
       'Content-Length': Buffer.byteLength(body),
-      'Cookie': `_session_id=${CONFIG.brazeSessionId}; ag_id___6a27c8bab79981004762ea60=6a003bbcb79981004762f2b4; f_ag_id___6a27c8bab79981004762ea60=6a003bbcb79981004762f2b4`,
+      'Cookie': `_session_id=${CONFIG.brazeSessionId}; remember_login_enc_v1=${CONFIG.brazeRememberToken}; ag_id___6a27c8bab79981004762ea60=6a003bbcb79981004762f2b4; f_ag_id___6a27c8bab79981004762ea60=6a003bbcb79981004762f2b4`,
       'X-CSRF-Token': CONFIG.brazeCsrfToken,
       'Accept': 'application/json, text/javascript, */*; q=0.01',
       'X-Requested-With': 'XMLHttpRequest',
