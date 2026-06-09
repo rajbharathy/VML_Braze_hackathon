@@ -372,7 +372,7 @@ async function createCanvas(canvasPayload) {
       'Accept': 'application/json, text/javascript, */*; q=0.01',
       'X-Requested-With': 'XMLHttpRequest',
       'Origin': `https://${CONFIG.brazeDashboardEndpoint}`,
-      'ab-app-group-id': '5e8e435643c19d324035c99e'
+      'ab-app-group-id': '6a27c8bab79981004762ea60'
     }
   }, body);
 
