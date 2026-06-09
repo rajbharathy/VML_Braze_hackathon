@@ -300,6 +300,7 @@ async function createCanvas(canvasPayload) {
   });
 
   const fields = {
+    authenticity_token: CONFIG.brazeCsrfToken,
     workflow_id: `"${workflowId}"`,
     create_version: 'false',
     api_workflow_id: `"${apiWorkflowId}"`,
@@ -363,7 +364,7 @@ async function createCanvas(canvasPayload) {
 
   const result = await httpsRequest({
     hostname: CONFIG.brazeDashboardEndpoint,
-    path: `/engagement/canvas?app_group_id=6a27c8bab79981004762ea60`,
+    path: `/engagement/canvas?app_group_id=6a003bbcb79981004762f2b4`,
     method: 'POST',
     headers: {
       'Content-Type': `multipart/form-data; boundary=${boundary}`,
@@ -372,9 +373,11 @@ async function createCanvas(canvasPayload) {
       'X-CSRF-Token': CONFIG.brazeCsrfToken,
       'Accept': 'application/json, text/javascript, */*; q=0.01',
       'X-Requested-With': 'XMLHttpRequest',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36',
       'Origin': `https://${CONFIG.brazeDashboardEndpoint}`,
       'Referer': `https://${CONFIG.brazeDashboardEndpoint}/engagement/canvas`,
-      'ab-app-group-id': '6a27c8bab79981004762ea60'
+      'ab-app-group-id': '6a003bbcb79981004762f2b4',
+      'ab-version': 'de1c71f99918eff396e448bc345a53b60aa72d83'
     }
   }, body);
 
