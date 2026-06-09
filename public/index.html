@@ -706,20 +706,6 @@ function renderContextPanel(context) {
     </div>
   `;
 }
-  // Count items from context
-  const campaignSection = context.match(/### Recent campaigns[\s\S]*?(?=###|$)/);
-  const canvasSection = context.match(/### Recent canvases[\s\S]*?(?=###|$)/);
-  if (campaignSection) {
-    const count = (campaignSection[0].match(/^  - /gm) || []).length;
-    const el = document.getElementById('statCampaigns');
-    if (el) el.textContent = count + '+';
-  }
-  if (canvasSection) {
-    const count = (canvasSection[0].match(/^  - /gm) || []).length;
-    const el = document.getElementById('statCanvases');
-    if (el) el.textContent = count + '+';
-  }
-}
 
 function renderContextError(msg) {
   document.getElementById('contextPanel').innerHTML = `
