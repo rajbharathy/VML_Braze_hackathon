@@ -367,11 +367,12 @@ async function createCanvas(canvasPayload) {
     headers: {
       'Content-Type': `multipart/form-data; boundary=${boundary}`,
       'Content-Length': Buffer.byteLength(body),
-      'Cookie': `_session_id=${CONFIG.brazeSessionId}`,
+      'Cookie': `_session_id=${CONFIG.brazeSessionId}; ag_id___6a27c8bab79981004762ea60=6a003bbcb79981004762f2b4; f_ag_id___6a27c8bab79981004762ea60=6a003bbcb79981004762f2b4`,
       'X-CSRF-Token': CONFIG.brazeCsrfToken,
       'Accept': 'application/json, text/javascript, */*; q=0.01',
       'X-Requested-With': 'XMLHttpRequest',
       'Origin': `https://${CONFIG.brazeDashboardEndpoint}`,
+      'Referer': `https://${CONFIG.brazeDashboardEndpoint}/engagement/canvas`,
       'ab-app-group-id': '6a27c8bab79981004762ea60'
     }
   }, body);
