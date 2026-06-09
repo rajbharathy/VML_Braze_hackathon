@@ -673,18 +673,21 @@ async function loadContext() {
 }
 
 function renderContextPanel(context) {
-  const lines = context.split('\n');
-  const campaigns = (context.match(/^  - /gm) || []).length;
+  const campaignSection = context.match(/### Recent campaigns[\s\S]*?(?=###|$)/);
+  const canvasSection = context.match(/### Recent canvases[\s\S]*?(?=###|$)/);
+  const campaignCount = campaignSection ? (campaignSection[0].match(/^  - /gm) || []).length : 0;
+  const canvasCount = canvasSection ? (canvasSection[0].match(/^  - /gm) || []).length : 0;
+
   const panel = document.getElementById('contextPanel');
   panel.innerHTML = `
     <div class="context-card">
       <div class="context-stat">
         <div>
-          <div class="context-stat-num" id="statCampaigns">—</div>
+          <div class="context-stat-num">${campaignCount}+</div>
           <div class="context-stat-label">campaigns loaded</div>
         </div>
         <div style="text-align:right">
-          <div class="context-stat-num" id="statCanvases">—</div>
+          <div class="context-stat-num">${canvasCount}+</div>
           <div class="context-stat-label">canvases loaded</div>
         </div>
       </div>
@@ -702,6 +705,7 @@ function renderContextPanel(context) {
       <div class="context-card-value">Live workspace data loaded. Copilot is ready.</div>
     </div>
   `;
+}
   // Count items from context
   const campaignSection = context.match(/### Recent campaigns[\s\S]*?(?=###|$)/);
   const canvasSection = context.match(/### Recent canvases[\s\S]*?(?=###|$)/);
