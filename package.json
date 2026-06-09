@@ -5,8 +5,13 @@
   "main": "server/proxy.js",
   "scripts": {
     "start": "node server/proxy.js",
-    "dev": "BRAZE_API_KEY=your_key ANTHROPIC_API_KEY=your_key node server/proxy.js"
+    "dev": "cross-env DOTENV_CONFIG_PATH=config.env node -r dotenv/config server/proxy.js"
   },
-  "dependencies": {},
-  "engines": { "node": ">=18" }
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^17.4.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }

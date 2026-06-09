@@ -34,7 +34,7 @@ const CONFIG = {
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ,
 
   // Server
-  port: 3000,
+  port: process.env.PORT || 3000,
   knowledgeDir: path.join(__dirname, '../knowledge')
 };
 

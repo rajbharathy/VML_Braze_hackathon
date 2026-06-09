@@ -620,8 +620,8 @@
     <div class="modal-body">
       <div class="field-group">
         <div class="field-label">Proxy server URL</div>
-        <input class="field-input" id="cfgProxyUrl" type="text" value="http://localhost:3000" placeholder="http://localhost:3000">
-        <div class="field-hint">The local proxy server address. Default: http://localhost:3000</div>
+        <input class="field-input" id="cfgProxyUrl" type="text" placeholder="Leave blank for relative (same host)">
+        <div class="field-hint">Leave blank when the UI is served by the proxy. Set a full URL only when running the frontend separately.</div>
       </div>
       <div class="field-group">
         <div class="field-label">Braze session ID <span style="color:#DC2626">*</span></div>
@@ -646,7 +646,7 @@
 
 <script>
 // ─── State ─────────────────────────────────────────────────────────────────
-let PROXY_URL = localStorage.getItem('proxyUrl') || 'http://localhost:3000';
+let PROXY_URL = localStorage.getItem('proxyUrl') || '';
 let workspaceContext = '';
 let conversationHistory = [];
 let isThinking = false;
@@ -778,7 +778,7 @@ async function sendMessage() {
     }
   } catch (e) {
     thinkingEl.remove();
-    appendMessage('assistant', `**Connection error:** Cannot reach the proxy server.\n\nMake sure \`node server/proxy.js\` is running on port 3000.`);
+    appendMessage('assistant', `**Connection error:** Cannot reach the proxy server.\n\nMake sure \`node server/proxy.js\` is running.`);
   }
 
   isThinking = false;
@@ -975,7 +975,7 @@ function closeConfig() {
 }
 
 function saveConfig() {
-  PROXY_URL = document.getElementById('cfgProxyUrl').value.trim() || 'http://localhost:3000';
+  PROXY_URL = document.getElementById('cfgProxyUrl').value.trim();
   localStorage.setItem('proxyUrl', PROXY_URL);
 
   const sessionId = document.getElementById('cfgSessionId').value.trim();
