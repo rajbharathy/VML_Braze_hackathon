@@ -1,0 +1,12 @@
+{
+  "name": "braze-copilot",
+  "version": "0.1.0",
+  "description": "AI-native Braze practitioner — Hackathon skeleton",
+  "main": "server/proxy.js",
+  "scripts": {
+    "start": "node server/proxy.js",
+    "dev": "BRAZE_API_KEY=your_key ANTHROPIC_API_KEY=your_key node server/proxy.js"
+  },
+  "dependencies": {},
+  "engines": { "node": ">=18" }
+}
