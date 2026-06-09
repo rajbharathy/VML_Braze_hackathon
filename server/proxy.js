@@ -404,7 +404,7 @@ async function callClaude(messages, systemPrompt) {
       'Content-Type': 'application/json',
       'Content-Length': Buffer.byteLength(bodyStr)
     }
-  }, bodyStr, 60000);
+  }, bodyStr, 180000);
 }
 
 // ─── REQUEST ROUTER ───────────────────────────────────────────────────────────
