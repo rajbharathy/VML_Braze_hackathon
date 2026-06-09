@@ -66,19 +66,25 @@ Campari Group is a global spirits company with a portfolio of over 50 brands inc
 ### Key custom attributes
 | Attribute name | Type | Description | Example values |
 |---|---|---|---|
+| is_legal_drinking_age | Boolean | Age verification passed — must be true before any alcohol promotional send | true, false |
+| birth_date | Date/Time | User's date of birth — used for age verification and birthday campaigns | 1990-05-15 |
+| country_residence | String | User's country of residence — used for market targeting and compliance | uk, us, it, de, au |
+| preferred_language | String | User's preferred language for communications | en, it, de, fr, es |
+| favorite_brand | String | User's self-declared or inferred favourite Campari Group brand | aperol, campari, wild_turkey, espolon, grand_marnier, skyy |
+| affinity_aperitifs | Boolean | User has demonstrated affinity for aperitif-style drinks | true, false |
+| affinity_dark_spirits | Boolean | User has demonstrated affinity for dark spirits — whiskey, rum, brandy | true, false |
+| affinity_tequila | Boolean | User has demonstrated affinity for tequila — Espolòn targeting | true, false |
+| persona_type | String | Derived persona segment based on engagement behaviour and preferences | cocktail_enthusiast, casual_drinker, brand_loyalist, explorer, gifter |
+| is_loyalty_member | Boolean | User is enrolled in the loyalty programme | true, false |
+| loyalty_points_balance | Number | Current loyalty points balance | 0–5000 |
 | loyalty_tier | String | Current loyalty programme tier | bronze, silver, gold, platinum |
-| loyalty_points | Number | Current points balance | 0–5000 |
-| favourite_brand | String | Self-declared favourite Campari Group brand | aperol, campari, wild_turkey, espolon, grand_marnier |
-| favourite_cocktail | String | Most engaged-with cocktail recipe | aperol_spritz, negroni, old_fashioned |
-| registration_date | Date | Date user registered on the platform | 2025-01-15 |
 | last_engagement_date | Date | Date of most recent platform interaction | 2025-05-20 |
 | days_since_last_engagement | Number | Computed daily — days since last activity | 0–365 |
+| market | String | User's primary market — use country_residence where available | uk, us, it, de, au |
+| app_installed | Boolean | Campari app installed and active | true, false |
 | events_attended | Number | Total brand events attended | 0–20 |
 | recipes_saved | Number | Total recipes saved to profile | 0–50 |
 | preferred_channel | String | Preferred communication channel | email, push |
-| market | String | User's primary market | uk, us, it, de, au |
-| age_verified | Boolean | Age verification completed | true, false |
-| app_installed | Boolean | Campari app installed and active | true, false |
 
 ### Key custom events
 | Event name | Description | Key properties |
