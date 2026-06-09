@@ -22,16 +22,16 @@ const url = require('url');
 
 const CONFIG = {
   // Braze REST API (read operations)
-  brazeApiKey: process.env.BRAZE_API_KEY ,
-  brazeRestEndpoint: process.env.BRAZE_REST_ENDPOINT || 'rest.fra-01.braze.eu',
+  brazeApiKey: (process.env.BRAZE_API_KEY || '').trim(),
+  brazeRestEndpoint: (process.env.BRAZE_REST_ENDPOINT || 'rest.fra-01.braze.eu').replace(/^https?:\/\//, '').trim(),
 
   // Braze Dashboard (write operations — grab from DevTools Network tab on demo day)
-  brazeSessionId: process.env.BRAZE_SESSION_ID || 'YOUR_SESSION_ID_COOKIE',
-  brazeCsrfToken: process.env.BRAZE_CSRF_TOKEN || 'YOUR_CSRF_TOKEN',
-  brazeDashboardEndpoint: process.env.BRAZE_DASHBOARD_ENDPOINT || 'dashboard-01.braze.eu',
+  brazeSessionId: (process.env.BRAZE_SESSION_ID || 'YOUR_SESSION_ID_COOKIE').trim(),
+  brazeCsrfToken: (process.env.BRAZE_CSRF_TOKEN || 'YOUR_CSRF_TOKEN').trim(),
+  brazeDashboardEndpoint: (process.env.BRAZE_DASHBOARD_ENDPOINT || 'dashboard-01.braze.eu').trim(),
 
   // Claude API
-  anthropicApiKey: process.env.ANTHROPIC_API_KEY ,
+  anthropicApiKey: (process.env.ANTHROPIC_API_KEY || '').trim(),
 
   // Server
   port: process.env.PORT || 3000,
