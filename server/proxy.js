@@ -314,7 +314,9 @@ async function createCanvas(canvasPayload) {
       if (!firstMessageStepId) firstMessageStepId = stepId;
       const channels = step.channels || step.messages || {};
       const email = channels.email || {};
-      const push = channels.push || {};
+    const push = channels.push || {};
+const pushIos = push.ios || channels.push_ios || {};
+const pushAndroid = push.android || channels.push_android || {};
 
       // Build messaging_actions
       const messagingActions = [];
@@ -335,9 +337,9 @@ async function createCanvas(canvasPayload) {
       }
 
       if (push.ios || push.android) {
-        const ios = push.ios || {};
-        const android = push.android || {};
-        if (ios.alert || ios.title) {
+       const ios = pushIos;
+const android = pushAndroid;
+if (ios.alert || ios.title) {
           messagingActions.push({
             type: 'ios_push',
             message: {
