@@ -1,194 +1,105 @@
-# 🟠 Braze Morning Brief
+# ☀️ Braze Morning Brief
 
-> What broke · What's at risk · What ships today
-
-**Date:** YYYY-MM-DD | **By:** Name | **Workspace:** Name | **Status:** 🟢 Green / 🟡 Watch / 🔴 Action Required
-
----
-
-## 0. At a Glance *(write last)*
-
-| Area | Status | Action Needed |
-|---|---|---|
-| Campaigns & Canvases | 🟢 / 🟡 / 🔴 | |
-| Data & Events | 🟢 / 🟡 / 🔴 | |
-| Deliverability | 🟢 / 🟡 / 🔴 | |
-| Personalization & Liquid | 🟢 / 🟡 / 🔴 | |
-| BrazeAI Features | 🟢 / 🟡 / 🔴 | |
-| Promo Codes & Catalogs | 🟢 / 🟡 / 🔴 | |
-| Incidents | 🟢 / 🟡 / 🔴 | |
-
-**Top 3 for leadership:**
-1. 
-2. 
-3. 
+**Date:** {{today}}
+**Window:** Last 72 Hours
 
 ---
 
-## 1. System Health
+# 🚨 Card 1: Instance Health
 
-| Check | Status |
-|---|---|
-| status.braze.com | 🟢 / 🟡 / 🔴 |
-| SDK / API ingestion lag | 🟢 / 🟡 / 🔴 |
-| CDI / Zero-copy Canvas Triggers | 🟢 / 🟡 / 🔴 |
-| Connected Content endpoints | 🟢 / 🟡 / 🔴 |
-| Webhooks (no 4xx/5xx spike) | 🟢 / 🟡 / 🔴 |
-| Currents export | 🟢 / 🟡 / 🔴 |
+**Overall Health Score:** {{92/100}}
 
----
+| Metric            | Status |
+| ----------------- | ------ |
+| Campaign Sends    | ✅      |
+| Canvas Sends      | ✅      |
+| Delivery Health   | ✅      |
+| Event Ingestion   | ✅      |
+| Catalog Sync      | ✅      |
+| Connected Content | ⚠️     |
+| Currents Export   | ✅      |
 
-## 2. What Changed Yesterday?
+### Attention Needed
 
-| Item | Type | Environment | Impact | Owner |
-|---|---|---|---|---|
-| | Canvas / Campaign / Segment / API | Prod / Stage | | |
-
-🚨 **Verify immediately if any of these changed:** trigger event name · audience filters · re-entry rules · Liquid / abort logic · promo code pool · webhook auth · sending domain · frequency caps
+* {{critical_issue_1}}
+* {{critical_issue_2}}
 
 ---
 
-## 3. Canvas & Campaign Health
+# 📬 Card 2: Messaging Activity
 
-| Canvas / Campaign | Status | Entries 24hr | Errors | Flag |
-|---|---|---|---|---|
-| | Live / Paused | | | |
+### Last 72 Hours
 
-- [ ] Any canvas at zero entries unexpectedly?
-- [ ] Users stuck at delay / decision split?
-- [ ] Frequency caps silently suppressing key sends?
-- [ ] Any A/B test hit significance — declare winner?
+| Metric          | Value     |
+| --------------- | --------- |
+| Campaigns Sent  | {{count}} |
+| Active Canvases | {{count}} |
+| Messages Sent   | {{count}} |
+| Failed Sends    | {{count}} |
+| Abort Messages  | {{count}} |
 
----
+### Exceptions
 
-## 4. Data & Events
-
-| Event | Expected | Actual | Variance | Status |
-|---|---|---|---|---|
-| `ecommerce.order_placed` | | | | 🟢 / 🟡 / 🔴 |
-| `ecommerce.checkout_started` | | | | 🟢 / 🟡 / 🔴 |
-| `back_in_stock_trigger` | | | | 🟢 / 🟡 / 🔴 |
-| `refill_due` | | | | 🟢 / 🟡 / 🔴 |
-| [Custom event] | | | | 🟢 / 🟡 / 🔴 |
-
-> 🚨 Flag if any event drops 30%+ vs. 7-day average.
-
-- [ ] Key event payload spot-checked (`external_id`, timestamp, required properties)
-- [ ] Catalog / CDI sync completed overnight
+* {{canvas_with_failures}}
+* {{campaign_with_bounces}}
+* {{campaign_with_high_unsubs}}
 
 ---
 
-## 5. Deliverability
+# 🛒 Card 3: Customer Activity
 
-| Metric | Yesterday | Threshold | Status |
-|---|---|---|---|
-| Delivery Rate | | > 98% | 🟢 / 🟡 / 🔴 |
-| Hard Bounce Rate | | < 0.5% | 🟢 / 🟡 / 🔴 |
-| Spam Complaint Rate | | < 0.08% | 🟢 / 🟡 / 🔴 |
-| Unsubscribe Rate | | < 0.2% | 🟢 / 🟡 / 🔴 |
+| Event            | Volume    | Trend  |
+| ---------------- | --------- | ------ |
+| product_viewed   | {{count}} | {{↑↓}} |
+| cart_updated     | {{count}} | {{↑↓}} |
+| checkout_started | {{count}} | {{↑↓}} |
+| order_placed     | {{count}} | {{↑↓}} |
 
-- [ ] DMARC / SPF / DKIM passing?
-- [ ] ISP-level anomaly? (Gmail / Outlook / Yahoo / Apple)
-- [ ] IP warming on track? *(pause if spam > 0.10% or hard bounce > 2%)*
+### Event Anomalies
 
----
-
-## 6. Channel Checks
-
-**Push:** APNs/FCM errors normal · tokens collecting · deep links working
-**SMS:** correct subscription group · opt-outs processed · E.164 format
-**WhatsApp:** Meta Catalog syncing · Flows submitting · Carousels loading · opt-in compliant
-**RCS:** Rich Cards rendering · SMS fallback configured
-**IAM:** no stale messages showing · Form Blocks submitting
+* {{event_anomaly_1}}
+* {{event_anomaly_2}}
 
 ---
 
-## 7. Liquid & Personalization
+# 📈 Card 4: Journey Performance
 
-- [ ] No broken Liquid in live templates — all vars have `| default:` fallback
-- [ ] Abort logic (`{% abort_message %}`) intentional and monitored
-- [ ] Connected Content: endpoints responding, timeout fallback set
-- [ ] Promo code rendering: `{{ custom_attribute.${promo_code_issued} }}`
+### Top Performers
 
----
+🥇 {{canvas_name}} — {{conversion}}%
 
-## 8. Promotion Codes
+🥈 {{canvas_name}} — {{conversion}}%
 
-| Code List | Remaining | Issued Today | Redeemed | Expiring 48hr | Status |
-|---|---|---|---|---|---|
-| | | | | | 🟢 / 🟡 / 🔴 |
+🥉 {{canvas_name}} — {{conversion}}%
 
-- [ ] Any list < 20% remaining? *(restock now)*
-- [ ] `promo_code_issued` writing to profile on first send
-- [ ] `promo_code_redeemed` updating on redemption
-- [ ] Reminder Canvas filtering `redeemed = false` correctly
-- [ ] Expired codes not visible in live templates
+### Underperformers
 
----
+⚠️ {{canvas_name}} — CTR down {{x}}%
 
-## 9. BrazeAI Health
+⚠️ {{canvas_name}} — Conversion down {{x}}%
 
-| Feature | Status | Notes |
-|---|---|---|
-| Decisioning Studio (RL — optimising LTV/revenue) | 🟢 / 🟡 / 🔴 | |
-| Agent Console (custom agents) | 🟢 / 🟡 / 🔴 | |
-| Operator (prompt-based builds — human review required) | 🟢 / 🟡 / 🔴 | |
-| Intelligent Timing / Channel | 🟢 / 🟡 / 🔴 | |
-| Predictive Churn — model fresh? | 🟢 / 🟡 / 🔴 | |
+### Silent Canvases
+
+* No sends in last 24h: {{canvas_name}}
 
 ---
 
-## 10. Today's Sends — Pre-Launch Checklist
+# 🤖 Card 5: AI Summary
 
-| Campaign / Canvas | Time | Audience | Channel | Test Send | Approved |
-|---|---|---|---|---|---|
-| | | | | ✅ / ❌ | ✅ / ❌ |
+## What Happened?
 
-- [ ] Liquid resolves in test send · suppression lists applied · promo codes pulling
-- [ ] Links, UTMs, from-name correct · conversion event mapped
-- [ ] Pause plan ready if issues in first 30 minutes
+{{one_sentence_summary}}
 
----
+## Biggest Change
 
-## 11. Automation Health *(n8n)*
+{{largest_change_detected}}
 
-| Workflow | Last Run | Status | Errors |
-|---|---|---|---|
-| Back-in-Stock Trigger | | ✅ / ❌ | |
-| Promo Code Issuer & Redeemed Updater | | ✅ / ❌ | |
-| Refill Calculator & Expired Cleanup | | ✅ / ❌ | |
+## What Should I Check Today?
 
----
+👉 {{single_recommendation}}
 
-## 12. Action Log
+## Risk Level
 
-| # | Action | Priority | Owner | Due | Status |
-|---|---|---|---|---|---|
-| 1 | | 🔴 / 🟡 / 🟢 | | | |
-| 2 | | | | | |
-
----
-
-## ⚡ 10-Min Version
-
-1. Anything broken or erroring?
-2. Entries, sends, conversions normal yesterday?
-3. Today's launches ready?
-4. Events and data feeds healthy?
-5. Bounce / complaint / unsub within threshold?
-6. Promo codes, catalogs, links working?
-7. Who owns today's risks?
-
----
-
-## 🤖 AI Prompt — Morning Triage
-
-```
-Act as a Braze hypercare analyst. Review the data below and return:
-1) health status by area  2) anomalies vs baseline  3) root causes
-4) recommended actions with owners  5) risks if ignored.
-Data: [paste metrics]
-```
-
----
-*Braze Morning Brief v2.0 · Forge 2025: BrazeAI Decisioning Studio · Agent Console · Operator · Zero-copy Canvas Triggers · WhatsApp Commerce · RCS Rich Cards*
+🟢 Low
+🟡 Medium
+🔴 High
