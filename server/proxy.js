@@ -45,7 +45,7 @@ const ATTRIBUTES_APP_GROUP_ID = '6a003bbcb79981004762f2b4';
 // ─── KNOWLEDGE LOADER ─────────────────────────────────────────────────────────
 
 function loadKnowledge() {
-  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'housekeeping-module.md', 'workspace-health-module.md', 'unused-attributes.md', 'unused-segments.md', 'migration-audit-module.md', 'braze_hypercare_morning_brief.md'];
+  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'sample-canvas-data', 'housekeeping-module.md', 'workspace-health-module.md', 'unused-attributes.md', 'unused-segments.md', 'migration-audit-module.md', 'braze_hypercare_morning_brief.md'];
   return files.map(f => {
     try {
       const content = fs.readFileSync(path.join(CONFIG.knowledgeDir, f), 'utf8');
