@@ -24,6 +24,41 @@ Braze has two distinct API surfaces. The copilot must understand which to use:
 
 ---
 
+## Module Endpoint Map
+
+Quick reference: which REST API endpoints each knowledge module relies on (see `canvas-metrics-module.md`, `housekeeping-module.md`, `workspace-health-module.md`). All use `https://{rest_endpoint}/` with `Authorization: Bearer {api_key}`.
+
+### Canvas Metrics
+```
+GET https://{rest_endpoint}/canvas/list
+GET https://{rest_endpoint}/canvas/details
+GET https://{rest_endpoint}/canvas/data_series
+GET https://{rest_endpoint}/segments/details
+```
+
+### Housekeeping
+```
+GET https://{rest_endpoint}/segments/list
+GET https://{rest_endpoint}/segments/details
+GET https://{rest_endpoint}/campaigns/list
+GET https://{rest_endpoint}/campaigns/details
+GET https://{rest_endpoint}/canvas/list
+GET https://{rest_endpoint}/canvas/details
+GET https://{rest_endpoint}/events/list
+GET https://{rest_endpoint}/custom_attributes
+GET https://{rest_endpoint}/templates/email/list
+GET https://{rest_endpoint}/templates/email/info
+```
+
+### Workspace Health
+```
+GET https://{rest_endpoint}/campaigns/data_series
+GET https://{rest_endpoint}/canvas/data_series
+GET https://{rest_endpoint}/segments/details
+```
+
+---
+
 ## Canvas Create — Dashboard API
 
 ### Endpoint

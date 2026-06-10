@@ -42,7 +42,7 @@ const CONFIG = {
 // ─── KNOWLEDGE LOADER ─────────────────────────────────────────────────────────
 
 function loadKnowledge() {
-  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md'];
+  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'housekeeping-module.md', 'workspace-health-module.md'];
   return files.map(f => {
     try {
       const content = fs.readFileSync(path.join(CONFIG.knowledgeDir, f), 'utf8');

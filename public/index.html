@@ -246,6 +246,21 @@
       </div>
     </div>
 
+    <div class="sidebar-section">
+      <div class="sidebar-label">Health & monitoring</div>
+      <div class="capability-list">
+        <div class="capability-item" onclick="sendPrompt('Run the Canvas Metrics health check. For each active Canvas, classify it as one-time-entry or recurring based on its re-entry settings, apply the relevant metric filters, and surface the top 5 underperforming Canvases from the last 7 days with a diagnostic one-liner and recommended fix for each.')">
+          <span class="cap-icon">📊</span> Canvas metrics check
+        </div>
+        <div class="capability-item" onclick="sendPrompt('Run a housekeeping audit of the workspace. Identify orphan segments, unused custom events, unused custom attributes, naming convention violations, dead/stale campaigns, stale draft campaigns, zero-member segments, and unused email templates. List specific assets by name.')">
+          <span class="cap-icon">🧹</span> Housekeeping audit
+        </div>
+        <div class="capability-item" onclick="sendPrompt('Run a workspace health check. Look for unsubscribe rate spikes, segment size anomalies in key segments, API error health (429/5xx rates), and duplicate profile surges. For any anomaly found, give the diagnostic hypothesis and likely cause.')">
+          <span class="cap-icon">🩺</span> Workspace health check
+        </div>
+      </div>
+    </div>
+
     <div class="context-panel">
       <div class="sidebar-label">Workspace snapshot</div>
       <div id="contextPanel">
@@ -402,7 +417,11 @@ function renderContextPanel(context) {
       <div class="context-card-value">
         ✓ Best practice playbook<br>
         ✓ Client context<br>
-        ✓ Ecosystem architecture
+        ✓ Ecosystem architecture<br>
+        ✓ Canvas brief<br>
+        ✓ Canvas metrics module<br>
+        ✓ Housekeeping module<br>
+        ✓ Workspace health module
       </div>
     </div>
     <div class="context-card">
@@ -679,7 +698,7 @@ async function triggerCanvasBuild(btn, responseText) {
 
   const buildData = await buildRes.json();
 
-  avascript  if (buildData.status === 200 || buildData.status === 201) {
+    if (buildData.status === 200 || buildData.status === 201) {
     appendMessage('assistant', '✅ **Canvas built successfully in Braze.**\n\nThe Canvas has been created in your workspace. Open Braze to review it before activating.');
     btn.textContent = '✅ Built in Braze';
   } else {
