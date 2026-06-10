@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Analyze newly launched canvases and identify launch risks during the first 72 hours after go-live.
+Analyze newly launched canvases during their first 72 hours after go-live and identify potential launch issues.
 
 ---
 
@@ -34,112 +34,97 @@ Include ONLY canvases where:
 
 ---
 
-# 📋 Card 1 — Launch Health Matrix
+# 📋 Launch Health Metrics
 
-| Canvas          | First Entry | Entries | Sends | Conversions | Exits | Health | Key Observation      |
-| --------------- | ----------- | ------- | ----- | ----------- | ----- | ------ | -------------------- |
-| Welcome Series  | 18h ago     | 5,212   | 5,108 | 318         | 72    | 🟢     | Healthy launch       |
-| Abandoned Cart  | 27h ago     | 1,155   | 1,148 | 92          | 44    | 🟢     | Healthy launch       |
-| Loyalty Tier Up | 42h ago     | 817     | 804   | 33          | 188   | 🟡     | Exit volume elevated |
-| Prospects Promo | 61h ago     | 17      | 0     | 0           | 0     | 🔴     | Entries but no sends |
+| Canvas      | First Entry | Entries | Sends | Conversions | Health       | Health Reason            |
+| ----------- | ----------- | ------: | ----: | ----------: | ------------ | ------------------------ |
+| Canvas Name | Date/Time   |   Count | Count |       Count | 🟢 / 🟡 / 🔴 | AI-generated explanation |
 
-### Health Logic
+### Health Definitions
 
 🟢 Healthy
 
-* Entries present
-* Sends present
-* Normal progression
+* Entries detected
+* Messages sent
+* Journey progression detected
 
 🟡 Monitoring
 
-* Activity present
+* Activity detected
 * Potential anomaly detected
 
 🔴 At Risk
 
-* Missing sends
-* Missing progression
+* Entries but no sends
+* No progression
 * Abnormally high exits
 * No activity after launch
 
 ---
 
-# 🔍 Card 2 — Journey Integrity Findings
+# 🔍 Key Findings
 
-Display only canvases with issues.
+Provide 3-5 concise findings ranked by operational importance.
 
-### 🔴 Critical
+Examples:
 
-**Prospects Promo**
+* All newly launched canvases are receiving entries and sending messages successfully.
+* No launch-blocking issues detected.
+* One canvas is showing lower than expected entry volume.
+* One canvas has elevated exits after Step 1.
+* One canvas is receiving entries but has not sent messages.
 
-* 17 users entered
-* 0 messages sent
-
-Possible causes:
-
-* Audience filter
-* Message disabled
-* Canvas step configuration
-* Liquid abort logic
-
-### 🟡 Warning
-
-**Loyalty Tier Up**
-
-* Exit volume significantly above peer canvases
-
-Possible causes:
-
-* Conversion event mismatch
-* Eligibility filtering
-* Delay timing issue
+Focus only on findings that require awareness or action.
 
 ---
 
-# ⚠️ Card 3 — Investigation Queue
+# ⚠️ Recommended Actions
 
-| Priority | Canvas          | Issue                      | Recommended Check                  |
-| -------- | --------------- | -------------------------- | ---------------------------------- |
-| P1       | Prospects Promo | No sends after entry       | Message step configuration         |
-| P2       | Loyalty Tier Up | High exits                 | Exit criteria and conversion logic |
-| P3       | Abandoned Cart  | Lower than expected volume | Entry event validation             |
+Provide a prioritized action list.
+
+Format:
+
+1. Highest-priority action
+2. Second-priority action
+3. Third-priority action
+
+Examples:
+
+1. Investigate message delivery configuration for Canvas X.
+2. Review exit criteria in Canvas Y.
+3. Continue monitoring launch volume for Canvas Z.
+
+If no action is required, explicitly state:
+
+"No immediate action required. Continue standard hypercare monitoring."
 
 ---
 
-# 🤖 Card 4 — AI Summary
+# 🚦 Overall Risk Assessment
 
-## What Went Live?
+Provide one of:
 
-* 4 canvases launched in the last 72 hours
+🟢 LOW
 
-## Findings
+No customer-impacting launch issues detected.
 
-* 1 canvas requires immediate investigation
-* 1 canvas requires monitoring
-* 2 canvases operating normally
+🟡 MEDIUM
 
-## Recommended Actions
+Minor launch anomalies detected that require monitoring.
 
-1. Investigate canvases with entries but no sends
-2. Review canvases with elevated exits
-3. Validate entry volume against expected launch forecast
+🔴 HIGH
 
-## Overall Risk
-
-🟡 Medium
-
-```
-Potential customer impact detected in one newly launched journey.
-```
+Customer-impacting launch issues detected requiring immediate investigation.
 
 ---
 
 # Output Rules
 
-* Keep under 300 words
-* Prioritize operational issues
-* Focus on launch validation
-* Surface only actionable findings
-* Do not invent missing metrics
-* Explicitly state when data is unavailable
+* Keep response under 400 words.
+* Prioritize operational health over marketing performance.
+* Focus on launch validation.
+* Surface only actionable insights.
+* Do not invent missing metrics.
+* Explicitly state when data is unavailable.
+* Rank findings by customer impact.
+* The Health Reason column must contain a concise AI-generated explanation for the assigned health status.
