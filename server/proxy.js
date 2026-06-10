@@ -44,8 +44,51 @@ const ATTRIBUTES_APP_GROUP_ID = '6a003bbcb79981004762f2b4';
 
 // ─── KNOWLEDGE LOADER ─────────────────────────────────────────────────────────
 
-function loadKnowledge() {
-  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'sample-canvas-data', 'housekeeping-module.md', 'workspace-health-module.md', 'unused-attributes.md', 'unused-segments.md', 'migration-audit-module.md', 'braze_hypercare_morning_brief.md'];
+// ─── INTENT CLASSIFIER ────────────────────────────────────────────────────────
+
+function classifyIntent(messages) {
+  const lastMessage = messages?.slice?.()?.reverse?.()?.find?.(m => m.role === 'user');
+  const text = (typeof lastMessage?.content === 'string'
+    ? lastMessage.content
+    : lastMessage?.content?.map?.(c => c.text || '').join(' ') || ''
+  ).toLowerCase();
+
+  if (/brief|build|canvas|create|journey|campaign|push|email|sms|message|step|delay|action path|audience path|segment|schedule|launch|deploy/.test(text)) {
+    return 'canvas_build';
+  }
+  if (/audit|health|review|check|violation|best practice|flag|issue|problem|fix|wrong|broken|stale|duplicate/.test(text)) {
+    return 'audit';
+  }
+  if (/metric|performance|open rate|click|conversion|revenue|report|analytics|results|stats|how did|how is/.test(text)) {
+    return 'metrics';
+  }
+  if (/morning|brief|summary|today|overnight|what happened|update|status/.test(text)) {
+    return 'morning_brief';
+  }
+  if (/liquid|personalise|personalize|variable|default|attribute|template|code|syntax/.test(text)) {
+    return 'liquid';
+  }
+  if (/unused|orphan|cleanup|housekeeping|migration|legacy|archive|delete|redundant/.test(text)) {
+    return 'housekeeping';
+  }
+
+  return 'general';
+}
+
+// ─── KNOWLEDGE LOADER ─────────────────────────────────────────────────────────
+
+const KNOWLEDGE_MAP = {
+  canvas_build: ['best-practice.md', 'client-context.md', 'braze-api-reference.md', 'canvas-brief.md'],
+  audit:        ['best-practice.md', 'workspace-health-module.md', 'client-context.md'],
+  metrics:      ['canvas-metrics-module.md', 'best-practice.md', 'client-context.md'],
+  morning_brief:['braze_hypercare_morning_brief.md', 'workspace-health-module.md', 'best-practice.md'],
+  liquid:       ['client-context.md', 'braze-api-reference.md', 'best-practice.md'],
+  housekeeping: ['housekeeping-module.md', 'unused-attributes.md', 'unused-segments.md', 'migration-audit-module.md'],
+  general:      ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md']
+};
+
+function loadKnowledge(intent = 'general') {
+  const files = KNOWLEDGE_MAP[intent] || KNOWLEDGE_MAP.general;
   return files.map(f => {
     try {
       const content = fs.readFileSync(path.join(CONFIG.knowledgeDir, f), 'utf8');
@@ -56,8 +99,8 @@ function loadKnowledge() {
   }).join('');
 }
 
-function buildSystemPrompt(brazeContext) {
-  const knowledge = loadKnowledge();
+function buildSystemPrompt(brazeContext, intent = 'general') {
+  const knowledge = loadKnowledge(intent);
   return `You are the Braze Copilot — an opinionated, expert AI practitioner for the Braze customer engagement platform.
 
 You work as a senior member of a Braze delivery partner team. You are not a neutral assistant — you have strong, well-reasoned opinions about what good looks like on Braze, and you proactively share them. You catch problems before they ship. You recommend better approaches. You build things.
@@ -985,7 +1028,9 @@ async function handleRequest(req, res) {
       const body = await parseBody(req);
       const { messages, workspaceContext } = body;
 
-      const systemPrompt = buildSystemPrompt(workspaceContext || 'Workspace context not loaded.');
+      const intent = classifyIntent(messages);
+      const systemPrompt = buildSystemPrompt(workspaceContext || 'Workspace context not loaded.', intent);
+      console.log('Intent classified:', intent);
       const result = await callClaude(messages, systemPrompt);
 
       if (result.status !== 200) {
