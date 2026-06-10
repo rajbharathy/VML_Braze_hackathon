@@ -77,6 +77,10 @@
   .bubble strong { font-weight: 600; } .bubble em { font-style: italic; color: var(--text-secondary); }
   .bubble blockquote { border-left: 3px solid var(--brand); padding: 8px 14px; background: var(--brand-light); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 10px 0; color: var(--brand-dark); font-size: 13px; }
   .bubble hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+  .bubble table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+  .bubble th, .bubble td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+  .bubble th { background: var(--surface-2); font-weight: 600; color: var(--text-primary); }
+  .bubble tbody tr:nth-child(even) { background: var(--surface-2); }
   .canvas-action { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
   .build-canvas-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-sm); padding: 9px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font); transition: background 0.15s; }
   .build-canvas-btn:hover { background: var(--brand-dark); }
@@ -533,6 +537,14 @@ function renderMarkdown(text) {
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/^### (.+)$/gm, '<h3>$1</h3>').replace(/^## (.+)$/gm, '<h2>$1</h2>').replace(/^# (.+)$/gm, '<h1>$1</h1>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^\|(.+)\|[ \t]*\n\|[ \t]*:?-+:?[ \t]*(?:\|[ \t]*:?-+:?[ \t]*)*\|[ \t]*\n((?:\|.*\|[ \t]*\n?)*)/gm, (_, headerRow, bodyRows) => {
+      const splitCells = row => row.replace(/^\s*\||\|\s*$/g, '').split('|').map(c => c.trim());
+      const headers = splitCells(headerRow);
+      const rows = bodyRows.split('\n').filter(line => line.trim()).map(splitCells);
+      let html = '<table><thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+      rows.forEach(cells => { html += '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>'; });
+      return html + '</tbody></table>';
+    })
     .replace(/^---$/gm, '<hr>').replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
     .replace(/^\* (.+)$/gm, '<li>$1</li>').replace(/^- (.+)$/gm, '<li>$1</li>').replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
     .replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>').replace(/<\/ul>\s*<ul>/g, '')

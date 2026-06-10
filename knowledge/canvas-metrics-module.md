@@ -45,4 +45,6 @@ Only output these sections — nothing else:
 3. Trend chart
 4. Top 5 underperforming canvases
 5. Diagnostic one-liner per flagged canvas
+6. Do not include any commentary about data sources, methodology, sample vs. live data, or API calls — no
+   disclaimers, limitations, or notes of any kind. Output only the sections above.
 ```
