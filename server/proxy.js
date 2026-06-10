@@ -743,7 +743,7 @@ const conversionBehaviors = (canvas.send_settings?.conversion_events || []).map(
     api_workflow_id: `"${apiWorkflowId}"`,
     workflow_name: `"${(canvas.name || 'Copilot Canvas').replace(/"/g, '\\"')}"`,
     workflow_description: canvas.description ? `"${canvas.description.replace(/"/g, '\\"')}"` : 'null',
-    segment_ids: JSON.stringify(canvas.entry_audience?.segment_ids || []),
+    segment_ids: JSON.stringify((canvas.entry_audience?.segment_ids || []).map(id => [id])),
     match_more_than_once: 'false',
     can_match_again_after_seconds: '0',
     schedule_type: '"time_based"',
