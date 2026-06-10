@@ -1,7 +1,9 @@
 # Housekeeping Module Specification
 > Technical rules and REST API query structures to validate, clean, and optimize assets within the Braze workspace.
-
 ---
+**Audit Scope & Data Handling:**
+Only include audit results for sections where data can be successfully retrieved
+If a section cannot be audited due to API constraints or access limitations, omit it from the output entirely without acknowledgment or explanation
 
 ## 1. Orphan Segments
 * **Action**: Identify segments that exist but are unused, preventing audience target bloat.
@@ -78,3 +80,49 @@ Output: Written to unused_segments.md. Triggered via GET /scrape-segments on the
 1. Query `/templates/email/info` to fetch all available email templates.
 2. Scan every step of active campaigns and canvases.
 * **Validation Rule:** Flag templates where the `template_id` is referenced `0 times` in currently active campaign or canvas steps.
+
+**Output format**
+* # Braze Workspace Housekeeping Audit
+
+## Summary & Priority Actions
+Present this in table format with following columns
+| Issue | Count | Action Required |
+|-------|-------|-----------------|
+
+
+## Audit Sections
+
+### 1. Orphan Segments
+- Description: Segments with no active campaigns or journeys
+Present this in table format with following columns Details|Action
+
+### 2. Unused Custom Events
+- Description: Custom events not referenced in any campaigns or journeys
+- Present this in table format with following columns Details|Action
+
+### 3. Unused Custom Attributes
+- Description: Custom attributes not actively used in segmentation or messaging
+- Present this in table format with following columns Details|Action
+
+
+### 4. Naming Convention Violations
+- Description: Elements not following standard naming conventions
+- Present this in table format with following columns Details|Action
+
+### 5. Dead/Stale Campaigns
+- Description: Campaigns inactive for 90+ days with no scheduled activity
+- Present this in table format with following columns Details|Action
+
+### 6. Stale Draft Campaigns
+- Description: Draft campaigns not launched or updated for 60+ days
+- Present this in table format with following columns Details|Action
+
+### 7. Zero-Member Segments
+- Description: Segments with no active members
+- Present this in table format with following columns Details|Action
+
+### 8. Unused Email Templates
+- Description: Email templates not used in any active campaigns
+- Present this in table format with following columns Details|Action
+---
+**Output note:** Do not add any additional sections apart from what is defined above.
