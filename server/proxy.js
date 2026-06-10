@@ -39,10 +39,13 @@ const CONFIG = {
   knowledgeDir: path.join(__dirname, '../knowledge')
 };
 
+// Used for Dashboard API calls (custom attribute usage scan)
+const ATTRIBUTES_APP_GROUP_ID = '6a003bbcb79981004762f2b4';
+
 // ─── KNOWLEDGE LOADER ─────────────────────────────────────────────────────────
 
 function loadKnowledge() {
-  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'housekeeping-module.md', 'workspace-health-module.md'];
+  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'housekeeping-module.md', 'workspace-health-module.md', 'unused-attributes.md'];
   return files.map(f => {
     try {
       const content = fs.readFileSync(path.join(CONFIG.knowledgeDir, f), 'utf8');
@@ -153,6 +156,21 @@ async function brazeGet(path) {
   });
 }
 
+async function brazeDashboardGet(urlPath) {
+  return httpsRequest({
+    hostname: CONFIG.brazeDashboardEndpoint,
+    path: urlPath,
+    method: 'GET',
+    headers: {
+      'accept': 'application/json',
+      'x-requested-with': 'XMLHttpRequest',
+      'x-csrf-token': CONFIG.brazeCsrfToken,
+      'cookie': `_session_id=${CONFIG.brazeSessionId}; remember_login_enc_v1=${CONFIG.brazeRememberToken}; ag_id___6a27c8bab79981004762ea60=${ATTRIBUTES_APP_GROUP_ID}; f_ag_id___6a27c8bab79981004762ea60=${ATTRIBUTES_APP_GROUP_ID}`,
+      'user-agent': 'Mozilla/5.0'
+    }
+  });
+}
+
 async function loadWorkspaceContext() {
   try {
     const [campaigns, canvases, segments, customAttributes] = await Promise.all([
@@ -193,6 +211,49 @@ ${attrList}`;
   } catch (e) {
     return `Unable to load live workspace context: ${e.message}`;
   }
+}
+
+// ─── CUSTOM ATTRIBUTE USAGE SCRAPER ───────────────────────────────────────────
+
+async function scrapeUnusedAttributes() {
+  const listPath =
+    `/app_settings/custom_attributes_data?limit=1000&sortby=name&sortdir=1&start=0` +
+    `&app_group_id=${ATTRIBUTES_APP_GROUP_ID}` +
+    `&query%5B0%5D%5Bkey%5D=blacklisted&query%5B0%5D%5Bvalue%5D=all` +
+    `&query%5B1%5D%5Bkey%5D=&query%5B1%5D%5Bvalue%5D=`;
+
+  const listResult = await brazeDashboardGet(listPath);
+  const all = listResult.body.results || [];
+
+  const unused = [];
+  for (const attr of all) {
+    const encoded = encodeURIComponent(attr.name);
+    const usageResult = await brazeDashboardGet(
+      `/app_settings/custom_attributes_values?name=${encoded}&app_group_id=${ATTRIBUTES_APP_GROUP_ID}`
+    );
+    const usage = usageResult.body;
+    if (usage && typeof usage.total === 'number' && usage.total === 0) unused.push(attr);
+  }
+
+  const typeMap = { TrueClass: 'Boolean', FalseClass: 'Boolean', String: 'String', Integer: 'Integer', Array: 'Array', Time: 'Date/Time' };
+  const rows = unused.length
+    ? unused.map(a => `| \`${a.name}\` | ${typeMap[a.detected_data_type] || a.detected_data_type || '—'} | ${a.updated_at ? new Date(a.updated_at).toLocaleDateString('en-GB') : 'Never'} |`).join('\n')
+    : '| — | No unused attributes found | — |';
+
+  const md = `# Unused Braze Custom Attributes
+
+> **Generated:** ${new Date().toLocaleString('en-GB')}
+> **Total scanned:** ${all.length} | **Unused:** ${unused.length}
+
+---
+
+| Attribute Name | Type | Last Updated |
+|----------------|------|--------------|
+${rows}
+`;
+
+  fs.writeFileSync(path.join(CONFIG.knowledgeDir, 'unused-attributes.md'), md, 'utf8');
+  return { total: all.length, unused: unused.length, attributes: unused };
 }
 
 // ─── BRAZE CANVAS WRITE ───────────────────────────────────────────────────────
@@ -871,6 +932,18 @@ async function handleRequest(req, res) {
       console.log('Config updated — session and CSRF token refreshed');
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+  // ── Scrape unused custom attributes ───────────────────────────────────────
+  if (req.method === 'GET' && pathname === '/scrape-attributes') {
+    try {
+      const result = await scrapeUnusedAttributes();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(result));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: e.message }));

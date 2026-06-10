@@ -171,6 +171,13 @@
       </div>
     </div>
 
+    <div class="sidebar-section">
+      <div class="sidebar-label">Scan Attributes</div>
+      <div class="capability-list">
+        <div class="capability-item" onclick="scanAttributes()"><span class="cap-icon">🔍</span> Scan unused attributes</div>
+      </div>
+    </div>
+
     <div class="context-panel">
       <div class="sidebar-label">Workspace snapshot</div>
       <div id="contextPanel">
@@ -321,6 +328,20 @@ function sendPrompt(text) {
   const input = document.getElementById('messageInput');
   input.value = text;
   sendMessage();
+}
+
+async function scanAttributes() {
+  setStatus('loading', 'Scanning attribute usage...');
+  try {
+    const res = await fetch(`${PROXY_URL}/scrape-attributes`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    setStatus('ok', 'Workspace loaded');
+    sendPrompt(`I just ran a live custom attribute usage scan — ${data.unused} of ${data.total} attributes have zero user adoption. Show me the full list of unused attributes with their types and last updated dates, and recommend what to do with them.`);
+  } catch (e) {
+    setStatus('error', 'Scan failed');
+    alert(`Attribute scan failed: ${e.message}`);
+  }
 }
  
 async function sendMessage() {
