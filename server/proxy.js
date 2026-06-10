@@ -358,8 +358,9 @@ async function createCanvas(canvasPayload) {
   }
 
   // Build Braze steps array from copilot steps
-  let brazeSteps = [];
+ let brazeSteps = [];
   let firstMessageStepId = null;
+  let firstCanvasStepId = null;
 
   copilotSteps.forEach((step, i) => {
     const key = step.id || step.name || `step_${i}`;
@@ -559,7 +560,7 @@ async function createCanvas(canvasPayload) {
         filters: null,
         exclusion_filters: null
       });
-
+if (!firstCanvasStepId) firstCanvasStepId = messageStepId;
       // MESSAGE connector step — different step_id, points to next step
       brazeSteps.push({
         step_id: messageStepId,
@@ -576,47 +577,90 @@ async function createCanvas(canvasPayload) {
       });
 
     } else if (type === 'action_path' || type === 'audience_path' || type === 'decision_split') {
-      // For branching steps — create as a basic FULL step pointing to first path's next step
-      const paths = (step.paths || step.action_path_settings?.paths || step.audience_path_settings?.paths || []);
-      const firstNextRef = paths[0]?.next_step_id || step.next_step_id;
-      const firstNextId = resolveNextId(firstNextRef);
+      const paths = step.paths || step.action_path_settings?.paths || step.audience_path_settings?.paths || [];
+      const window = step.window || step.action_path_settings?.window || {};
+      const durationSecs = (() => {
+        const val = window.duration || 1;
+        const unit = (window.unit || window.duration_unit || 'days').toLowerCase();
+        if (unit === 'hours') return val * 3600;
+        if (unit === 'days') return val * 86400;
+        return val * 86400;
+      })();
+
+      // Find the previous message step ID for email open tracking
+      const prevMessageStepId = (() => {
+        for (let j = i - 1; j >= 0; j--) {
+          if ((copilotSteps[j].type || '').toLowerCase() === 'message') {
+            const key = copilotSteps[j].id || copilotSteps[j].name || `step_${j}`;
+            return stepIdMap[key];
+          }
+        }
+        return null;
+      })();
+
+      const actionPaths = paths.map(p => {
+        const filters = p.filters || [];
+        const nextId = resolveNextId(p.next_step || p.next_step_id) || null;
+
+        // Determine trigger event type from filter
+        const triggerEvents = filters.map(f => {
+          if (f.type === 'email_open' || f.type === 'email_opened') {
+            return {
+              event_type: 'TrackedUserBehavior::InteractedWithWorkflowStep',
+              blocklisted: false,
+              has_hard_deleted_data: false,
+              interaction: 'oe',
+              workflow_step_id: prevMessageStepId
+            };
+          }
+          if (f.type === 'email_click' || f.type === 'email_clicked') {
+            return {
+              event_type: 'TrackedUserBehavior::InteractedWithWorkflowStep',
+              blocklisted: false,
+              has_hard_deleted_data: false,
+              interaction: 'ce',
+              workflow_step_id: prevMessageStepId
+            };
+          }
+          if (f.type === 'custom_event') {
+            return {
+              event_type: 'TrackedUserBehavior::PerformedCustomEvent',
+              blocklisted: false,
+              has_hard_deleted_data: false,
+              custom_event_name: f.custom_event_name || ''
+            };
+          }
+          return null;
+        }).filter(Boolean);
+
+        return {
+          id: generateObjectId(),
+          name: p.name || 'Path',
+          exits_canvas: false,
+          next_step_id: nextId,
+          trigger_events: triggerEvents
+        };
+      });
 
       brazeSteps.push({
         step_id: stepId,
-        step_name: step.name || 'Branch',
-        next_step_ids: firstNextId ? [firstNextId] : [],
+        step_name: step.name || 'Action Path',
+        next_step_ids: [],
         row, column: col,
         is_control_step: false,
-        type: 'FULL',
+        type: 'ACTION_PATHS',
         id_eagerly_created: true,
-        push_max_enabled: false,
-        banner_priority_bucket: 2,
-        banner_priority_for_unpersisted_step: null,
-        ms_id: firstNextId || null,
-        forced_advancement_behavior: true,
-        messages: { messaging_actions: [], composition_mode: 'quick-push-multichannel' },
-        segment_ids: [],
-        attached_images_ids: [],
-        ignore_workflow_quiet_time: false,
-        trigger_schedule: {
-          start_time: startTime,
-          limit_end: false, end_time: null,
-          deliver_in_local_time: true,
-          send_after_quiet_time: false,
-          quiet_start_hour: 0, quiet_start_minute: '00',
-          quiet_end_hour: 8, quiet_end_minute: '00',
-          trigger_events: [], exception_events: [],
-          trigger_delay_in_seconds: 0, duration_in_seconds: 0,
-          reevaluate_segment_at_send_time: true,
-          evaluate_segment_at_enqueue_time: false,
-          delivery_time_without_zone: null, delivery_day: null, deliver_in_days: null,
-          optimal_time_notification: false,
-          delay_option: 'immediately',
-          retry_window_seconds: 0
+        step_data: {
+          has_ranked_order: false,
+          advance_immediately: false,
+          everyone_else_exits_canvas: false,
+          action_paths: actionPaths,
+          duration_in_seconds: durationSecs,
+          duration_variable: null,
+          duration_variable_type: null,
+          duration_variable_unit: null
         },
-        delivery_validation_failure_behavior: 'exit',
-        using_v2_filters: true,
-        filters: null, exclusion_filters: null
+        is_disconnected: false
       });
 
     } else if (type === 'exit') {
@@ -717,7 +761,7 @@ async function createCanvas(canvasPayload) {
       send_percentage: v.percentage || v.weight || (i === 0 ? 90 : 10),
       initial_send_percentage: v.percentage || v.weight || (i === 0 ? 90 : 10),
       first_step_ids: [],
-      first_canvas_step_id: brazeSteps[0]?.step_id || null,
+     first_canvas_step_id: firstCanvasStepId || brazeSteps[0]?.step_id || null,
       is_control: v.name?.toLowerCase().includes('control') || false
     }));
   } else {
@@ -728,7 +772,7 @@ async function createCanvas(canvasPayload) {
       send_percentage: 100,
       initial_send_percentage: 100,
       first_step_ids: [],
-      first_canvas_step_id: brazeSteps[0]?.step_id || null,
+first_canvas_step_id: firstCanvasStepId || brazeSteps[0]?.step_id || null,
       is_control: false
     }];
   }
