@@ -5,8 +5,8 @@
       "canvas_name": "Campari Welcome Series - Discover the Icon",
       "details": {
         "message": "success",
-        "created_at": "2024-03-15T08:30:00Z",
-        "updated_at": "2024-05-22T14:20:00Z",
+        "created_at": "2026-03-15T08:30:00Z",
+        "updated_at": "2026-05-22T14:20:00Z",
         "name": "Campari Welcome Series - Discover the Icon",
         "description": "First-time user onboarding introducing Campari's Italian heritage, distinctive bitter-herbal profile, and aperitivo tradition",
         "archived": false,
@@ -14,8 +14,8 @@
         "enabled": true,
         "has_post_launch_draft": false,
         "schedule_type": "action_based",
-        "first_entry": "2024-03-15T08:30:00Z",
-        "last_entry": "2024-05-22T16:45:00Z",
+        "first_entry": "2026-03-15T08:30:00Z",
+        "last_entry": "2026-05-22T16:45:00Z",
         "channels": ["email", "in_app_message", "push"],
         "variants": [
           {
@@ -38,7 +38,7 @@
           "name": "Campari Welcome Series - Discover the Icon",
           "stats": [
             {
-              "time": "2024-03-15T00:00:00Z",
+              "time": "2026-03-15T00:00:00Z",
               "total_stats": {
                 "revenue": 0.0,
                 "conversions": 0,
@@ -81,7 +81,7 @@
               }
             },
             {
-              "time": "2024-03-20T00:00:00Z",
+              "time": "2026-03-20T00:00:00Z",
               "total_stats": {
                 "revenue": 45.99,
                 "conversions": 8,
@@ -140,7 +140,7 @@
               }
             },
             {
-              "time": "2024-03-30T00:00:00Z",
+              "time": "2026-03-30T00:00:00Z",
               "total_stats": {
                 "revenue": 89.50,
                 "conversions": 18,
@@ -299,8 +299,8 @@
       "canvas_name": "Campari Summer Campaign - Return to Ritual",
       "details": {
         "message": "success",
-        "created_at": "2024-02-01T10:15:00Z",
-        "updated_at": "2024-06-10T11:30:00Z",
+        "created_at": "2026-02-01T10:15:00Z",
+        "updated_at": "2026-06-10T11:30:00Z",
         "name": "Campari Summer Campaign - Return to Ritual",
         "description": "Reengagement for inactive users with seasonal aperitivo inspiration and exclusive summer promotions",
         "archived": false,
@@ -308,8 +308,8 @@
         "enabled": true,
         "has_post_launch_draft": true,
         "schedule_type": "date",
-        "first_entry": "2024-02-01T10:15:00Z",
-        "last_entry": "2024-06-10T15:20:00Z",
+        "first_entry": "2026-02-01T10:15:00Z",
+        "last_entry": "2026-06-10T15:20:00Z",
         "channels": ["email", "sms", "push"],
         "variants": [
           {
@@ -327,7 +327,7 @@
           "name": "Campari Summer Campaign - Return to Ritual",
           "stats": [
             {
-              "time": "2024-02-01T00:00:00Z",
+              "time": "2026-02-01T00:00:00Z",
               "total_stats": {
                 "revenue": 342.75,
                 "conversions": 15,
@@ -363,7 +363,7 @@
               }
             },
             {
-              "time": "2024-02-10T00:00:00Z",
+              "time": "2026-02-10T00:00:00Z",
               "total_stats": {
                 "revenue": 612.40,
                 "conversions": 32,
@@ -419,7 +419,7 @@
               }
             },
             {
-              "time": "2024-02-15T00:00:00Z",
+              "time": "2026-02-15T00:00:00Z",
               "total_stats": {
                 "revenue": 756.80,
                 "conversions": 42,
@@ -573,8 +573,8 @@
       "canvas_name": "Campari Connoisseur Circle - VIP Engagement",
       "details": {
         "message": "success",
-        "created_at": "2024-04-12T16:45:00Z",
-        "updated_at": "2024-06-08T13:15:00Z",
+        "created_at": "2026-04-12T16:45:00Z",
+        "updated_at": "2026-06-08T13:15:00Z",
         "name": "Campari Connoisseur Circle - VIP Engagement",
         "description": "Behavior-triggered engagement for premium users based on purchase frequency and brand affinity, featuring exclusive products and events",
         "archived": false,
@@ -582,8 +582,8 @@
         "enabled": true,
         "has_post_launch_draft": false,
         "schedule_type": "action_based",
-        "first_entry": "2024-04-12T16:45:00Z",
-        "last_entry": "2024-06-08T19:30:00Z",
+        "first_entry": "2026-04-12T16:45:00Z",
+        "last_entry": "2026-06-08T19:30:00Z",
         "channels": ["email", "push", "in_app_message"],
         "variants": [
           {
@@ -601,7 +601,7 @@
           "name": "Campari Connoisseur Circle - VIP Engagement",
           "stats": [
             {
-              "time": "2024-04-12T00:00:00Z",
+              "time": "2026-04-12T00:00:00Z",
               "total_stats": {
                 "revenue": 487.50,
                 "conversions": 6,
@@ -637,7 +637,7 @@
               }
             },
             {
-              "time": "2024-04-25T00:00:00Z",
+              "time": "2026-04-25T00:00:00Z",
               "total_stats": {
                 "revenue": 892.75,
                 "conversions": 13,
@@ -689,7 +689,7 @@
               }
             },
             {
-              "time": "2024-05-10T00:00:00Z",
+              "time": "2026-05-10T00:00:00Z",
               "total_stats": {
                 "revenue": 1156.25,
                 "conversions": 18,
@@ -835,8 +835,8 @@
       "canvas_name": "Campari Order Journey - Delivery & Delight",
       "details": {
         "message": "success",
-        "created_at": "2024-05-20T09:00:00Z",
-        "updated_at": "2024-06-09T12:35:00Z",
+        "created_at": "2026-05-20T09:00:00Z",
+        "updated_at": "2026-06-09T12:35:00Z",
         "name": "Campari Order Journey - Delivery & Delight",
         "description": "Transactional messaging for premium spirit orders with tracking, tasting notes, and aperitivo pairing suggestions",
         "archived": false,
@@ -844,8 +844,8 @@
         "enabled": true,
         "has_post_launch_draft": false,
         "schedule_type": "action_based",
-        "first_entry": "2024-05-20T09:00:00Z",
-        "last_entry": "2024-06-09T18:15:00Z",
+        "first_entry": "2026-05-20T09:00:00Z",
+        "last_entry": "2026-06-09T18:15:00Z",
         "channels": ["email", "sms"],
         "variants": [
           {
@@ -863,7 +863,7 @@
           "name": "Campari Order Journey - Delivery & Delight",
           "stats": [
             {
-              "time": "2024-05-20T00:00:00Z",
+              "time": "2026-05-20T00:00:00Z",
               "total_stats": {
                 "revenue": 1847.60,
                 "conversions": 92,
@@ -899,7 +899,7 @@
               }
             },
             {
-              "time": "2024-05-25T00:00:00Z",
+              "time": "2026-05-25T00:00:00Z",
               "total_stats": {
                 "revenue": 2156.80,
                 "conversions": 108,
@@ -955,7 +955,7 @@
               }
             },
             {
-              "time": "2024-06-01T00:00:00Z",
+              "time": "2026-06-01T00:00:00Z",
               "total_stats": {
                 "revenue": 2428.35,
                 "conversions": 121,
@@ -1109,8 +1109,8 @@
       "canvas_name": "Campari Weekly - The Aperitivo Hour",
       "details": {
         "message": "success",
-        "created_at": "2024-01-10T07:00:00Z",
-        "updated_at": "2024-06-07T06:30:00Z",
+        "created_at": "2026-01-10T07:00:00Z",
+        "updated_at": "2026-06-07T06:30:00Z",
         "name": "Campari Weekly - The Aperitivo Hour",
         "description": "Scheduled weekly newsletter featuring classic & contemporary recipes, bartender wisdom, and the stories behind Campari's heritage",
         "archived": false,
@@ -1118,8 +1118,8 @@
         "enabled": true,
         "has_post_launch_draft": true,
         "schedule_type": "recurring",
-        "first_entry": "2024-01-10T07:00:00Z",
-        "last_entry": "2024-06-07T07:00:00Z",
+        "first_entry": "2026-01-10T07:00:00Z",
+        "last_entry": "2026-06-07T07:00:00Z",
         "channels": ["email"],
         "variants": [
           {
@@ -1137,7 +1137,7 @@
           "name": "Campari Weekly - The Aperitivo Hour",
           "stats": [
             {
-              "time": "2024-01-10T07:00:00Z",
+              "time": "2026-01-10T07:00:00Z",
               "total_stats": {
                 "revenue": 342.50,
                 "conversions": 28,
@@ -1173,7 +1173,7 @@
               }
             },
             {
-              "time": "2024-02-14T07:00:00Z",
+              "time": "2026-02-14T07:00:00Z",
               "total_stats": {
                 "revenue": 521.75,
                 "conversions": 44,
@@ -1209,7 +1209,7 @@
               }
             },
             {
-              "time": "2024-03-20T07:00:00Z",
+              "time": "2026-03-20T07:00:00Z",
               "total_stats": {
                 "revenue": 618.90,
                 "conversions": 52,
@@ -1245,7 +1245,7 @@
               }
             },
             {
-              "time": "2024-04-17T07:00:00Z",
+              "time": "2026-04-17T07:00:00Z",
               "total_stats": {
                 "revenue": 742.65,
                 "conversions": 63,
@@ -1281,7 +1281,7 @@
               }
             },
             {
-              "time": "2024-05-15T07:00:00Z",
+              "time": "2026-05-15T07:00:00Z",
               "total_stats": {
                 "revenue": 895.30,
                 "conversions": 76,

@@ -5,9 +5,9 @@ STEP 1 — FETCH
 Call GET /canvas/list?status=active. Only analyse active canvases. Never include draft, stopped, or archived.
 
 STEP 2 — CLASSIFY
-Classify each canvas by re_entry_settings.is_enabled:
-- true = Recurring
-- false = One-Time
+Classify each canvas by details.schedule_type:
+- "recurring" = Recurring
+- "action_based" or "date" (or any other value) = One-Time
 
 STEP 3 — METRIC FILTERING
 | Metric        | One-Time                              | Recurring                                      |
@@ -16,7 +16,7 @@ STEP 3 — METRIC FILTERING
 | Conversion    | Compare vs. account baseline          | Compare vs. segment baseline in re-entry window|
 | Messages Sent | Cumulative delivery check             | Frequency cap + re-entry window                |
 | Exits         | Noise unless explicit exit criteria   | High relevance — monitor trends                |
-| Errors        | Focus on launch/entry spike           | Rolling window matching re-entry logic         |
+| Errors        | Delivery failure rate (delivery_failed + bounces + rejected + opt_out vs. sent, per channel), focus on launch/entry spike | Delivery failure rate within rolling re-entry window |
 
 STEP 4 — TREND CHART
 - One-Time canvas → Entry-Date Cohort Distribution Chart
@@ -25,7 +25,7 @@ STEP 4 — TREND CHART
 STEP 5 — UNDERPERFORMING CANVASES
 Flag top 5 canvases from the last 7 days if either condition is met:
 - Conversion rate < 5% OR 5% below account-wide baseline
-- Step error rate > 2% of total sends
+- Step delivery failure rate (delivery_failed + bounces + rejected + opt_out ÷ sent, per channel) > 2% of total sends
 
 STEP 6 — DIAGNOSTICS
 Output one diagnostic line per flagged canvas:
@@ -33,7 +33,7 @@ Output one diagnostic line per flagged canvas:
 |----------------------------------------|---------------------------------------------------------------|
 | Low entries + re-entry disabled        | "Low entries detected. Verify re-entry limits."               |
 | Exit spike at a branch                 | "High exits on Step [X]. Evaluate exit conditions."           |
-| Webhook errors elevated                | "Webhook error rate [X]%. Check payload and endpoint."        |
+| Delivery failure rate elevated         | "Delivery failure rate [X]% on Step [X] ([channel]). Check delivery_failed/bounces/rejected/opt_out." |
 
 OUTPUT RULES
 Only output these sections — nothing else:
