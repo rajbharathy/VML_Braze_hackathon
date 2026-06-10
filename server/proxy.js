@@ -414,6 +414,9 @@ async function createCanvas(canvasPayload) {
       const messagingActions = [];
 
       if (email.subject || email.body) {
+        const fromRaw = email.from || email.from_address || 'test_user@mail.development.braze.com';
+        const fromAddress = fromRaw.replace(/.*<(.+)>.*/, '$1').replace(/<[^>]*>/g, '').trim();
+        const fromName = fromRaw.includes('<') ? fromRaw.replace(/<.*>/, '').trim() : 'Braze';
         messagingActions.push({
           variation_id: `message-${Math.floor(Math.random() * 90000) + 10000}`,
           message_type: 'email',
@@ -422,14 +425,36 @@ async function createCanvas(canvasPayload) {
           link_template_ids: [],
           link_config_set: {},
           draft_link_management_data: '',
-          subject: email.subject || '',
-          preheader: email.preheader || '',
-          from: (email.from || 'test_user@mail.development.braze.com').replace(/<[^>]*>/g, '').trim(),
-          reply_to: email.reply_to || '',
-          body: email.body || '',
+          variant_group_id: null,
+          from_display_name: fromName,
+          from_address: fromAddress,
+          reply_to_address: email.reply_to || null,
+          bcc_address: null,
+          should_send_to_seed_groups: false,
+          seed_group_ids: [],
+          is_control: null,
+          last_sent_email: null,
+          has_included_amp: null,
+          ip_pool_name: 'development',
+          multi_language_composition_setup: null,
+          link_includer_sequence_base: 0,
+          link_includer_sequence_offset: 1,
+          content_block_inclusion_sequence_base: 0,
+          content_block_inclusion_sequence_offset: 0,
+          draft_content_block_mapping: {},
+          links: [],
+          tracked_link_count: null,
+          email_attachments: null,
+          email_subject: email.subject || '',
+          email_body: email.body || '',
+          email_amp_body: '',
+          dnd_template_json: null,
+          is_dnd_template: false,
           plaintext_body: email.plaintext_body || '',
-          should_inline_css: email.should_inline_css !== false,
-          multi_language_composition_setup: null
+          preheader: email.preheader || '',
+          should_whitespace_preheader: false,
+          list_unsubscribe_header_config: { scope: 0 },
+          should_inline_css: email.should_inline_css !== false
         });
       }
 
