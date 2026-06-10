@@ -553,10 +553,10 @@ async function createCanvas(canvasPayload) {
 
   // ── Build conversion behaviors ────────────────────────────────────────────
   const conversionBehaviors = (canvas.send_settings?.conversion_events || []).map(e => ({
-    type: e.conversion_type || 'custom_event',
-    custom_event_name: e.custom_event_name || '',
-    conversion_deadline: e.conversion_deadline || 168
-  }));
+  behavior_type: 'performs_custom_event',
+  custom_event_name: e.custom_event_name || '',
+  conversion_deadline_in_minutes: (e.conversion_deadline || 168) * 60
+})).filter(e => e.custom_event_name);
 
   // ── Build quiet time ──────────────────────────────────────────────────────
   const quietHours = canvas.send_settings?.quiet_hours || {};
