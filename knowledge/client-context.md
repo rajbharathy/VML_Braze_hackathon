@@ -4,6 +4,12 @@
 
 ---
 
+## CRITICAL — Segment IDs
+All segment IDs listed in this document are from the PRODUCTION workspace and are INVALID in the current sandbox environment.
+ALWAYS look up segment IDs from the LIVE WORKSPACE CONTEXT provided in the system prompt — never use IDs from this document.
+
+---
+
 ## Client Overview
 
 **Client name:** Campari Group
