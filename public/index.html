@@ -376,7 +376,8 @@ function appendMessage(role, content) {
   bubble.className = 'bubble';
  
   if (role === 'assistant') {
-    bubble.innerHTML = renderMarkdown(content);
+    const displayContent = content.replace(/<canvas_json>[\s\S]*?<\/canvas_json>/g, '').trim();
+    bubble.innerHTML = renderMarkdown(displayContent);
     // Show build button if response contains canvas_json tags OR canvas JSON fields
     if (content.includes('<canvas_json>') || content.includes('"schedule_type"') || content.includes('"entry_audience"')) {
       const action = document.createElement('div');
