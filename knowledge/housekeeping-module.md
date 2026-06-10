@@ -81,16 +81,16 @@ Output: Written to unused_segments.md. Triggered via GET /scrape-segments on the
 2. Scan every step of active campaigns and canvases.
 * **Validation Rule:** Flag templates where the `template_id` is referenced `0 times` in currently active campaign or canvas steps.
 
-**Output format**
+##Output format
 **Braze Workspace Housekeeping Audit
 
-## Summary & Priority Actions
+### Summary & Priority Actions
 Present this in table format with following columns
 | Issue | Count | Action Required |
 |-------|-------|-----------------|
 
 
-## Audit Sections
+Audit Sections
 
 ### 1. Orphan Segments
 - Description: Segments with no active campaigns or journeys
