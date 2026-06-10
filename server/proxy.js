@@ -45,7 +45,7 @@ const ATTRIBUTES_APP_GROUP_ID = '6a003bbcb79981004762f2b4';
 // ─── KNOWLEDGE LOADER ─────────────────────────────────────────────────────────
 
 function loadKnowledge() {
-  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'housekeeping-module.md', 'workspace-health-module.md', 'unused-attributes.md'];
+  const files = ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md', 'braze-api-reference.md', 'canvas-brief.md', 'canvas-metrics-module.md', 'housekeeping-module.md', 'workspace-health-module.md', 'unused-attributes.md', 'unused-segments.md'];
   return files.map(f => {
     try {
       const content = fs.readFileSync(path.join(CONFIG.knowledgeDir, f), 'utf8');
@@ -254,6 +254,52 @@ ${rows}
 
   fs.writeFileSync(path.join(CONFIG.knowledgeDir, 'unused-attributes.md'), md, 'utf8');
   return { total: all.length, unused: unused.length, attributes: unused };
+}
+
+// ─── ORPHAN SEGMENT SCRAPER ───────────────────────────────────────────────────
+
+async function scrapeUnusedSegments() {
+  const listPath =
+    `/engagement/segments` +
+    `?query%5B0%5D%5Bkey%5D=status&query%5B0%5D%5Bvalue%5D=active` +
+    `&query%5B1%5D%5Bkey%5D=&query%5B1%5D%5Bvalue%5D=` +
+    `&limit=1000&start=0&sortby=last_edited&sortdir=-1` +
+    `&app_group_id=${ATTRIBUTES_APP_GROUP_ID}` +
+    `&fields=description%2Ctags%2Cname%2Cmarked_as_deleted%2Clast_edited_by%2Clast_edited`;
+
+  const listResult = await brazeDashboardGet(listPath);
+  const all = listResult.body.results || [];
+
+  const unused = [];
+  for (const seg of all) {
+    const usageResult = await brazeDashboardGet(`/engagement/segments/${seg.id}/engagements?app_group_id=${ATTRIBUTES_APP_GROUP_ID}`);
+    const usage = usageResult.body;
+    const isUnused =
+      usage.campaigns_using_segment?.count === 0 &&
+      usage.cards_using_segment?.count === 0 &&
+      usage.workflows_using_segment?.count === 0 &&
+      usage.segments_using_segment?.count === 0;
+    if (isUnused) unused.push(seg);
+  }
+
+  const rows = unused.length
+    ? unused.map(s => `| \`${s.name}\` | ${s.description || '—'} | ${s.last_edited ? new Date(s.last_edited).toLocaleDateString('en-GB') : 'Never'} | ${s.last_edited_by?.developer_name || '—'} |`).join('\n')
+    : '| — | No unused segments found | — | — |';
+
+  const md = `# Unused Braze Segments
+
+> **Generated:** ${new Date().toLocaleString('en-GB')}
+> **Total scanned:** ${all.length} | **Unused:** ${unused.length}
+
+---
+
+| Segment Name | Description | Last Edited | Last Edited By |
+|--------------|-------------|-------------|-----------------|
+${rows}
+`;
+
+  fs.writeFileSync(path.join(CONFIG.knowledgeDir, 'unused-segments.md'), md, 'utf8');
+  return { total: all.length, unused: unused.length, segments: unused };
 }
 
 // ─── BRAZE CANVAS WRITE ───────────────────────────────────────────────────────
@@ -942,6 +988,18 @@ async function handleRequest(req, res) {
   if (req.method === 'GET' && pathname === '/scrape-attributes') {
     try {
       const result = await scrapeUnusedAttributes();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(result));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+  // ── Scrape orphan segments ────────────────────────────────────────────────
+  if (req.method === 'GET' && pathname === '/scrape-segments') {
+    try {
+      const result = await scrapeUnusedSegments();
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(result));
     } catch (e) {
