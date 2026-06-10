@@ -82,7 +82,7 @@ Output: Written to unused_segments.md. Triggered via GET /scrape-segments on the
 * **Validation Rule:** Flag templates where the `template_id` is referenced `0 times` in currently active campaign or canvas steps.
 
 **Output format**
-* # Braze Workspace Housekeeping Audit
+**Braze Workspace Housekeeping Audit
 
 ## Summary & Priority Actions
 Present this in table format with following columns
