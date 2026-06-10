@@ -312,59 +312,132 @@ async function createCanvas(canvasPayload) {
 
     } else if (type === 'message') {
       if (!firstMessageStepId) firstMessageStepId = stepId;
+      const messageStepId = generateObjectId(); // separate ID for the MESSAGE connector
+
       const channels = step.channels || step.messages || {};
       const email = channels.email || {};
-    const push = channels.push || {};
-const pushIos = push.ios || channels.push_ios || {};
-const pushAndroid = push.android || channels.push_android || {};
+      const push = channels.push || {};
+      const pushIos = push.ios || channels.push_ios || {};
+      const pushAndroid = push.android || channels.push_android || {};
 
-      // Build messaging_actions
       const messagingActions = [];
 
       if (email.subject || email.body) {
         messagingActions.push({
-          type: 'email',
-          message: {
-            subject: email.subject || '',
-            preheader: email.preheader || '',
-            from: email.from_address ? `${email.from_name || 'Braze'} <${email.from_address}>` : (email.from || ''),
-            reply_to: email.reply_to || '',
-            body: email.body || '',
-            plaintext_body: email.plaintext_body || '',
-            should_inline_css: email.should_inline_css !== false
-          }
+          variation_id: `message-${Math.floor(Math.random() * 90000) + 10000}`,
+          message_type: 'email',
+          send_percentage: 0,
+          is_active: true,
+          link_template_ids: [],
+          link_config_set: {},
+          draft_link_management_data: '',
+          subject: email.subject || '',
+          preheader: email.preheader || '',
+          from: (email.from || 'test_user@mail.development.braze.com').replace(/<[^>]*>/g, '').trim(),
+          reply_to: email.reply_to || '',
+          body: email.body || '',
+          plaintext_body: email.plaintext_body || '',
+          should_inline_css: email.should_inline_css !== false,
+          multi_language_composition_setup: null
         });
       }
 
-      if (push.ios || push.android) {
-       const ios = pushIos;
-const android = pushAndroid;
-if (ios.alert || ios.title) {
-          messagingActions.push({
-            type: 'ios_push',
-            message: {
-              alert: ios.alert || '',
-              title: ios.title || '',
-              deep_link: ios.deep_link || '',
-              time_to_live: ios.time_to_live || 86400
-            }
-          });
-        }
-        if (android.alert || android.title) {
-          messagingActions.push({
-            type: 'android_push',
-            message: {
-              alert: android.alert || '',
-              title: android.title || '',
-              deep_link: android.deep_link || '',
-              time_to_live: android.time_to_live || 86400
-            }
-          });
-        }
+      if (pushIos.alert || pushIos.title) {
+        messagingActions.push({
+          variation_id: `message-${Math.floor(Math.random() * 90000) + 10000}`,
+          message_type: 'iosPush',
+          send_percentage: 0,
+          is_active: true,
+          link_template_ids: [],
+          link_config_set: {},
+          draft_link_management_data: '',
+          ios_push_message: pushIos.alert || '',
+          ios_push_category: null,
+          ios_alert_hash: { title: pushIos.title || '' },
+          ios_uri_type: 'NONE',
+          multi_language_composition_setup: null,
+          ios_uri: pushIos.deep_link || null,
+          ios_use_webview: true,
+          ios_only_most_recent_device: false,
+          ios_only_ipads: false,
+          ios_only_iphones: false,
+          ios_push_buttons: [],
+          ios_interruption_level: 'active'
+        });
       }
 
+      if (pushAndroid.alert || pushAndroid.title) {
+        messagingActions.push({
+          variation_id: `message-${Math.floor(Math.random() * 90000) + 10000}`,
+          message_type: 'androidPush',
+          send_percentage: 0,
+          is_active: true,
+          link_template_ids: [],
+          link_config_set: {},
+          draft_link_management_data: '',
+          android_title: pushAndroid.title || '',
+          android_push_message: pushAndroid.alert || '',
+          android_priority: 0,
+          android_uri_type: 'NONE',
+          android_custom_uri: pushAndroid.deep_link || null,
+          android_only_most_recent_device: false,
+          android_use_webview: true,
+          is_notification_channel_dynamic: false,
+          android_carousel_type: null,
+          notification_channel_id: null,
+          android_time_to_live: pushAndroid.time_to_live || 2419200,
+          android_fcm_priority: 'normal',
+          android_push_buttons: [],
+          multi_language_composition_setup: null
+        });
+      }
+
+      // FULL step with message content
       brazeSteps.push({
         step_id: stepId,
+        step_name: step.name || 'Message',
+        next_step_ids: [],
+        row, column: col,
+        is_control_step: false,
+        type: 'FULL',
+        id_eagerly_created: true,
+        push_max_enabled: false,
+        banner_priority_bucket: 2,
+        banner_priority_for_unpersisted_step: null,
+        ms_id: messageStepId,
+        forced_advancement_behavior: true,
+        messages: messagingActions.length > 0
+          ? { messaging_actions: messagingActions, composition_mode: 'quick-push-multichannel' }
+          : { unchanged: true },
+        segment_ids: [],
+        attached_images_ids: [],
+        ignore_workflow_quiet_time: false,
+        trigger_schedule: {
+          start_time: startTime,
+          limit_end: false, end_time: null,
+          deliver_in_local_time: true,
+          send_after_quiet_time: false,
+          quiet_start_hour: 0, quiet_start_minute: '00',
+          quiet_end_hour: 8, quiet_end_minute: '00',
+          trigger_events: [], exception_events: [],
+          trigger_delay_in_seconds: 0, duration_in_seconds: 0,
+          reevaluate_segment_at_send_time: true,
+          evaluate_segment_at_enqueue_time: false,
+          delivery_time_without_zone: null,
+          delivery_day: null, deliver_in_days: null,
+          optimal_time_notification: false,
+          delay_option: 'immediately',
+          retry_window_seconds: 0
+        },
+        delivery_validation_failure_behavior: 'exit',
+        using_v2_filters: true,
+        filters: null,
+        exclusion_filters: null
+      });
+
+      // MESSAGE connector step — different step_id, points to next step
+      brazeSteps.push({
+        step_id: messageStepId,
         step_name: step.name || 'Message',
         next_step_ids: nextIds,
         row, column: col,
@@ -374,11 +447,7 @@ if (ios.alert || ios.title) {
         push_max_enabled: false,
         banner_priority_bucket: 2,
         banner_priority_for_unpersisted_step: null,
-        is_disconnected: false,
-        messages: {
-          messaging_actions: messagingActions,
-          composition_mode: 'quick-push-multichannel'
-        }
+        is_disconnected: false
       });
 
     } else if (type === 'action_path' || type === 'audience_path' || type === 'decision_split') {
