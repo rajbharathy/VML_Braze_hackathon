@@ -552,11 +552,15 @@ async function createCanvas(canvasPayload) {
   });
 
   // ── Build conversion behaviors ────────────────────────────────────────────
-  const conversionBehaviors = (canvas.send_settings?.conversion_events || []).map(e => ({
-  behavior_type: 'performs_custom_event',
-  custom_event_name: e.custom_event_name || '',
-  conversion_deadline_in_minutes: (e.conversion_deadline || 168) * 60
-})).filter(e => e.custom_event_name);
+const conversionBehaviors = (canvas.send_settings?.conversion_events || []).map(e => ({
+    event_type: 'TrackedUserBehavior::PerformedCustomEvent',
+    blocklisted: null,
+    has_hard_deleted_data: null,
+    custom_event_name: e.custom_event_name || '',
+    property_filters: [],
+    unadjusted_behavior_window_in_seconds: (e.conversion_deadline || 168) * 3600,
+    performed_behavior_window_in_seconds: (e.conversion_deadline || 168) * 3600
+  })).filter(e => e.custom_event_name);
 
   // ── Build quiet time ──────────────────────────────────────────────────────
   const quietHours = canvas.send_settings?.quiet_hours || {};
@@ -613,9 +617,9 @@ async function createCanvas(canvasPayload) {
     start_offloading_retargeting_data_at: '0',
     ready_to_offload_retargeting_data: 'null',
     conversion_behaviors: JSON.stringify(conversionBehaviors),
-    exit_criteria: '{"segment_ids":[],"exit_event":[],"filters_unchanged":true,"using_v2_filters":true}',
+  exit_criteria: '{"segment_ids":[],"exit_event":[],"filters_unchanged":true,"using_v2_filters":false}',
     filters_unchanged: 'true',
-    using_v2_filters: 'true',
+    using_v2_filters: 'false',
     schedule: schedule,
     steps: JSON.stringify(brazeSteps),
     step_count: String(brazeSteps.length),
