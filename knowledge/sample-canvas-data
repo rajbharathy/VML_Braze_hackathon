@@ -1,0 +1,1362 @@
+{
+  "canvases": [
+    {
+      "canvas_id": "campari_welcome_001",
+      "canvas_name": "Campari Welcome Series - Discover the Icon",
+      "details": {
+        "message": "success",
+        "created_at": "2024-03-15T08:30:00Z",
+        "updated_at": "2024-05-22T14:20:00Z",
+        "name": "Campari Welcome Series - Discover the Icon",
+        "description": "First-time user onboarding introducing Campari's Italian heritage, distinctive bitter-herbal profile, and aperitivo tradition",
+        "archived": false,
+        "draft": false,
+        "enabled": true,
+        "has_post_launch_draft": false,
+        "schedule_type": "action_based",
+        "first_entry": "2024-03-15T08:30:00Z",
+        "last_entry": "2024-05-22T16:45:00Z",
+        "channels": ["email", "in_app_message", "push"],
+        "variants": [
+          {
+            "name": "Welcome Variant A - Heritage",
+            "id": "campari_welcome_var_a",
+            "first_step_ids": ["welcome_step_1"]
+          },
+          {
+            "name": "Welcome Variant B - Modern",
+            "id": "campari_welcome_var_b",
+            "first_step_ids": ["welcome_step_1b"]
+          }
+        ],
+        "tags": ["welcome", "onboarding", "new_user", "aperitivo", "campari"],
+        "teams": ["Marketing Team", "Growth"]
+      },
+      "data_series": {
+        "message": "success",
+        "data": {
+          "name": "Campari Welcome Series - Discover the Icon",
+          "stats": [
+            {
+              "time": "2024-03-15T00:00:00Z",
+              "total_stats": {
+                "revenue": 0.0,
+                "conversions": 0,
+                "conversions_by_entry_time": 0,
+                "entries": 12
+              },
+              "variant_stats": {
+                "campari_welcome_var_a": {
+                  "name": "Welcome Variant A - Heritage",
+                  "revenue": 0.0,
+                  "conversions": 0,
+                  "conversions_by_entry_time": 0,
+                  "entries": 6
+                },
+                "campari_welcome_var_b": {
+                  "name": "Welcome Variant B - Modern",
+                  "revenue": 0.0,
+                  "conversions": 0,
+                  "conversions_by_entry_time": 0,
+                  "entries": 6
+                }
+              },
+              "step_stats": {
+                "welcome_step_1": {
+                  "name": "Welcome Email - Heritage & Craft",
+                  "revenue": 0.0,
+                  "conversions": 0,
+                  "conversions_by_entry_time": 0,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 12,
+                        "opens": 7,
+                        "unique_opens": 6,
+                        "clicks": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-03-20T00:00:00Z",
+              "total_stats": {
+                "revenue": 45.99,
+                "conversions": 8,
+                "conversions_by_entry_time": 5,
+                "entries": 28
+              },
+              "variant_stats": {
+                "campari_welcome_var_a": {
+                  "name": "Welcome Variant A - Heritage",
+                  "revenue": 28.99,
+                  "conversions": 5,
+                  "conversions_by_entry_time": 3,
+                  "entries": 14
+                },
+                "campari_welcome_var_b": {
+                  "name": "Welcome Variant B - Modern",
+                  "revenue": 17.0,
+                  "conversions": 3,
+                  "conversions_by_entry_time": 2,
+                  "entries": 14
+                }
+              },
+              "step_stats": {
+                "welcome_step_1": {
+                  "name": "Welcome Email - Heritage & Craft",
+                  "revenue": 28.99,
+                  "conversions": 5,
+                  "conversions_by_entry_time": 3,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 28,
+                        "opens": 18,
+                        "unique_opens": 15,
+                        "clicks": 8
+                      }
+                    ]
+                  }
+                },
+                "welcome_step_2": {
+                  "name": "In-App Guide - The Aperitivo Ritual",
+                  "revenue": 16.0,
+                  "conversions": 3,
+                  "conversions_by_entry_time": 2,
+                  "messages": {
+                    "in_app_message": [
+                      {
+                        "sent": 18,
+                        "opens": 12,
+                        "unique_opens": 10,
+                        "clicks": 5
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-03-30T00:00:00Z",
+              "total_stats": {
+                "revenue": 89.50,
+                "conversions": 18,
+                "conversions_by_entry_time": 12,
+                "entries": 52
+              },
+              "variant_stats": {
+                "campari_welcome_var_a": {
+                  "name": "Welcome Variant A - Heritage",
+                  "revenue": 56.25,
+                  "conversions": 11,
+                  "conversions_by_entry_time": 8,
+                  "entries": 26
+                },
+                "campari_welcome_var_b": {
+                  "name": "Welcome Variant B - Modern",
+                  "revenue": 33.25,
+                  "conversions": 7,
+                  "conversions_by_entry_time": 4,
+                  "entries": 26
+                }
+              },
+              "step_stats": {
+                "welcome_step_1": {
+                  "name": "Welcome Email - Heritage & Craft",
+                  "revenue": 45.50,
+                  "conversions": 10,
+                  "conversions_by_entry_time": 6,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 52,
+                        "opens": 38,
+                        "unique_opens": 32,
+                        "clicks": 18
+                      }
+                    ]
+                  }
+                },
+                "welcome_step_2": {
+                  "name": "In-App Guide - The Aperitivo Ritual",
+                  "revenue": 32.0,
+                  "conversions": 6,
+                  "conversions_by_entry_time": 4,
+                  "messages": {
+                    "in_app_message": [
+                      {
+                        "sent": 38,
+                        "opens": 28,
+                        "unique_opens": 24,
+                        "clicks": 12
+                      }
+                    ]
+                  }
+                },
+                "welcome_step_3": {
+                  "name": "Welcome Push - Your First Taste",
+                  "revenue": 12.0,
+                  "conversions": 2,
+                  "conversions_by_entry_time": 2,
+                  "messages": {
+                    "push": [
+                      {
+                        "sent": 28,
+                        "opens": 18,
+                        "influenced_opens": 22,
+                        "bounces": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "data_summary": {
+        "message": "success",
+        "data": {
+          "name": "Campari Welcome Series - Discover the Icon",
+          "total_stats": {
+            "revenue": 135.49,
+            "conversions": 26,
+            "conversions_by_entry_time": 17,
+            "entries": 92
+          },
+          "variant_stats": {
+            "campari_welcome_var_a": {
+              "name": "Welcome Variant A - Heritage",
+              "revenue": 85.24,
+              "conversions": 16,
+              "entries": 46
+            },
+            "campari_welcome_var_b": {
+              "name": "Welcome Variant B - Modern",
+              "revenue": 50.25,
+              "conversions": 10,
+              "entries": 46
+            }
+          },
+          "step_stats": {
+            "welcome_step_1": {
+              "name": "Welcome Email - Heritage & Craft",
+              "revenue": 74.49,
+              "conversions": 15,
+              "conversions_by_entry_time": 9,
+              "messages": {
+                "email": [
+                  {
+                    "sent": 92,
+                    "opens": 56,
+                    "unique_opens": 48,
+                    "clicks": 28
+                  }
+                ]
+              }
+            },
+            "welcome_step_2": {
+              "name": "In-App Guide - The Aperitivo Ritual",
+              "revenue": 48.0,
+              "conversions": 9,
+              "conversions_by_entry_time": 6,
+              "messages": {
+                "in_app_message": [
+                  {
+                    "sent": 56,
+                    "opens": 40,
+                    "unique_opens": 34,
+                    "clicks": 17
+                  }
+                ]
+              }
+            },
+            "welcome_step_3": {
+              "name": "Welcome Push - Your First Taste",
+              "revenue": 13.0,
+              "conversions": 2,
+              "conversions_by_entry_time": 2,
+              "messages": {
+                "push": [
+                  {
+                    "sent": 28,
+                    "opens": 18,
+                    "influenced_opens": 22,
+                    "bounces": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "canvas_id": "campari_lifecycle_001",
+      "canvas_name": "Campari Summer Campaign - Return to Ritual",
+      "details": {
+        "message": "success",
+        "created_at": "2024-02-01T10:15:00Z",
+        "updated_at": "2024-06-10T11:30:00Z",
+        "name": "Campari Summer Campaign - Return to Ritual",
+        "description": "Reengagement for inactive users with seasonal aperitivo inspiration and exclusive summer promotions",
+        "archived": false,
+        "draft": false,
+        "enabled": true,
+        "has_post_launch_draft": true,
+        "schedule_type": "date",
+        "first_entry": "2024-02-01T10:15:00Z",
+        "last_entry": "2024-06-10T15:20:00Z",
+        "channels": ["email", "sms", "push"],
+        "variants": [
+          {
+            "name": "Lifecycle - Seasonal Offer",
+            "id": "campari_lifecycle_summer",
+            "first_step_ids": ["lifecycle_step_1"]
+          }
+        ],
+        "tags": ["lifecycle", "reactivation", "seasonal", "aperitivo", "campari"],
+        "teams": ["Retention Team", "Marketing Team"]
+      },
+      "data_series": {
+        "message": "success",
+        "data": {
+          "name": "Campari Summer Campaign - Return to Ritual",
+          "stats": [
+            {
+              "time": "2024-02-01T00:00:00Z",
+              "total_stats": {
+                "revenue": 342.75,
+                "conversions": 15,
+                "conversions_by_entry_time": 8,
+                "entries": 245
+              },
+              "variant_stats": {
+                "campari_lifecycle_summer": {
+                  "name": "Lifecycle - Seasonal Offer",
+                  "revenue": 342.75,
+                  "conversions": 15,
+                  "conversions_by_entry_time": 8,
+                  "entries": 245
+                }
+              },
+              "step_stats": {
+                "lifecycle_step_1": {
+                  "name": "We Miss Your Moment Email",
+                  "revenue": 245.50,
+                  "conversions": 10,
+                  "conversions_by_entry_time": 5,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 245,
+                        "opens": 110,
+                        "unique_opens": 98,
+                        "clicks": 32
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-02-10T00:00:00Z",
+              "total_stats": {
+                "revenue": 612.40,
+                "conversions": 32,
+                "conversions_by_entry_time": 18,
+                "entries": 410
+              },
+              "variant_stats": {
+                "campari_lifecycle_summer": {
+                  "name": "Lifecycle - Seasonal Offer",
+                  "revenue": 612.40,
+                  "conversions": 32,
+                  "conversions_by_entry_time": 18,
+                  "entries": 410
+                }
+              },
+              "step_stats": {
+                "lifecycle_step_1": {
+                  "name": "We Miss Your Moment Email",
+                  "revenue": 380.25,
+                  "conversions": 18,
+                  "conversions_by_entry_time": 9,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 410,
+                        "opens": 205,
+                        "unique_opens": 175,
+                        "clicks": 62
+                      }
+                    ]
+                  }
+                },
+                "lifecycle_step_2": {
+                  "name": "SMS Reminder - Limited Time",
+                  "revenue": 165.15,
+                  "conversions": 9,
+                  "conversions_by_entry_time": 6,
+                  "messages": {
+                    "sms": [
+                      {
+                        "sent": 205,
+                        "sent_to_carrier": 204,
+                        "delivered": 202,
+                        "rejected": 1,
+                        "delivery_failed": 2,
+                        "clicks": 28,
+                        "opt_out": 3,
+                        "help": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-02-15T00:00:00Z",
+              "total_stats": {
+                "revenue": 756.80,
+                "conversions": 42,
+                "conversions_by_entry_time": 24,
+                "entries": 468
+              },
+              "variant_stats": {
+                "campari_lifecycle_summer": {
+                  "name": "Lifecycle - Seasonal Offer",
+                  "revenue": 756.80,
+                  "conversions": 42,
+                  "conversions_by_entry_time": 24,
+                  "entries": 468
+                }
+              },
+              "step_stats": {
+                "lifecycle_step_1": {
+                  "name": "We Miss Your Moment Email",
+                  "revenue": 468.50,
+                  "conversions": 24,
+                  "conversions_by_entry_time": 12,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 468,
+                        "opens": 265,
+                        "unique_opens": 232,
+                        "clicks": 84
+                      }
+                    ]
+                  }
+                },
+                "lifecycle_step_2": {
+                  "name": "SMS Reminder - Limited Time",
+                  "revenue": 215.30,
+                  "conversions": 12,
+                  "conversions_by_entry_time": 8,
+                  "messages": {
+                    "sms": [
+                      {
+                        "sent": 265,
+                        "sent_to_carrier": 264,
+                        "delivered": 261,
+                        "rejected": 1,
+                        "delivery_failed": 3,
+                        "clicks": 45,
+                        "opt_out": 4,
+                        "help": 0
+                      }
+                    ]
+                  }
+                },
+                "lifecycle_step_3": {
+                  "name": "Final Push - Join the Ritual",
+                  "revenue": 73.0,
+                  "conversions": 6,
+                  "conversions_by_entry_time": 4,
+                  "messages": {
+                    "push": [
+                      {
+                        "sent": 232,
+                        "opens": 156,
+                        "influenced_opens": 188,
+                        "bounces": 1
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "data_summary": {
+        "message": "success",
+        "data": {
+          "name": "Campari Summer Campaign - Return to Ritual",
+          "total_stats": {
+            "revenue": 1711.95,
+            "conversions": 89,
+            "conversions_by_entry_time": 50,
+            "entries": 1123
+          },
+          "variant_stats": {
+            "campari_lifecycle_summer": {
+              "name": "Lifecycle - Seasonal Offer",
+              "revenue": 1711.95,
+              "conversions": 89,
+              "entries": 1123
+            }
+          },
+          "step_stats": {
+            "lifecycle_step_1": {
+              "name": "We Miss Your Moment Email",
+              "revenue": 1094.25,
+              "conversions": 52,
+              "conversions_by_entry_time": 26,
+              "messages": {
+                "email": [
+                  {
+                    "sent": 1123,
+                    "opens": 580,
+                    "unique_opens": 505,
+                    "clicks": 178
+                  }
+                ]
+              }
+            },
+            "lifecycle_step_2": {
+              "name": "SMS Reminder - Limited Time",
+              "revenue": 380.45,
+              "conversions": 21,
+              "conversions_by_entry_time": 14,
+              "messages": {
+                "sms": [
+                  {
+                    "sent": 580,
+                    "sent_to_carrier": 578,
+                    "delivered": 573,
+                    "rejected": 2,
+                    "delivery_failed": 5,
+                    "clicks": 73,
+                    "opt_out": 7,
+                    "help": 0
+                  }
+                ]
+              }
+            },
+            "lifecycle_step_3": {
+              "name": "Final Push - Join the Ritual",
+              "revenue": 237.25,
+              "conversions": 16,
+              "conversions_by_entry_time": 10,
+              "messages": {
+                "push": [
+                  {
+                    "sent": 505,
+                    "opens": 318,
+                    "influenced_opens": 388,
+                    "bounces": 2
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "canvas_id": "campari_behavioral_001",
+      "canvas_name": "Campari Connoisseur Circle - VIP Engagement",
+      "details": {
+        "message": "success",
+        "created_at": "2024-04-12T16:45:00Z",
+        "updated_at": "2024-06-08T13:15:00Z",
+        "name": "Campari Connoisseur Circle - VIP Engagement",
+        "description": "Behavior-triggered engagement for premium users based on purchase frequency and brand affinity, featuring exclusive products and events",
+        "archived": false,
+        "draft": false,
+        "enabled": true,
+        "has_post_launch_draft": false,
+        "schedule_type": "action_based",
+        "first_entry": "2024-04-12T16:45:00Z",
+        "last_entry": "2024-06-08T19:30:00Z",
+        "channels": ["email", "push", "in_app_message"],
+        "variants": [
+          {
+            "name": "Behavioral - Connoisseur Recognition",
+            "id": "campari_behavioral_vip",
+            "first_step_ids": ["behavioral_step_1"]
+          }
+        ],
+        "tags": ["behavioral", "vip", "loyalty", "premium", "campari"],
+        "teams": ["Marketing Team", "Engagement"]
+      },
+      "data_series": {
+        "message": "success",
+        "data": {
+          "name": "Campari Connoisseur Circle - VIP Engagement",
+          "stats": [
+            {
+              "time": "2024-04-12T00:00:00Z",
+              "total_stats": {
+                "revenue": 487.50,
+                "conversions": 6,
+                "conversions_by_entry_time": 4,
+                "entries": 18
+              },
+              "variant_stats": {
+                "campari_behavioral_vip": {
+                  "name": "Behavioral - Connoisseur Recognition",
+                  "revenue": 487.50,
+                  "conversions": 6,
+                  "conversions_by_entry_time": 4,
+                  "entries": 18
+                }
+              },
+              "step_stats": {
+                "behavioral_step_1": {
+                  "name": "VIP Recognition Email",
+                  "revenue": 325.00,
+                  "conversions": 4,
+                  "conversions_by_entry_time": 2,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 18,
+                        "opens": 16,
+                        "unique_opens": 14,
+                        "clicks": 8
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-04-25T00:00:00Z",
+              "total_stats": {
+                "revenue": 892.75,
+                "conversions": 13,
+                "conversions_by_entry_time": 9,
+                "entries": 35
+              },
+              "variant_stats": {
+                "campari_behavioral_vip": {
+                  "name": "Behavioral - Connoisseur Recognition",
+                  "revenue": 892.75,
+                  "conversions": 13,
+                  "conversions_by_entry_time": 9,
+                  "entries": 35
+                }
+              },
+              "step_stats": {
+                "behavioral_step_1": {
+                  "name": "VIP Recognition Email",
+                  "revenue": 575.00,
+                  "conversions": 8,
+                  "conversions_by_entry_time": 5,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 35,
+                        "opens": 32,
+                        "unique_opens": 28,
+                        "clicks": 15
+                      }
+                    ]
+                  }
+                },
+                "behavioral_step_2": {
+                  "name": "In-App Exclusive Access",
+                  "revenue": 198.75,
+                  "conversions": 3,
+                  "conversions_by_entry_time": 2,
+                  "messages": {
+                    "in_app_message": [
+                      {
+                        "sent": 32,
+                        "opens": 28,
+                        "unique_opens": 24,
+                        "clicks": 12
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-05-10T00:00:00Z",
+              "total_stats": {
+                "revenue": 1156.25,
+                "conversions": 18,
+                "conversions_by_entry_time": 12,
+                "entries": 48
+              },
+              "variant_stats": {
+                "campari_behavioral_vip": {
+                  "name": "Behavioral - Connoisseur Recognition",
+                  "revenue": 1156.25,
+                  "conversions": 18,
+                  "conversions_by_entry_time": 12,
+                  "entries": 48
+                }
+              },
+              "step_stats": {
+                "behavioral_step_1": {
+                  "name": "VIP Recognition Email",
+                  "revenue": 725.00,
+                  "conversions": 11,
+                  "conversions_by_entry_time": 7,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 48,
+                        "opens": 44,
+                        "unique_opens": 38,
+                        "clicks": 22
+                      }
+                    ]
+                  }
+                },
+                "behavioral_step_2": {
+                  "name": "In-App Exclusive Access",
+                  "revenue": 268.75,
+                  "conversions": 4,
+                  "conversions_by_entry_time": 3,
+                  "messages": {
+                    "in_app_message": [
+                      {
+                        "sent": 44,
+                        "opens": 38,
+                        "unique_opens": 32,
+                        "clicks": 18
+                      }
+                    ]
+                  }
+                },
+                "behavioral_step_3": {
+                  "name": "VIP Event Invitation",
+                  "revenue": 162.50,
+                  "conversions": 3,
+                  "conversions_by_entry_time": 2,
+                  "messages": {
+                    "push": [
+                      {
+                        "sent": 38,
+                        "opens": 28,
+                        "influenced_opens": 32,
+                        "bounces": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "data_summary": {
+        "message": "success",
+        "data": {
+          "name": "Campari Connoisseur Circle - VIP Engagement",
+          "total_stats": {
+            "revenue": 2536.50,
+            "conversions": 37,
+            "conversions_by_entry_time": 25,
+            "entries": 101
+          },
+          "variant_stats": {
+            "campari_behavioral_vip": {
+              "name": "Behavioral - Connoisseur Recognition",
+              "revenue": 2536.50,
+              "conversions": 37,
+              "entries": 101
+            }
+          },
+          "step_stats": {
+            "behavioral_step_1": {
+              "name": "VIP Recognition Email",
+              "revenue": 1625.00,
+              "conversions": 23,
+              "conversions_by_entry_time": 14,
+              "messages": {
+                "email": [
+                  {
+                    "sent": 101,
+                    "opens": 92,
+                    "unique_opens": 80,
+                    "clicks": 45
+                  }
+                ]
+              }
+            },
+            "behavioral_step_2": {
+              "name": "In-App Exclusive Access",
+              "revenue": 467.50,
+              "conversions": 7,
+              "conversions_by_entry_time": 5,
+              "messages": {
+                "in_app_message": [
+                  {
+                    "sent": 92,
+                    "opens": 80,
+                    "unique_opens": 68,
+                    "clicks": 38
+                  }
+                ]
+              }
+            },
+            "behavioral_step_3": {
+              "name": "VIP Event Invitation",
+              "revenue": 444.00,
+              "conversions": 7,
+              "conversions_by_entry_time": 6,
+              "messages": {
+                "push": [
+                  {
+                    "sent": 80,
+                    "opens": 56,
+                    "influenced_opens": 68,
+                    "bounces": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "canvas_id": "campari_transactional_001",
+      "canvas_name": "Campari Order Journey - Delivery & Delight",
+      "details": {
+        "message": "success",
+        "created_at": "2024-05-20T09:00:00Z",
+        "updated_at": "2024-06-09T12:35:00Z",
+        "name": "Campari Order Journey - Delivery & Delight",
+        "description": "Transactional messaging for premium spirit orders with tracking, tasting notes, and aperitivo pairing suggestions",
+        "archived": false,
+        "draft": false,
+        "enabled": true,
+        "has_post_launch_draft": false,
+        "schedule_type": "action_based",
+        "first_entry": "2024-05-20T09:00:00Z",
+        "last_entry": "2024-06-09T18:15:00Z",
+        "channels": ["email", "sms"],
+        "variants": [
+          {
+            "name": "Transactional - Premium Flow",
+            "id": "campari_transactional_premium",
+            "first_step_ids": ["transactional_step_1"]
+          }
+        ],
+        "tags": ["transactional", "ecommerce", "order", "shipping", "campari"],
+        "teams": ["Operations", "Customer Experience"]
+      },
+      "data_series": {
+        "message": "success",
+        "data": {
+          "name": "Campari Order Journey - Delivery & Delight",
+          "stats": [
+            {
+              "time": "2024-05-20T00:00:00Z",
+              "total_stats": {
+                "revenue": 1847.60,
+                "conversions": 92,
+                "conversions_by_entry_time": 62,
+                "entries": 156
+              },
+              "variant_stats": {
+                "campari_transactional_premium": {
+                  "name": "Transactional - Premium Flow",
+                  "revenue": 1847.60,
+                  "conversions": 92,
+                  "conversions_by_entry_time": 62,
+                  "entries": 156
+                }
+              },
+              "step_stats": {
+                "transactional_step_1": {
+                  "name": "Order Confirmation - Celebration Begins",
+                  "revenue": 1847.60,
+                  "conversions": 92,
+                  "conversions_by_entry_time": 62,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 156,
+                        "opens": 126,
+                        "unique_opens": 112,
+                        "clicks": 58
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-05-25T00:00:00Z",
+              "total_stats": {
+                "revenue": 2156.80,
+                "conversions": 108,
+                "conversions_by_entry_time": 74,
+                "entries": 186
+              },
+              "variant_stats": {
+                "campari_transactional_premium": {
+                  "name": "Transactional - Premium Flow",
+                  "revenue": 2156.80,
+                  "conversions": 108,
+                  "conversions_by_entry_time": 74,
+                  "entries": 186
+                }
+              },
+              "step_stats": {
+                "transactional_step_1": {
+                  "name": "Order Confirmation - Celebration Begins",
+                  "revenue": 1265.40,
+                  "conversions": 63,
+                  "conversions_by_entry_time": 42,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 186,
+                        "opens": 152,
+                        "unique_opens": 134,
+                        "clicks": 72
+                      }
+                    ]
+                  }
+                },
+                "transactional_step_2": {
+                  "name": "Shipping Confirmation - En Route",
+                  "revenue": 756.40,
+                  "conversions": 38,
+                  "conversions_by_entry_time": 26,
+                  "messages": {
+                    "sms": [
+                      {
+                        "sent": 152,
+                        "sent_to_carrier": 151,
+                        "delivered": 150,
+                        "rejected": 0,
+                        "delivery_failed": 2,
+                        "clicks": 42,
+                        "opt_out": 1,
+                        "help": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-06-01T00:00:00Z",
+              "total_stats": {
+                "revenue": 2428.35,
+                "conversions": 121,
+                "conversions_by_entry_time": 82,
+                "entries": 206
+              },
+              "variant_stats": {
+                "campari_transactional_premium": {
+                  "name": "Transactional - Premium Flow",
+                  "revenue": 2428.35,
+                  "conversions": 121,
+                  "conversions_by_entry_time": 82,
+                  "entries": 206
+                }
+              },
+              "step_stats": {
+                "transactional_step_1": {
+                  "name": "Order Confirmation - Celebration Begins",
+                  "revenue": 1359.75,
+                  "conversions": 68,
+                  "conversions_by_entry_time": 46,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 206,
+                        "opens": 170,
+                        "unique_opens": 150,
+                        "clicks": 84
+                      }
+                    ]
+                  }
+                },
+                "transactional_step_2": {
+                  "name": "Shipping Confirmation - En Route",
+                  "revenue": 856.80,
+                  "conversions": 43,
+                  "conversions_by_entry_time": 29,
+                  "messages": {
+                    "sms": [
+                      {
+                        "sent": 170,
+                        "sent_to_carrier": 169,
+                        "delivered": 168,
+                        "rejected": 0,
+                        "delivery_failed": 2,
+                        "clicks": 52,
+                        "opt_out": 2,
+                        "help": 0
+                      }
+                    ]
+                  }
+                },
+                "transactional_step_3": {
+                  "name": "Arrival & Tasting Guide",
+                  "revenue": 211.80,
+                  "conversions": 10,
+                  "conversions_by_entry_time": 7,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 150,
+                        "opens": 128,
+                        "unique_opens": 112,
+                        "clicks": 38
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "data_summary": {
+        "message": "success",
+        "data": {
+          "name": "Campari Order Journey - Delivery & Delight",
+          "total_stats": {
+            "revenue": 6432.75,
+            "conversions": 321,
+            "conversions_by_entry_time": 218,
+            "entries": 548
+          },
+          "variant_stats": {
+            "campari_transactional_premium": {
+              "name": "Transactional - Premium Flow",
+              "revenue": 6432.75,
+              "conversions": 321,
+              "entries": 548
+            }
+          },
+          "step_stats": {
+            "transactional_step_1": {
+              "name": "Order Confirmation - Celebration Begins",
+              "revenue": 4472.75,
+              "conversions": 223,
+              "conversions_by_entry_time": 150,
+              "messages": {
+                "email": [
+                  {
+                    "sent": 548,
+                    "opens": 448,
+                    "unique_opens": 396,
+                    "clicks": 214
+                  }
+                ]
+              }
+            },
+            "transactional_step_2": {
+              "name": "Shipping Confirmation - En Route",
+              "revenue": 1613.20,
+              "conversions": 81,
+              "conversions_by_entry_time": 55,
+              "messages": {
+                "sms": [
+                  {
+                    "sent": 448,
+                    "sent_to_carrier": 446,
+                    "delivered": 446,
+                    "rejected": 0,
+                    "delivery_failed": 2,
+                    "clicks": 116,
+                    "opt_out": 3,
+                    "help": 0
+                  }
+                ]
+              }
+            },
+            "transactional_step_3": {
+              "name": "Arrival & Tasting Guide",
+              "revenue": 346.80,
+              "conversions": 17,
+              "conversions_by_entry_time": 13,
+              "messages": {
+                "email": [
+                  {
+                    "sent": 396,
+                    "opens": 336,
+                    "unique_opens": 294,
+                    "clicks": 98
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "canvas_id": "campari_batch_001",
+      "canvas_name": "Campari Weekly - The Aperitivo Hour",
+      "details": {
+        "message": "success",
+        "created_at": "2024-01-10T07:00:00Z",
+        "updated_at": "2024-06-07T06:30:00Z",
+        "name": "Campari Weekly - The Aperitivo Hour",
+        "description": "Scheduled weekly newsletter featuring classic & contemporary recipes, bartender wisdom, and the stories behind Campari's heritage",
+        "archived": false,
+        "draft": false,
+        "enabled": true,
+        "has_post_launch_draft": true,
+        "schedule_type": "recurring",
+        "first_entry": "2024-01-10T07:00:00Z",
+        "last_entry": "2024-06-07T07:00:00Z",
+        "channels": ["email"],
+        "variants": [
+          {
+            "name": "Batch Newsletter - Weekly Ritual",
+            "id": "campari_batch_newsletter",
+            "first_step_ids": ["batch_step_1"]
+          }
+        ],
+        "tags": ["batch", "newsletter", "weekly", "aperitivo", "campari"],
+        "teams": ["Content Team", "Marketing Team"]
+      },
+      "data_series": {
+        "message": "success",
+        "data": {
+          "name": "Campari Weekly - The Aperitivo Hour",
+          "stats": [
+            {
+              "time": "2024-01-10T07:00:00Z",
+              "total_stats": {
+                "revenue": 342.50,
+                "conversions": 28,
+                "conversions_by_entry_time": 18,
+                "entries": 4250
+              },
+              "variant_stats": {
+                "campari_batch_newsletter": {
+                  "name": "Batch Newsletter - Weekly Ritual",
+                  "revenue": 342.50,
+                  "conversions": 28,
+                  "conversions_by_entry_time": 18,
+                  "entries": 4250
+                }
+              },
+              "step_stats": {
+                "batch_step_1": {
+                  "name": "Weekly Newsletter - Campari Stories & Recipes",
+                  "revenue": 342.50,
+                  "conversions": 28,
+                  "conversions_by_entry_time": 18,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 4250,
+                        "opens": 1700,
+                        "unique_opens": 1445,
+                        "clicks": 285
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-02-14T07:00:00Z",
+              "total_stats": {
+                "revenue": 521.75,
+                "conversions": 44,
+                "conversions_by_entry_time": 29,
+                "entries": 4680
+              },
+              "variant_stats": {
+                "campari_batch_newsletter": {
+                  "name": "Batch Newsletter - Weekly Ritual",
+                  "revenue": 521.75,
+                  "conversions": 44,
+                  "conversions_by_entry_time": 29,
+                  "entries": 4680
+                }
+              },
+              "step_stats": {
+                "batch_step_1": {
+                  "name": "Weekly Newsletter - Campari Stories & Recipes",
+                  "revenue": 521.75,
+                  "conversions": 44,
+                  "conversions_by_entry_time": 29,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 4680,
+                        "opens": 2106,
+                        "unique_opens": 1872,
+                        "clicks": 422
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-03-20T07:00:00Z",
+              "total_stats": {
+                "revenue": 618.90,
+                "conversions": 52,
+                "conversions_by_entry_time": 34,
+                "entries": 5120
+              },
+              "variant_stats": {
+                "campari_batch_newsletter": {
+                  "name": "Batch Newsletter - Weekly Ritual",
+                  "revenue": 618.90,
+                  "conversions": 52,
+                  "conversions_by_entry_time": 34,
+                  "entries": 5120
+                }
+              },
+              "step_stats": {
+                "batch_step_1": {
+                  "name": "Weekly Newsletter - Campari Stories & Recipes",
+                  "revenue": 618.90,
+                  "conversions": 52,
+                  "conversions_by_entry_time": 34,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 5120,
+                        "opens": 2458,
+                        "unique_opens": 2208,
+                        "clicks": 558
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-04-17T07:00:00Z",
+              "total_stats": {
+                "revenue": 742.65,
+                "conversions": 63,
+                "conversions_by_entry_time": 41,
+                "entries": 5640
+              },
+              "variant_stats": {
+                "campari_batch_newsletter": {
+                  "name": "Batch Newsletter - Weekly Ritual",
+                  "revenue": 742.65,
+                  "conversions": 63,
+                  "conversions_by_entry_time": 41,
+                  "entries": 5640
+                }
+              },
+              "step_stats": {
+                "batch_step_1": {
+                  "name": "Weekly Newsletter - Campari Stories & Recipes",
+                  "revenue": 742.65,
+                  "conversions": 63,
+                  "conversions_by_entry_time": 41,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 5640,
+                        "opens": 2816,
+                        "unique_opens": 2534,
+                        "clicks": 678
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "time": "2024-05-15T07:00:00Z",
+              "total_stats": {
+                "revenue": 895.30,
+                "conversions": 76,
+                "conversions_by_entry_time": 50,
+                "entries": 6000
+              },
+              "variant_stats": {
+                "campari_batch_newsletter": {
+                  "name": "Batch Newsletter - Weekly Ritual",
+                  "revenue": 895.30,
+                  "conversions": 76,
+                  "conversions_by_entry_time": 50,
+                  "entries": 6000
+                }
+              },
+              "step_stats": {
+                "batch_step_1": {
+                  "name": "Weekly Newsletter - Campari Stories & Recipes",
+                  "revenue": 895.30,
+                  "conversions": 76,
+                  "conversions_by_entry_time": 50,
+                  "messages": {
+                    "email": [
+                      {
+                        "sent": 6000,
+                        "opens": 3000,
+                        "unique_opens": 2700,
+                        "clicks": 780
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "data_summary": {
+        "message": "success",
+        "data": {
+          "name": "Campari Weekly - The Aperitivo Hour",
+          "total_stats": {
+            "revenue": 3121.10,
+            "conversions": 263,
+            "conversions_by_entry_time": 172,
+            "entries": 25690
+          },
+          "variant_stats": {
+            "campari_batch_newsletter": {
+              "name": "Batch Newsletter - Weekly Ritual",
+              "revenue": 3121.10,
+              "conversions": 263,
+              "entries": 25690
+            }
+          },
+          "step_stats": {
+            "batch_step_1": {
+              "name": "Weekly Newsletter - Campari Stories & Recipes",
+              "revenue": 3121.10,
+              "conversions": 263,
+              "conversions_by_entry_time": 172,
+              "messages": {
+                "email": [
+                  {
+                    "sent": 25690,
+                    "opens": 12080,
+                    "unique_opens": 10859,
+                    "clicks": 2723
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
