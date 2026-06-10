@@ -650,54 +650,44 @@ async function triggerCanvasBuild(btn, responseText) {
   btn.disabled = true;
   btn.textContent = '⏳ Extracting Canvas config...';
 
+  // Extract JSON directly from the response — no second API call needed
+  const match = responseText.match(/<canvas_json>([\s\S]*?)<\/canvas_json>/);
+  if (!match) {
+    appendMessage('assistant', '**Could not find Canvas JSON in the response.** Ask me to produce the Canvas configuration and try again.');
+    btn.disabled = false;
+    btn.textContent = '🏗 Build this Canvas in Braze';
+    return;
+  }
+
+  let payload;
   try {
-    const extractRes = await fetch(`${PROXY_URL}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: [
-          ...conversationHistory,
-          {
-            role: 'user',
-            content: 'Extract the Canvas configuration from your last response as a valid JSON object suitable for POSTing to the Braze dashboard API /engagement/canvas endpoint. Return ONLY the JSON, no explanation, no markdown fences.'
-          }
-        ],
-        workspaceContext
-      })
-    });
-
-    const extractData = await extractRes.json();
-    let payload;
-
-    try {
-      payload = JSON.parse(extractData.reply.replace(/```json|```/g, '').trim());
-    } catch (e) {
-      appendMessage('assistant', '**Could not extract Canvas JSON.** Please ask me to produce the Canvas configuration as a JSON object and try again.');
-      btn.disabled = false;
-      btn.textContent = '🏗 Build this Canvas in Braze';
-      return;
-    }
-
-    btn.textContent = '⏳ Building in Braze...';
-
-    const buildRes = await fetch(`${PROXY_URL}/api/canvas/build`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ canvasPayload: payload })
-    });
-
-    const buildData = await buildRes.json();
-
-    if (buildData.status === 200 || buildData.status === 201) {
-      appendMessage('assistant', '✅ **Canvas built successfully in Braze.**\n\nThe Canvas has been created in your workspace. Open Braze to review it before activating — check the entry criteria, segment sizes, and message content before going live.');
-      btn.textContent = '✅ Built in Braze';
-    } else {
-      appendMessage('assistant', `**Canvas build failed.** Braze returned status ${buildData.status}.\n\nThis usually means the session token has expired. Refresh your session ID and CSRF token via DevTools and try again.`);
-      btn.disabled = false;
-      btn.textContent = '🏗 Retry build';
-    }
-
+    payload = JSON.parse(match[1].trim());
   } catch (e) {
+    appendMessage('assistant', '**Canvas JSON was malformed.** Ask me to reproduce the payload and try again.');
+    btn.disabled = false;
+    btn.textContent = '🏗 Build this Canvas in Braze';
+    return;
+  }
+
+  btn.textContent = '⏳ Building in Braze...';
+
+  const buildRes = await fetch(`${PROXY_URL}/api/canvas/build`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ canvasPayload: payload })
+  });
+
+  const buildData = await buildRes.json();
+
+  if (buildData.status === 200 || buildData.status === 201) {
+    appendMessage('assistant', '✅ **Canvas built successfully in Braze.**\n\nThe Canvas has been created in your workspace. Open Braze to review it before activating.');
+    btn.textContent = '✅ Built in Braze';
+  } else {
+    appendMessage('assistant', `**Canvas build failed.** Braze returned status ${buildData.status}.\n\nRefresh your session credentials and try again.`);
+    btn.disabled = false;
+    btn.textContent = '🏗 Retry build';
+  }
+} catch (e) {
     appendMessage('assistant', `**Build error:** ${e.message}`);
     btn.disabled = false;
     btn.textContent = '🏗 Build this Canvas in Braze';
