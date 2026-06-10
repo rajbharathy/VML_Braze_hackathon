@@ -6,52 +6,19 @@
 <title>Braze Copilot</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
   :root {
-    --brand: #4F46E5;
-    --brand-light: #EEF2FF;
-    --brand-mid: #A5B4FC;
-    --brand-dark: #3730A3;
-    --surface: #FFFFFF;
-    --surface-2: #F9FAFB;
-    --surface-3: #F3F4F6;
-    --border: #E5E7EB;
-    --text-primary: #111827;
-    --text-secondary: #6B7280;
-    --text-muted: #9CA3AF;
-    --success: #059669;
-    --success-light: #ECFDF5;
-    --warning: #D97706;
-    --warning-light: #FFFBEB;
-    --danger: #DC2626;
-    --danger-light: #FEF2F2;
+    --brand: #4F46E5; --brand-light: #EEF2FF; --brand-mid: #A5B4FC; --brand-dark: #3730A3;
+    --surface: #FFFFFF; --surface-2: #F9FAFB; --surface-3: #F3F4F6;
+    --border: #E5E7EB; --text-primary: #111827; --text-secondary: #6B7280; --text-muted: #9CA3AF;
+    --success: #059669; --success-light: #ECFDF5; --warning: #D97706; --warning-light: #FFFBEB;
+    --danger: #DC2626; --danger-light: #FEF2F2;
     --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-    --radius: 10px;
-    --radius-sm: 6px;
+    --radius: 10px; --radius-sm: 6px;
     --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     --font-mono: 'SF Mono', 'Fira Code', monospace;
   }
-
-  body {
-    font-family: var(--font);
-    background: var(--surface-2);
-    color: var(--text-primary);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .header {
-    background: var(--brand);
-    padding: 0 24px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  }
+  body { font-family: var(--font); background: var(--surface-2); color: var(--text-primary); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  .header { background: var(--brand); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
   .header-left { display: flex; align-items: center; gap: 12px; }
   .logo { width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
   .header h1 { font-size: 16px; font-weight: 600; color: #fff; letter-spacing: -0.01em; }
@@ -62,16 +29,13 @@
   .status-label { font-size: 12px; color: rgba(255,255,255,0.8); }
   .config-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 5px 12px; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; font-family: var(--font); transition: background 0.15s; }
   .config-btn:hover { background: rgba(255,255,255,0.25); }
-
   .app { display: flex; flex: 1; overflow: hidden; }
-
   .sidebar { width: 280px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
   .sidebar-section { padding: 16px; border-bottom: 1px solid var(--border); }
   .sidebar-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px; }
   .capability-list { display: flex; flex-direction: column; gap: 4px; }
   .capability-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.12s; font-size: 13px; color: var(--text-secondary); }
   .capability-item:hover { background: var(--surface-3); color: var(--text-primary); }
-  .capability-item:hover .cap-icon { color: var(--brand); }
   .cap-icon { font-size: 15px; width: 18px; text-align: center; }
   .context-panel { flex: 1; overflow-y: auto; padding: 16px; }
   .context-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px; font-size: 12px; }
@@ -82,10 +46,8 @@
   .context-stat-label { font-size: 11px; color: var(--text-muted); }
   .refresh-btn { width: 100%; padding: 7px; background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); cursor: pointer; font-family: var(--font); margin-top: 8px; transition: all 0.12s; }
   .refresh-btn:hover { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
-
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   .messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
-
   .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; padding: 40px; }
   .welcome-icon { width: 64px; height: 64px; background: var(--brand-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px; }
   .welcome h2 { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.02em; }
@@ -96,7 +58,6 @@
   .prompt-chip-icon { font-size: 18px; margin-bottom: 6px; }
   .prompt-chip-text { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
   .prompt-chip:hover .prompt-chip-text { color: var(--brand-dark); }
-
   .message { display: flex; gap: 12px; max-width: 820px; }
   .message.user { align-self: flex-end; flex-direction: row-reverse; }
   .avatar { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
@@ -104,80 +65,51 @@
   .avatar.user { background: var(--surface-3); color: var(--text-secondary); }
   .bubble { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; line-height: 1.65; color: var(--text-primary); box-shadow: var(--shadow); max-width: 680px; }
   .message.user .bubble { background: var(--brand); border-color: var(--brand-dark); color: #fff; }
-  .bubble h1, .bubble h2, .bubble h3 { font-weight: 600; margin: 16px 0 8px; color: var(--text-primary); letter-spacing: -0.01em; }
-  .bubble h1 { font-size: 17px; }
-  .bubble h2 { font-size: 15px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  .bubble h1, .bubble h2, .bubble h3 { font-weight: 600; margin: 16px 0 8px; color: var(--text-primary); }
+  .bubble h1 { font-size: 17px; } .bubble h2 { font-size: 15px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
   .bubble h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
   .bubble h1:first-child, .bubble h2:first-child, .bubble h3:first-child { margin-top: 0; }
-  .bubble p { margin-bottom: 10px; }
-  .bubble p:last-child { margin-bottom: 0; }
-  .bubble ul, .bubble ol { padding-left: 20px; margin-bottom: 10px; }
-  .bubble li { margin-bottom: 4px; }
+  .bubble p { margin-bottom: 10px; } .bubble p:last-child { margin-bottom: 0; }
+  .bubble ul, .bubble ol { padding-left: 20px; margin-bottom: 10px; } .bubble li { margin-bottom: 4px; }
   .bubble code { background: var(--surface-3); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-family: var(--font-mono); font-size: 12px; color: var(--brand-dark); }
   .bubble pre { background: #1E1E2E; border-radius: var(--radius-sm); padding: 14px 16px; overflow-x: auto; margin: 10px 0; }
   .bubble pre code { background: none; border: none; color: #CDD6F4; font-size: 12px; padding: 0; line-height: 1.6; }
-  .bubble strong { font-weight: 600; }
-  .bubble em { font-style: italic; color: var(--text-secondary); }
+  .bubble strong { font-weight: 600; } .bubble em { font-style: italic; color: var(--text-secondary); }
   .bubble blockquote { border-left: 3px solid var(--brand); padding: 8px 14px; background: var(--brand-light); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 10px 0; color: var(--brand-dark); font-size: 13px; }
   .bubble hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-
   .canvas-action { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
   .build-canvas-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-sm); padding: 9px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font); transition: background 0.15s; }
   .build-canvas-btn:hover { background: var(--brand-dark); }
   .build-canvas-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
-
   .flag { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); margin: 8px 0; font-size: 13px; }
   .flag.warning { background: var(--warning-light); border: 1px solid #FCD34D; color: #92400E; }
   .flag.danger { background: var(--danger-light); border: 1px solid #FCA5A5; color: #7F1D1D; }
   .flag.success { background: var(--success-light); border: 1px solid #6EE7B7; color: #064E3B; }
-
   .thinking { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); font-size: 13px; color: var(--text-secondary); max-width: 200px; }
   .thinking-dots { display: flex; gap: 4px; }
   .thinking-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); animation: bounce 1.2s infinite; }
   .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
   .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
-
   @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-  /* ── Input area ── */
   .input-area { padding: 16px 24px 20px; background: var(--surface); border-top: 1px solid var(--border); flex-shrink: 0; }
-
-  /* ── Brief upload banner ── */
-  .brief-banner {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--brand-light); border: 1px solid var(--brand-mid);
-    border-radius: var(--radius-sm); padding: 8px 12px;
-    margin-bottom: 10px; font-size: 12px; color: var(--brand-dark);
-  }
+  .brief-banner { display: flex; align-items: center; gap: 10px; background: var(--brand-light); border: 1px solid var(--brand-mid); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 10px; font-size: 12px; color: var(--brand-dark); }
   .brief-banner-name { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .brief-clear-btn { background: none; border: none; color: var(--brand); cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1; }
   .brief-clear-btn:hover { color: var(--brand-dark); }
-
   .input-row { display: flex; gap: 10px; align-items: flex-end; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 10px 12px; transition: border-color 0.15s; }
   .input-row:focus-within { border-color: var(--brand); background: var(--surface); }
-
-  /* ── Upload button ── */
-  .upload-btn {
-    width: 34px; height: 34px; flex-shrink: 0;
-    background: transparent; color: var(--text-muted);
-    border: 1.5px solid var(--border); border-radius: 8px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 16px; transition: all 0.15s;
-  }
+  .upload-btn { width: 34px; height: 34px; flex-shrink: 0; background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.15s; }
   .upload-btn:hover { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
   .upload-btn.has-file { background: var(--brand-light); color: var(--brand); border-color: var(--brand); }
-
   #messageInput { flex: 1; border: none; background: transparent; font-family: var(--font); font-size: 14px; color: var(--text-primary); resize: none; outline: none; max-height: 140px; min-height: 24px; line-height: 1.5; }
   #messageInput::placeholder { color: var(--text-muted); }
   #briefFileInput { display: none; }
-
   .send-btn { width: 34px; height: 34px; flex-shrink: 0; background: var(--brand); color: #fff; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: background 0.15s, transform 0.1s; }
   .send-btn:hover { background: var(--brand-dark); }
   .send-btn:active { transform: scale(0.95); }
   .send-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
   .input-hint { font-size: 11px; color: var(--text-muted); margin-top: 6px; padding-left: 2px; }
-
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--surface); border-radius: var(--radius); box-shadow: 0 20px 60px rgba(0,0,0,0.2); width: 480px; max-width: 90vw; overflow: hidden; }
@@ -196,15 +128,13 @@
   .btn-secondary:hover { background: var(--surface-3); }
   .btn-primary { padding: 8px 16px; background: var(--brand); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font); transition: background 0.12s; }
   .btn-primary:hover { background: var(--brand-dark); }
-
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 </style>
 </head>
 <body>
-
+ 
 <header class="header">
   <div class="header-left">
     <div class="logo">⚡</div>
@@ -216,63 +146,40 @@
     <button class="config-btn" onclick="openConfig()">⚙ Config</button>
   </div>
 </header>
-
+ 
 <div class="app">
   <aside class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Quick actions</div>
       <div class="capability-list">
-        <div class="capability-item" onclick="sendPrompt('Audit the workspace. Identify the top 5 issues I should fix today based on best practice.')">
-          <span class="cap-icon">🔍</span> Audit workspace
-        </div>
-        <div class="capability-item" onclick="sendPrompt('Review all active Canvases and flag any that violate best practice — missing exit criteria, no control group, Liquid without defaults, or stale configurations.')">
-          <span class="cap-icon">🗺</span> Review Canvases
-        </div>
-        <div class="capability-item" onclick="sendPrompt('Analyse the segment library. Identify duplicates, segments without analytics tracking that are used in Canvases, and any naming convention violations.')">
-          <span class="cap-icon">👥</span> Segment health check
-        </div>
-        <div class="capability-item" onclick="sendPrompt('I want to build a new Canvas. Ask me the questions you need to understand the brief, then design and build it.')">
-          <span class="cap-icon">🏗</span> Build a Canvas
-        </div>
-        <div class="capability-item" onclick="sendPrompt('Give me a morning brief — summarise the current state of the workspace, flag anything that needs attention today, and highlight any recent activity worth reviewing.')">
-          <span class="cap-icon">☀️</span> Morning brief
-        </div>
-        <div class="capability-item" onclick="sendPrompt('Write Liquid personalisation logic for me. Ask me what I am trying to personalise, then produce the complete Liquid code with proper defaults and error handling.')">
-          <span class="cap-icon">💧</span> Write Liquid
-        </div>
-        <div class="capability-item" onclick="triggerBriefUpload()">
-          <span class="cap-icon">📄</span> Upload brief
-        </div>
+        <div class="capability-item" onclick="sendPrompt('Audit the workspace. Identify the top 5 issues I should fix today based on best practice.')"><span class="cap-icon">🔍</span> Audit workspace</div>
+        <div class="capability-item" onclick="sendPrompt('Review all active Canvases and flag any that violate best practice — missing exit criteria, no control group, Liquid without defaults, or stale configurations.')"><span class="cap-icon">🗺</span> Review Canvases</div>
+        <div class="capability-item" onclick="sendPrompt('Analyse the segment library. Identify duplicates, segments without analytics tracking that are used in Canvases, and any naming convention violations.')"><span class="cap-icon">👥</span> Segment health check</div>
+        <div class="capability-item" onclick="sendPrompt('I want to build a new Canvas. Ask me the questions you need to understand the brief, then design and build it.')"><span class="cap-icon">🏗</span> Build a Canvas</div>
+        <div class="capability-item" onclick="sendPrompt('Give me a morning brief — summarise the current state of the workspace, flag anything that needs attention today, and highlight any recent activity worth reviewing.')"><span class="cap-icon">☀️</span> Morning brief</div>
+        <div class="capability-item" onclick="sendPrompt('Write Liquid personalisation logic for me. Ask me what I am trying to personalise, then produce the complete Liquid code with proper defaults and error handling.')"><span class="cap-icon">💧</span> Write Liquid</div>
+        <div class="capability-item" onclick="triggerBriefUpload()"><span class="cap-icon">📄</span> Upload brief</div>
       </div>
     </div>
 
     <div class="sidebar-section">
       <div class="sidebar-label">Health & monitoring</div>
       <div class="capability-list">
-        <div class="capability-item" onclick="sendPrompt('Run the Canvas Metrics health check. For each active Canvas, classify it as one-time-entry or recurring based on its re-entry settings, apply the relevant metric filters, and surface the top 5 underperforming Canvases from the last 7 days with a diagnostic one-liner and recommended fix for each.')">
-          <span class="cap-icon">📊</span> Canvas metrics check
-        </div>
-        <div class="capability-item" onclick="sendPrompt('Run a housekeeping audit of the workspace. Identify orphan segments, unused custom events, unused custom attributes, naming convention violations, dead/stale campaigns, stale draft campaigns, zero-member segments, and unused email templates. List specific assets by name.')">
-          <span class="cap-icon">🧹</span> Housekeeping audit
-        </div>
-        <div class="capability-item" onclick="sendPrompt('Run a workspace health check. Look for unsubscribe rate spikes, segment size anomalies in key segments, API error health (429/5xx rates), and duplicate profile surges. For any anomaly found, give the diagnostic hypothesis and likely cause.')">
-          <span class="cap-icon">🩺</span> Workspace health check
-        </div>
+        <div class="capability-item" onclick="sendPrompt('Run the Canvas Metrics health check. For each active Canvas, classify it as one-time-entry or recurring based on its re-entry settings, apply the relevant metric filters, and surface the top 5 underperforming Canvases from the last 7 days with a diagnostic one-liner and recommended fix for each.')"><span class="cap-icon">📊</span> Canvas metrics check</div>
+        <div class="capability-item" onclick="sendPrompt('Run a housekeeping audit of the workspace. Identify orphan segments, unused custom events, unused custom attributes, naming convention violations, dead/stale campaigns, stale draft campaigns, zero-member segments, and unused email templates. List specific assets by name.')"><span class="cap-icon">🧹</span> Housekeeping audit</div>
+        <div class="capability-item" onclick="sendPrompt('Run a workspace health check. Look for unsubscribe rate spikes, segment size anomalies in key segments, API error health (429/5xx rates), and duplicate profile surges. For any anomaly found, give the diagnostic hypothesis and likely cause.')"><span class="cap-icon">🩺</span> Workspace health check</div>
       </div>
     </div>
 
     <div class="context-panel">
       <div class="sidebar-label">Workspace snapshot</div>
       <div id="contextPanel">
-        <div class="context-card">
-          <div class="context-card-title">Loading...</div>
-          <div class="context-card-value">Fetching live workspace data</div>
-        </div>
+        <div class="context-card"><div class="context-card-title">Loading...</div><div class="context-card-value">Fetching live workspace data</div></div>
       </div>
       <button class="refresh-btn" onclick="loadContext()">↻ Refresh workspace</button>
     </div>
   </aside>
-
+ 
   <main class="main">
     <div class="messages" id="messages">
       <div class="welcome" id="welcome">
@@ -280,103 +187,57 @@
         <h2>Braze Copilot</h2>
         <p>An opinionated AI practitioner. I know your best practice playbook, your client's data model, and their ecosystem. Ask me anything — or upload a brief to build a Canvas.</p>
         <div class="prompt-grid">
-          <button class="prompt-chip" onclick="sendPrompt('Audit the workspace and give me your top 5 concerns.')">
-            <div class="prompt-chip-icon">🔍</div>
-            <div class="prompt-chip-text">Audit the workspace for best practice violations</div>
-          </button>
-          <button class="prompt-chip" onclick="sendPrompt('I want to build a win-back Canvas for lapsed customers. Walk me through the brief and then build it.')">
-            <div class="prompt-chip-icon">🏗</div>
-            <div class="prompt-chip-text">Build a win-back Canvas for lapsed customers</div>
-          </button>
-          <button class="prompt-chip" onclick="triggerBriefUpload()">
-            <div class="prompt-chip-icon">📄</div>
-            <div class="prompt-chip-text">Upload a campaign brief to build a Canvas</div>
-          </button>
-          <button class="prompt-chip" onclick="sendPrompt('Write Liquid for a loyalty tier personalisation block — bronze, silver, gold, and platinum tiers — with proper defaults.')">
-            <div class="prompt-chip-icon">💧</div>
-            <div class="prompt-chip-text">Write Liquid for loyalty tier personalisation</div>
-          </button>
+          <button class="prompt-chip" onclick="sendPrompt('Audit the workspace and give me your top 5 concerns.')"><div class="prompt-chip-icon">🔍</div><div class="prompt-chip-text">Audit the workspace for best practice violations</div></button>
+          <button class="prompt-chip" onclick="sendPrompt('I want to build a win-back Canvas for lapsed customers. Walk me through the brief and then build it.')"><div class="prompt-chip-icon">🏗</div><div class="prompt-chip-text">Build a win-back Canvas for lapsed customers</div></button>
+          <button class="prompt-chip" onclick="triggerBriefUpload()"><div class="prompt-chip-icon">📄</div><div class="prompt-chip-text">Upload a campaign brief to build a Canvas</div></button>
+          <button class="prompt-chip" onclick="sendPrompt('Write Liquid for a loyalty tier personalisation block — bronze, silver, gold, and platinum tiers — with proper defaults.')"><div class="prompt-chip-icon">💧</div><div class="prompt-chip-text">Write Liquid for loyalty tier personalisation</div></button>
         </div>
       </div>
     </div>
-
+ 
     <div class="input-area">
-      <!-- Brief banner — shown when a file is loaded -->
       <div class="brief-banner" id="briefBanner" style="display:none">
         <span>📄</span>
         <span class="brief-banner-name" id="briefBannerName"></span>
         <span style="color:var(--text-muted);font-size:11px" id="briefBannerSize"></span>
         <button class="brief-clear-btn" onclick="clearBrief()" title="Remove brief">×</button>
       </div>
-
       <div class="input-row">
-        <!-- Hidden file input -->
         <input type="file" id="briefFileInput" accept=".pdf,.doc,.docx,.txt" onchange="handleBriefUpload(event)">
-        <!-- Upload button -->
         <button class="upload-btn" id="uploadBtn" onclick="triggerBriefUpload()" title="Upload campaign brief (PDF, Word, TXT)">📎</button>
-        <textarea
-          id="messageInput"
-          placeholder="Ask the copilot anything, or upload a brief with 📎 to build a Canvas from a document..."
-          rows="1"
-          onkeydown="handleKey(event)"
-          oninput="autoResize(this)"
-        ></textarea>
+        <textarea id="messageInput" placeholder="Ask the copilot anything, or upload a brief with 📎 to build a Canvas from a document..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">↑</button>
       </div>
       <div class="input-hint">↵ Send &nbsp;·&nbsp; Shift+↵ New line &nbsp;·&nbsp; 📎 Upload a PDF or Word brief to build a Canvas from a document</div>
     </div>
   </main>
 </div>
-
+ 
 <div class="modal-overlay" id="configModal">
   <div class="modal">
-    <div class="modal-header">
-      <h2>⚙ Configuration</h2>
-      <button class="modal-close" onclick="closeConfig()">×</button>
-    </div>
+    <div class="modal-header"><h2>⚙ Configuration</h2><button class="modal-close" onclick="closeConfig()">×</button></div>
     <div class="modal-body">
-      <div class="field-group">
-        <div class="field-label">Proxy server URL</div>
-        <input class="field-input" id="cfgProxyUrl" type="text" placeholder="Leave blank for relative (same host)">
-        <div class="field-hint">Leave blank when the UI is served by the proxy. Set a full URL only when running the frontend separately.</div>
-      </div>
-      <div class="field-group">
-        <div class="field-label">Braze session ID <span style="color:#DC2626">*</span></div>
-        <input class="field-input" id="cfgSessionId" type="password" placeholder="Grab from DevTools → Network → Cookie header">
-        <div class="field-hint">From DevTools Network tab: any Braze dashboard request → Cookie → _session_id value</div>
-      </div>
-      <div class="field-group">
-        <div class="field-label">Braze CSRF token <span style="color:#DC2626">*</span></div>
-        <input class="field-input" id="cfgCsrfToken" type="password" placeholder="Grab from DevTools → Network → X-CSRF-Token header">
-        <div class="field-hint">From DevTools Network tab: any Braze dashboard request → Request Headers → X-CSRF-Token</div>
-      </div>
-      <div class="flag warning">
-        ⚠ Refresh session ID and CSRF token on demo day — sessions expire. Takes 2 minutes via DevTools.
-      </div>
+      <div class="field-group"><div class="field-label">Proxy server URL</div><input class="field-input" id="cfgProxyUrl" type="text" placeholder="Leave blank for relative (same host)"><div class="field-hint">Leave blank when the UI is served by the proxy.</div></div>
+      <div class="field-group"><div class="field-label">Braze session ID <span style="color:#DC2626">*</span></div><input class="field-input" id="cfgSessionId" type="password" placeholder="Grab from DevTools → Network → Cookie header"><div class="field-hint">From DevTools: any Braze dashboard request → Cookie → _session_id value</div></div>
+      <div class="field-group"><div class="field-label">Braze CSRF token <span style="color:#DC2626">*</span></div><input class="field-input" id="cfgCsrfToken" type="password" placeholder="Grab from DevTools → Network → X-CSRF-Token header"><div class="field-hint">From DevTools: any Braze dashboard request → Request Headers → X-CSRF-Token</div></div>
+      <div class="flag warning">⚠ Refresh session ID and CSRF token on demo day — sessions expire. Takes 2 minutes via DevTools.</div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeConfig()">Cancel</button>
-      <button class="btn-primary" onclick="saveConfig()">Save & reconnect</button>
-    </div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeConfig()">Cancel</button><button class="btn-primary" onclick="saveConfig()">Save & reconnect</button></div>
   </div>
 </div>
-
+ 
 <script>
-// ─── State ─────────────────────────────────────────────────────────────────
+// ─── State ──────────────────────────────────────────────────────────────────
 let PROXY_URL = localStorage.getItem('proxyUrl') || '';
 let workspaceContext = '';
 let conversationHistory = [];
 let isThinking = false;
-
-// Brief document state
-let briefDocument = null; // { name, type, base64, mediaType }
-
-// ─── Init ──────────────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  loadContext();
-});
-
-// ─── Context loading ───────────────────────────────────────────────────────
+let briefDocument = null;
+ 
+// ─── Init ────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => { loadContext(); });
+ 
+// ─── Context ─────────────────────────────────────────────────────────────────
 async function loadContext() {
   setStatus('loading', 'Loading workspace...');
   try {
@@ -391,200 +252,113 @@ async function loadContext() {
     renderContextError(e.message);
   }
 }
-
+ 
 function renderContextPanel(context) {
   const campaignSection = context.match(/### Recent campaigns[\s\S]*?(?=###|$)/);
   const canvasSection = context.match(/### Recent canvases[\s\S]*?(?=###|$)/);
   const campaignCount = campaignSection ? (campaignSection[0].match(/^  - /gm) || []).length : 0;
   const canvasCount = canvasSection ? (canvasSection[0].match(/^  - /gm) || []).length : 0;
-
-  const panel = document.getElementById('contextPanel');
-  panel.innerHTML = `
-    <div class="context-card">
-      <div class="context-stat">
-        <div>
-          <div class="context-stat-num">${campaignCount}+</div>
-          <div class="context-stat-label">campaigns loaded</div>
-        </div>
-        <div style="text-align:right">
-          <div class="context-stat-num">${canvasCount}+</div>
-          <div class="context-stat-label">canvases loaded</div>
-        </div>
-      </div>
-    </div>
-    <div class="context-card">
-      <div class="context-card-title">Knowledge layers</div>
-      <div class="context-card-value">
-        ✓ Best practice playbook<br>
-        ✓ Client context<br>
-        ✓ Ecosystem architecture<br>
-        ✓ Canvas brief<br>
-        ✓ Canvas metrics module<br>
-        ✓ Housekeeping module<br>
-        ✓ Workspace health module
-      </div>
-    </div>
-    <div class="context-card">
-      <div class="context-card-title">Status</div>
-      <div class="context-card-value">Live workspace data loaded. Copilot is ready.</div>
-    </div>
-  `;
-}
-
-function renderContextError(msg) {
   document.getElementById('contextPanel').innerHTML = `
     <div class="context-card">
-      <div class="context-card-title" style="color:#DC2626">Connection error</div>
-      <div class="context-card-value">Cannot reach proxy server.<br>Start with: <code>node server/proxy.js</code><br><br>Error: ${msg}</div>
+      <div class="context-stat">
+        <div><div class="context-stat-num">${campaignCount}+</div><div class="context-stat-label">campaigns loaded</div></div>
+        <div style="text-align:right"><div class="context-stat-num">${canvasCount}+</div><div class="context-stat-label">canvases loaded</div></div>
+      </div>
     </div>
-  `;
+    <div class="context-card"><div class="context-card-title">Knowledge layers</div><div class="context-card-value">✓ Best practice playbook<br>✓ Client context<br>✓ Ecosystem architecture<br>✓ Canvas brief<br>✓ Canvas metrics module<br>✓ Housekeeping module<br>✓ Workspace health module</div></div>
+    <div class="context-card"><div class="context-card-title">Status</div><div class="context-card-value">Live workspace data loaded. Copilot is ready.</div></div>`;
 }
-
+ 
+function renderContextError(msg) {
+  document.getElementById('contextPanel').innerHTML = `<div class="context-card"><div class="context-card-title" style="color:#DC2626">Connection error</div><div class="context-card-value">Cannot reach proxy server.<br>Start with: <code>node server/proxy.js</code><br><br>Error: ${msg}</div></div>`;
+}
+ 
 function setStatus(state, label) {
-  const dot = document.getElementById('statusDot');
-  const lbl = document.getElementById('statusLabel');
-  dot.className = 'status-dot' + (state === 'loading' ? ' loading' : state === 'error' ? ' error' : '');
-  lbl.textContent = label;
+  document.getElementById('statusDot').className = 'status-dot' + (state === 'loading' ? ' loading' : state === 'error' ? ' error' : '');
+  document.getElementById('statusLabel').textContent = label;
 }
-
-// ─── Brief upload ──────────────────────────────────────────────────────────
+ 
+// ─── Brief upload ─────────────────────────────────────────────────────────────
 function triggerBriefUpload() {
   document.getElementById('briefFileInput').click();
 }
-
+ 
 function handleBriefUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
-
-  const maxSize = 10 * 1024 * 1024; // 10MB
-  if (file.size > maxSize) {
-    alert('File too large. Maximum size is 10MB.');
-    return;
-  }
-
+  if (file.size > 10 * 1024 * 1024) { alert('File too large. Maximum size is 10MB.'); return; }
   const supportedTypes = {
     'application/pdf': 'application/pdf',
     'text/plain': 'text/plain',
     'application/msword': 'text/plain',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'text/plain'
   };
-
   const mediaType = supportedTypes[file.type];
-  if (!mediaType) {
-    alert('Unsupported file type. Please upload a PDF, Word document, or text file.');
-    return;
-  }
-
+  if (!mediaType) { alert('Unsupported file type. Please upload a PDF, Word document, or text file.'); return; }
   const reader = new FileReader();
   reader.onload = (e) => {
-    const base64 = e.target.result.split(',')[1];
-    briefDocument = {
-      name: file.name,
-      type: file.type,
-      mediaType: mediaType,
-      base64: base64,
-      size: (file.size / 1024).toFixed(0) + 'KB'
-    };
-
-    // Show banner
+    briefDocument = { name: file.name, type: file.type, mediaType, base64: e.target.result.split(',')[1], size: (file.size / 1024).toFixed(0) + 'KB' };
     document.getElementById('briefBanner').style.display = 'flex';
     document.getElementById('briefBannerName').textContent = file.name;
     document.getElementById('briefBannerSize').textContent = briefDocument.size;
     document.getElementById('uploadBtn').classList.add('has-file');
-
-    // Auto-prompt if no text in input
     const input = document.getElementById('messageInput');
-    if (!input.value.trim()) {
-      input.value = 'Read this brief and build a Canvas in Braze. Apply best practice and use the correct segments from the workspace.';
-      autoResize(input);
-    }
-
-    // Reset file input so same file can be re-uploaded
+    if (!input.value.trim()) { input.value = 'Read this brief and build a Canvas in Braze. Apply best practice and use the correct segments from the workspace.'; autoResize(input); }
     event.target.value = '';
   };
-
   reader.readAsDataURL(file);
 }
-
+ 
 function clearBrief() {
   briefDocument = null;
   document.getElementById('briefBanner').style.display = 'none';
   document.getElementById('briefBannerName').textContent = '';
   document.getElementById('uploadBtn').classList.remove('has-file');
 }
-
-// ─── Chat ──────────────────────────────────────────────────────────────────
+ 
+// ─── Chat ─────────────────────────────────────────────────────────────────────
 function sendPrompt(text) {
   const input = document.getElementById('messageInput');
   input.value = text;
   sendMessage();
 }
-
+ 
 async function sendMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
   if (!text || isThinking) return;
-
-  hideWelcome();
+  const w = document.getElementById('welcome');
+  if (w) w.remove();
   input.value = '';
   autoResize(input);
-
-  // Build user message — include document if present
+ 
   let userMessage;
   if (briefDocument) {
-    const isPdf = briefDocument.mediaType === 'application/pdf';
-    if (isPdf) {
-      // PDF: pass as document block to Claude
-      userMessage = {
-        role: 'user',
-        content: [
-          {
-            type: 'document',
-            source: {
-              type: 'base64',
-              media_type: 'application/pdf',
-              data: briefDocument.base64
-            }
-          },
-          { type: 'text', text: text }
-        ]
-      };
+    if (briefDocument.mediaType === 'application/pdf') {
+      userMessage = { role: 'user', content: [{ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: briefDocument.base64 } }, { type: 'text', text }] };
     } else {
-      // Text/Word: decode and prepend as text
       const decoded = atob(briefDocument.base64);
-      userMessage = {
-        role: 'user',
-        content: `[Brief document: ${briefDocument.name}]\n\n${decoded}\n\n---\n\n${text}`
-      };
+      userMessage = { role: 'user', content: `[Brief document: ${briefDocument.name}]\n\n${decoded}\n\n---\n\n${text}` };
     }
-    // Show user message in chat with file indicator
     appendMessage('user', `📄 ${briefDocument.name}\n\n${text}`);
-    // Clear brief after sending
     clearBrief();
   } else {
     userMessage = { role: 'user', content: text };
     appendMessage('user', text);
   }
-
+ 
   conversationHistory.push(userMessage);
-
   isThinking = true;
   document.getElementById('sendBtn').disabled = true;
   const thinkingEl = appendThinking();
-
+ 
   try {
     const res = await fetch(`${PROXY_URL}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: conversationHistory,
-        workspaceContext
-      })
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: conversationHistory, workspaceContext })
     });
-
     const data = await res.json();
     thinkingEl.remove();
-
     if (data.error) {
       appendMessage('assistant', `**Error:** ${data.error}\n\nMake sure the proxy server is running and configured correctly.`);
     } else {
@@ -595,41 +369,34 @@ async function sendMessage() {
     thinkingEl.remove();
     appendMessage('assistant', `**Connection error:** Cannot reach the proxy server.\n\nMake sure \`node server/proxy.js\` is running.`);
   }
-
+ 
   isThinking = false;
   document.getElementById('sendBtn').disabled = false;
   input.focus();
 }
-
-function hideWelcome() {
-  const w = document.getElementById('welcome');
-  if (w) w.remove();
-}
-
+ 
 function appendMessage(role, content) {
   const messages = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = `message ${role}`;
-
   const avatar = document.createElement('div');
   avatar.className = `avatar ${role}`;
   avatar.textContent = role === 'assistant' ? '⚡' : '👤';
-
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
-
+ 
   if (role === 'assistant') {
-    bubble.innerHTML = renderMarkdown(content);
-    if (content.includes('"schedule_type"') || content.includes('"entry_audience"') || content.includes('"canvas_entry_properties_schema"')) {
+    const displayContent = content.replace(/<canvas_json>[\s\S]*?<\/canvas_json>/g, '').trim();
+    bubble.innerHTML = renderMarkdown(displayContent);
+    // Show build button if response contains canvas_json tags OR canvas JSON fields
+    if (content.includes('<canvas_json>') || content.includes('"schedule_type"') || content.includes('"entry_audience"')) {
       const action = document.createElement('div');
       action.className = 'canvas-action';
       const btn = document.createElement('button');
       btn.className = 'build-canvas-btn';
       btn.textContent = '🏗 Build this Canvas in Braze';
       btn.dataset.content = content;
-      btn.addEventListener('click', function() {
-        triggerCanvasBuild(this, this.dataset.content);
-      });
+      btn.addEventListener('click', function() { triggerCanvasBuild(this, this.dataset.content); });
       const hint = document.createElement('span');
       hint.style.cssText = 'font-size:12px;color:var(--text-muted);margin-left:10px';
       hint.textContent = 'Will POST directly to your Braze workspace';
@@ -640,133 +407,122 @@ function appendMessage(role, content) {
   } else {
     bubble.innerHTML = renderMarkdown(content);
   }
-
+ 
   div.appendChild(avatar);
   div.appendChild(bubble);
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
   return div;
 }
-
+ 
 function appendThinking() {
   const messages = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = 'message assistant';
-  div.innerHTML = `
-    <div class="avatar assistant">⚡</div>
-    <div class="thinking">
-      <div class="thinking-dots"><span></span><span></span><span></span></div>
-      Thinking...
-    </div>
-  `;
+  div.innerHTML = `<div class="avatar assistant">⚡</div><div class="thinking"><div class="thinking-dots"><span></span><span></span><span></span></div>Thinking...</div>`;
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
   return div;
 }
-
-// ─── Canvas builder ────────────────────────────────────────────────────────
+ 
+// ─── Canvas builder ───────────────────────────────────────────────────────────
 async function triggerCanvasBuild(btn, responseText) {
   btn.disabled = true;
   btn.textContent = '⏳ Extracting Canvas config...';
-
-  // Extract JSON directly from the response — no second API call needed
-  const match = responseText.match(/<canvas_json>([\s\S]*?)<\/canvas_json>/);
-  if (!match) {
-    appendMessage('assistant', '**Could not find Canvas JSON in the response.** Ask me to produce the Canvas configuration and try again.');
-    btn.disabled = false;
-    btn.textContent = '🏗 Build this Canvas in Braze';
-    return;
-  }
-
+ 
+  // Try canvas_json tags first (preferred — no extra API call)
+  const tagMatch = responseText.match(/<canvas_json>([\s\S]*?)<\/canvas_json>/);
+ 
   let payload;
+ 
+  if (tagMatch) {
+    try {
+      payload = JSON.parse(tagMatch[1].trim());
+    } catch (e) {
+      appendMessage('assistant', '**Canvas JSON was malformed.** Ask me to reproduce the Canvas payload and try again.');
+      btn.disabled = false;
+      btn.textContent = '🏗 Build this Canvas in Braze';
+      return;
+    }
+  } else {
+    // Fallback: ask Claude to extract the JSON
+    btn.textContent = '⏳ Extracting via AI...';
+    try {
+      const extractRes = await fetch(`${PROXY_URL}/api/chat`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...conversationHistory, { role: 'user', content: 'Extract the Canvas configuration from your last response as a valid JSON object. Return ONLY the JSON, no explanation, no markdown fences, no truncation. Must be complete and parseable.' }],
+          workspaceContext
+        })
+      });
+      const extractData = await extractRes.json();
+      try {
+        payload = JSON.parse(extractData.reply.replace(/```json|```/g, '').trim());
+      } catch (e) {
+        appendMessage('assistant', '**Could not extract Canvas JSON.** Ask me to reproduce the Canvas configuration and try again.');
+        btn.disabled = false;
+        btn.textContent = '🏗 Build this Canvas in Braze';
+        return;
+      }
+    } catch (e) {
+      appendMessage('assistant', `**Extraction error:** ${e.message}`);
+      btn.disabled = false;
+      btn.textContent = '🏗 Build this Canvas in Braze';
+      return;
+    }
+  }
+ 
+  btn.textContent = '⏳ Building in Braze...';
+ 
   try {
-    payload = JSON.parse(match[1].trim());
+    const buildRes = await fetch(`${PROXY_URL}/api/canvas/build`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ canvasPayload: payload })
+    });
+    const buildData = await buildRes.json();
+    if (buildData.status === 200 || buildData.status === 201) {
+      appendMessage('assistant', '✅ **Canvas built successfully in Braze.**\n\nThe Canvas has been created in your workspace. Open Braze to review it before activating.');
+      btn.textContent = '✅ Built in Braze';
+    } else {
+      appendMessage('assistant', `**Canvas build failed.** Braze returned status ${buildData.status}.\n\nRefresh your session credentials and try again.`);
+      btn.disabled = false;
+      btn.textContent = '🏗 Retry build';
+    }
   } catch (e) {
-    appendMessage('assistant', '**Canvas JSON was malformed.** Ask me to reproduce the payload and try again.');
+    appendMessage('assistant', `**Build error:** ${e.message}`);
     btn.disabled = false;
     btn.textContent = '🏗 Build this Canvas in Braze';
-    return;
-  }
-
-  btn.textContent = '⏳ Building in Braze...';
-
-  const buildRes = await fetch(`${PROXY_URL}/api/canvas/build`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ canvasPayload: payload })
-  });
-
-  const buildData = await buildRes.json();
-
-    if (buildData.status === 200 || buildData.status === 201) {
-    appendMessage('assistant', '✅ **Canvas built successfully in Braze.**\n\nThe Canvas has been created in your workspace. Open Braze to review it before activating.');
-    btn.textContent = '✅ Built in Braze';
-  } else {
-    appendMessage('assistant', `**Canvas build failed.** Braze returned status ${buildData.status}.\n\nRefresh your session credentials and try again.`);
-    btn.disabled = false;
-    btn.textContent = '🏗 Retry build';
   }
 }
-// ─── Markdown renderer ─────────────────────────────────────────────────────
+ 
+// ─── Markdown renderer ────────────────────────────────────────────────────────
 function renderMarkdown(text) {
   return text
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) =>
-      `<pre><code class="language-${lang}">${code.trim()}</code></pre>`)
+    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code class="language-${lang}">${code.trim()}</code></pre>`)
     .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/^---$/gm, '<hr>')
-    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-    .replace(/^\* (.+)$/gm, '<li>$1</li>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
-    .replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>')
-    .replace(/<\/ul>\s*<ul>/g, '')
-    .split('\n\n').map(block => {
-      if (block.startsWith('<')) return block;
-      if (block.trim()) return `<p>${block}</p>`;
-      return '';
-    }).join('');
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>').replace(/^## (.+)$/gm, '<h2>$1</h2>').replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^---$/gm, '<hr>').replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^\* (.+)$/gm, '<li>$1</li>').replace(/^- (.+)$/gm, '<li>$1</li>').replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+    .replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>').replace(/<\/ul>\s*<ul>/g, '')
+    .split('\n\n').map(block => { if (block.startsWith('<')) return block; if (block.trim()) return `<p>${block}</p>`; return ''; }).join('');
 }
-
-// ─── Input helpers ─────────────────────────────────────────────────────────
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
-}
-
-// ─── Config modal ──────────────────────────────────────────────────────────
-function openConfig() {
-  document.getElementById('cfgProxyUrl').value = PROXY_URL;
-  document.getElementById('configModal').classList.add('open');
-}
-
-function closeConfig() {
-  document.getElementById('configModal').classList.remove('open');
-}
-
+ 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 140) + 'px'; }
+ 
+// ─── Config modal ─────────────────────────────────────────────────────────────
+function openConfig() { document.getElementById('cfgProxyUrl').value = PROXY_URL; document.getElementById('configModal').classList.add('open'); }
+function closeConfig() { document.getElementById('configModal').classList.remove('open'); }
 function saveConfig() {
   PROXY_URL = document.getElementById('cfgProxyUrl').value.trim();
   localStorage.setItem('proxyUrl', PROXY_URL);
   const sessionId = document.getElementById('cfgSessionId').value.trim();
   const csrfToken = document.getElementById('cfgCsrfToken').value.trim();
   if (sessionId || csrfToken) {
-    fetch(`${PROXY_URL}/api/config`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, csrfToken })
-    }).catch(() => {});
+    fetch(`${PROXY_URL}/api/config`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId, csrfToken }) }).catch(() => {});
   }
   closeConfig();
   loadContext();
