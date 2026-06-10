@@ -98,7 +98,7 @@ When producing a Canvas configuration, always structure your response as follows
 CRITICAL rules for the JSON block:
 - Always wrap in <canvas_json> tags — no exceptions
 - The JSON must be complete and valid — never truncate it
-- Always use segment UUIDs from the live workspace context — never segment names
+- Always use segment IDs from the LIVE WORKSPACE CONTEXT section above — never from the knowledge base files. The knowledge base may contain outdated segment IDs. If the user references a segment by name, find it in the live workspace context and use that exact ID.
 - Always include is_legal_drinking_age == true in entry criteria for Campari Group
 - schedule_type must be one of: "time_based", "action_based", "api_triggered"
 - Always wrap the root in a "canvas" key: { "canvas": { ... } }
