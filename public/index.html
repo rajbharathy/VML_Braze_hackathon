@@ -169,7 +169,7 @@
     <div class="sidebar-section">
       <div class="sidebar-label">Health & monitoring</div>
       <div class="capability-list">
-        <div class="capability-item" onclick="sendPrompt('Run the Canvas Metrics health check using only the canvases and data_series in the SAMPLE CANVAS DATA reference dataset from your knowledge base — do not use the live workspace canvas list for this check. For each canvas in that dataset, classify it as one-time-entry or recurring based on details.schedule_type, apply the relevant metric filters, and surface the top 5 underperforming Canvases from the last 7 days with a diagnostic one-liner and recommended fix for each.')"><span class="cap-icon">📊</span> Canvas metrics check</div>
+        <div class="capability-item" onclick="sendPrompt('Run the Canvas Metrics health check for the current Canvas portfolio. Classify each canvas as one-time-entry or recurring, apply the relevant metric filters, and surface the top 5 underperforming Canvases from the last 7 days with a diagnostic one-liner and recommended fix for each.', 'Run the Canvas Metrics health check using only the canvases and data_series in the SAMPLE CANVAS DATA reference dataset from your knowledge base — do not use the live workspace canvas list for this check. For each canvas in that dataset, classify it as one-time-entry or recurring based on details.schedule_type, apply the relevant metric filters, and surface the top 5 underperforming Canvases from the last 7 days with a diagnostic one-liner and recommended fix for each.')"><span class="cap-icon">📊</span> Canvas metrics check</div>
         <div class="capability-item" onclick="sendPrompt('Run a housekeeping audit of the workspace. Identify orphan segments, unused custom events, unused custom attributes, naming convention violations, dead/stale campaigns, stale draft campaigns, zero-member segments, and unused email templates. List specific assets by name.')"><span class="cap-icon">🧹</span> Housekeeping audit</div>
         <div class="capability-item" onclick="scanAttributes()"><span class="cap-icon">🔍</span> Scan unused attributes</div>
         <div class="capability-item" onclick="scanSegments()"><span class="cap-icon">🗂</span> Scan unused segments</div>
@@ -323,10 +323,10 @@ function clearBrief() {
 }
  
 // ─── Chat ─────────────────────────────────────────────────────────────────────
-function sendPrompt(text) {
+function sendPrompt(text, hiddenText) {
   const input = document.getElementById('messageInput');
   input.value = text;
-  sendMessage();
+  sendMessage(hiddenText);
 }
 
 async function scanAttributes() {
@@ -357,7 +357,7 @@ async function scanSegments() {
   }
 }
 
-async function sendMessage() {
+async function sendMessage(overrideText) {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
   if (!text || isThinking) return;
@@ -365,19 +365,20 @@ async function sendMessage() {
   if (w) w.remove();
   input.value = '';
   autoResize(input);
- 
+  const apiText = overrideText || text;
+
   let userMessage;
   if (briefDocument) {
     if (briefDocument.mediaType === 'application/pdf') {
-      userMessage = { role: 'user', content: [{ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: briefDocument.base64 } }, { type: 'text', text }] };
+      userMessage = { role: 'user', content: [{ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: briefDocument.base64 } }, { type: 'text', text: apiText }] };
     } else {
       const decoded = atob(briefDocument.base64);
-      userMessage = { role: 'user', content: `[Brief document: ${briefDocument.name}]\n\n${decoded}\n\n---\n\n${text}` };
+      userMessage = { role: 'user', content: `[Brief document: ${briefDocument.name}]\n\n${decoded}\n\n---\n\n${apiText}` };
     }
     appendMessage('user', `📄 ${briefDocument.name}\n\n${text}`);
     clearBrief();
   } else {
-    userMessage = { role: 'user', content: text };
+    userMessage = { role: 'user', content: apiText };
     appendMessage('user', text);
   }
  
