@@ -1,105 +1,176 @@
+# BRAZE MORNING BRIEF GENERATION INSTRUCTIONS
+
+## Analysis Rules (Mandatory)
+
+Use the canvases provided in the **SAMPLE CANVAS DATA** section of your knowledge base as the sole dataset for this analysis.
+
+### Data Source Restrictions
+
+* Do NOT call the live Braze API.
+* Do NOT query the current Braze workspace.
+* Do NOT retrieve live Canvas data.
+* Do NOT use any external source of Canvas information.
+* Use only:
+
+  * `details`
+  * `data_series`
+  * `data_summary`
+
+objects contained within **SAMPLE CANVAS DATA**.
+
+### Canvas Eligibility Rules
+
+Include ONLY canvases where:
+
+```text
+details.archived = false
+AND
+details.draft = false
+```
+
+Exclude:
+
+* Archived canvases
+* Draft canvases
+* Deleted canvases
+* Any canvas missing performance data
+
+### Analysis Window
+
+Analyse activity for the last 72 hours using the available metrics in SAMPLE CANVAS DATA.
+
+---
+
 # ☀️ Braze Morning Brief
 
 **Date:** {{today}}
-**Window:** Last 72 Hours
+**Analysis Window:** Last 72 Hours
 
 ---
 
 # 🚨 Card 1: Instance Health
 
-**Overall Health Score:** {{92/100}}
+## Health Score
 
-| Metric            | Status |
-| ----------------- | ------ |
-| Campaign Sends    | ✅      |
-| Canvas Sends      | ✅      |
-| Delivery Health   | ✅      |
-| Event Ingestion   | ✅      |
-| Catalog Sync      | ✅      |
-| Connected Content | ⚠️     |
-| Currents Export   | ✅      |
+{{health_score}} / 100
 
-### Attention Needed
+### Summary
 
-* {{critical_issue_1}}
-* {{critical_issue_2}}
+* Active Canvases Analysed: {{count}}
+* Canvases with No Issues: {{count}}
+* Canvases Requiring Review: {{count}}
+
+### Alerts
+
+* {{alert_1}}
+* {{alert_2}}
 
 ---
 
 # 📬 Card 2: Messaging Activity
 
-### Last 72 Hours
+### Canvas Activity
 
 | Metric          | Value     |
 | --------------- | --------- |
-| Campaigns Sent  | {{count}} |
 | Active Canvases | {{count}} |
 | Messages Sent   | {{count}} |
-| Failed Sends    | {{count}} |
-| Abort Messages  | {{count}} |
+| Entry Events    | {{count}} |
+| Conversions     | {{count}} |
+| Exit Events     | {{count}} |
 
 ### Exceptions
 
-* {{canvas_with_failures}}
-* {{campaign_with_bounces}}
-* {{campaign_with_high_unsubs}}
+List canvases with:
+
+* Significant drop in sends
+* Significant drop in conversions
+* Unexpected spikes or declines
+* High exit volume
 
 ---
 
-# 🛒 Card 3: Customer Activity
+# 🛒 Card 3: Customer Journey Signals
 
-| Event            | Volume    | Trend  |
-| ---------------- | --------- | ------ |
-| product_viewed   | {{count}} | {{↑↓}} |
-| cart_updated     | {{count}} | {{↑↓}} |
-| checkout_started | {{count}} | {{↑↓}} |
-| order_placed     | {{count}} | {{↑↓}} |
+### Positive Trends
 
-### Event Anomalies
+* {{canvas_name}} increased conversions by {{x}}%
+* {{canvas_name}} increased sends by {{x}}%
 
-* {{event_anomaly_1}}
-* {{event_anomaly_2}}
+### Negative Trends
 
----
+* {{canvas_name}} decreased conversions by {{x}}%
+* {{canvas_name}} decreased sends by {{x}}%
 
-# 📈 Card 4: Journey Performance
+### Silent Journeys
 
-### Top Performers
+Identify active canvases with:
 
-🥇 {{canvas_name}} — {{conversion}}%
-
-🥈 {{canvas_name}} — {{conversion}}%
-
-🥉 {{canvas_name}} — {{conversion}}%
-
-### Underperformers
-
-⚠️ {{canvas_name}} — CTR down {{x}}%
-
-⚠️ {{canvas_name}} — Conversion down {{x}}%
-
-### Silent Canvases
-
-* No sends in last 24h: {{canvas_name}}
+* No sends in the last 72 hours
+* No entries in the last 72 hours
+* No conversions in the last 72 hours
 
 ---
 
-# 🤖 Card 5: AI Summary
+# 📈 Card 4: Top & Bottom Performers
+
+## Top 3 Canvases
+
+🥇 {{canvas_name}}
+
+* Conversion Rate: {{rate}}
+* Sends: {{count}}
+
+🥈 {{canvas_name}}
+
+* Conversion Rate: {{rate}}
+* Sends: {{count}}
+
+🥉 {{canvas_name}}
+
+* Conversion Rate: {{rate}}
+* Sends: {{count}}
+
+## Canvases Needing Attention
+
+⚠️ {{canvas_name}}
+
+* Reason: {{reason}}
+
+⚠️ {{canvas_name}}
+
+* Reason: {{reason}}
+
+---
+
+# 🤖 Card 5: Executive Summary
 
 ## What Happened?
 
-{{one_sentence_summary}}
+Provide a concise summary of notable changes observed across all eligible canvases during the last 72 hours.
 
 ## Biggest Change
 
-{{largest_change_detected}}
+Identify the single largest positive or negative trend.
 
-## What Should I Check Today?
+## Recommended Investigation
 
-👉 {{single_recommendation}}
+Recommend the highest-priority canvas or metric to review today and explain why.
 
 ## Risk Level
 
 🟢 Low
 🟡 Medium
 🔴 High
+
+---
+
+# Output Requirements
+
+* Keep the entire report under 500 words.
+* Prioritise anomalies over normal behaviour.
+* Focus on actionable insights.
+* Do not mention excluded canvases.
+* Do not invent missing metrics.
+* If data is unavailable, explicitly state "Data not available in SAMPLE CANVAS DATA."
+* Rank findings by business impact.
