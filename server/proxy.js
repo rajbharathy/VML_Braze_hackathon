@@ -365,8 +365,9 @@ async function createCanvas(canvasPayload) {
     if (type === 'delay') {
       const durationSecs = (() => {
         const d = step.delay || {};
-        const val = d.duration || 0;
-        const unit = (d.unit || d.duration_unit || 'minutes').toLowerCase();
+        const inner = typeof d.duration === 'object' ? d.duration : d;
+        const val = inner.duration || d.duration || 0;
+        const unit = (inner.unit || inner.duration_unit || d.unit || d.duration_unit || 'minutes').toLowerCase();
         if (unit === 'minutes') return val * 60;
         if (unit === 'hours') return val * 3600;
         if (unit === 'days') return val * 86400;
@@ -380,41 +381,24 @@ async function createCanvas(canvasPayload) {
         next_step_ids: nextIds,
         row, column: col,
         is_control_step: false,
-        type: 'FULL',
+        type: 'DELAY',
         id_eagerly_created: true,
-        push_max_enabled: false,
-        banner_priority_bucket: 2,
-        banner_priority_for_unpersisted_step: null,
-        ms_id: nextIds[0] || null,
-        forced_advancement_behavior: true,
-        messages: { messaging_actions: [], composition_mode: 'quick-push-multichannel' },
-        segment_ids: [],
-        attached_images_ids: [],
-        ignore_workflow_quiet_time: false,
-        trigger_schedule: {
-          start_time: startTime,
-          limit_end: false,
-          end_time: null,
-          deliver_in_local_time: true,
-          send_after_quiet_time: false,
-          quiet_start_hour: 0, quiet_start_minute: '00',
-          quiet_end_hour: 8, quiet_end_minute: '00',
-          trigger_events: [], exception_events: [],
-          trigger_delay_in_seconds: durationSecs,
-          duration_in_seconds: durationSecs,
-          reevaluate_segment_at_send_time: true,
-          evaluate_segment_at_enqueue_time: false,
-          delivery_time_without_zone: null,
-          delivery_day: null,
-          deliver_in_days: null,
-          optimal_time_notification: false,
-          delay_option: 'delay_for',
-          retry_window_seconds: 0
+        step_data: {
+          delay_in_seconds: durationSecs,
+          specific_time: null,
+          in_local_time: null,
+          delay_until: null,
+          delay_until_iso: null,
+          delay_until_next_day: null,
+          advance_same_day: null,
+          delay_as_minimum_duration: true,
+          delay_until_variable: null,
+          delay_until_variable_type: null,
+          duration_variable: null,
+          duration_variable_type: null,
+          duration_variable_unit: null
         },
-        delivery_validation_failure_behavior: 'exit',
-        using_v2_filters: true,
-        filters: null,
-        exclusion_filters: null
+        is_disconnected: false
       });
 
     } else if (type === 'message') {
