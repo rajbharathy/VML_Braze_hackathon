@@ -210,110 +210,374 @@ function generateUUID() {
 }
 
 async function createCanvas(canvasPayload) {
+  const canvas = canvasPayload.canvas || canvasPayload;
   const boundary = '----WebKitFormBoundary' + Math.random().toString(36).slice(2, 18);
   const workflowId = generateObjectId();
   const apiWorkflowId = generateUUID();
   const changelogId = generateObjectId();
-  const stepId1 = generateObjectId();
-  const stepId2 = generateObjectId();
-  const variantId = generateObjectId();
-  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
   const startTime = Math.floor(Date.now() / 1000) + 300;
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
 
-  const steps = JSON.stringify([
-    {
-      step_id: stepId1,
-      step_name: "Entry",
-      next_step_ids: [stepId2],
-      row: 0,
-      column: 3,
-      is_control_step: false,
-      type: "FULL",
-      id_eagerly_created: true,
-      push_max_enabled: false,
-      banner_priority_bucket: 2,
-      banner_priority_for_unpersisted_step: null,
-      ms_id: stepId2,
-      forced_advancement_behavior: true,
-      messages: { messaging_actions: [], composition_mode: "quick-push-multichannel" },
-      segment_ids: [],
-      attached_images_ids: [],
-      ignore_workflow_quiet_time: false,
-      trigger_schedule: {
-        start_time: startTime,
-        limit_end: false,
-        end_time: null,
-        deliver_in_local_time: true,
-        send_after_quiet_time: false,
-        quiet_start_hour: 0,
-        quiet_start_minute: "00",
-        quiet_end_hour: 8,
-        quiet_end_minute: "00",
-        trigger_events: [],
-        exception_events: [],
-        trigger_delay_in_seconds: 0,
-        duration_in_seconds: 0,
-        reevaluate_segment_at_send_time: true,
-        evaluate_segment_at_enqueue_time: false,
-        delivery_time_without_zone: null,
-        delivery_day: null,
-        deliver_in_days: null,
-        optimal_time_notification: false,
-        delay_option: "immediately",
-        retry_window_seconds: 0
-      },
-      delivery_validation_failure_behavior: "exit",
-      using_v2_filters: true,
-      filters: null,
-      exclusion_filters: null
-    },
-    {
-      step_id: stepId2,
-      step_name: "Message",
-      next_step_ids: [],
-      row: 0,
-      column: 3,
-      is_control_step: false,
-      type: "MESSAGE",
-      id_eagerly_created: true,
-      push_max_enabled: false,
-      banner_priority_bucket: 2,
-      banner_priority_for_unpersisted_step: null,
-      is_disconnected: false
+  // ── Map copilot steps to Braze internal step format ──────────────────────
+  const copilotSteps = canvas.steps || [];
+
+  // Build a lookup from copilot step id/name → generated Braze stepId
+  const stepIdMap = {};
+  copilotSteps.forEach((s, i) => {
+    const key = s.id || s.name || `step_${i}`;
+    stepIdMap[key] = generateObjectId();
+  });
+
+  // Helper to resolve next_step_id to a generated Braze ObjectId
+  function resolveNextId(nextStepRef) {
+    if (!nextStepRef) return null;
+    if (stepIdMap[nextStepRef]) return stepIdMap[nextStepRef];
+    // Try matching by name
+    const match = copilotSteps.find(s => s.name === nextStepRef || s.id === nextStepRef);
+    if (match) {
+      const key = match.id || match.name;
+      return stepIdMap[key];
     }
-  ]);
+    return null;
+  }
 
-  const variations = JSON.stringify([{
-    id: variantId,
-    name: "Variant 1",
-    send_percentage: 100,
-    initial_send_percentage: 100,
-    first_step_ids: [],
-    first_canvas_step_id: stepId2,
-    is_control: false
-  }]);
+  // Build Braze steps array from copilot steps
+  let brazeSteps = [];
+  let firstMessageStepId = null;
 
+  copilotSteps.forEach((step, i) => {
+    const key = step.id || step.name || `step_${i}`;
+    const stepId = stepIdMap[key];
+    const nextId = resolveNextId(step.next_step_id || step.next_step);
+    const nextIds = nextId ? [nextId] : [];
+    const row = i;
+    const col = 3;
+
+    const type = (step.type || '').toLowerCase();
+
+    if (type === 'delay') {
+      const durationSecs = (() => {
+        const d = step.delay || {};
+        const val = d.duration || 0;
+        const unit = (d.unit || d.duration_unit || 'minutes').toLowerCase();
+        if (unit === 'minutes') return val * 60;
+        if (unit === 'hours') return val * 3600;
+        if (unit === 'days') return val * 86400;
+        if (unit === 'weeks') return val * 604800;
+        return val * 60;
+      })();
+
+      brazeSteps.push({
+        step_id: stepId,
+        step_name: step.name || 'Delay',
+        next_step_ids: nextIds,
+        row, column: col,
+        is_control_step: false,
+        type: 'FULL',
+        id_eagerly_created: true,
+        push_max_enabled: false,
+        banner_priority_bucket: 2,
+        banner_priority_for_unpersisted_step: null,
+        ms_id: nextIds[0] || null,
+        forced_advancement_behavior: true,
+        messages: { messaging_actions: [], composition_mode: 'quick-push-multichannel' },
+        segment_ids: [],
+        attached_images_ids: [],
+        ignore_workflow_quiet_time: false,
+        trigger_schedule: {
+          start_time: startTime,
+          limit_end: false,
+          end_time: null,
+          deliver_in_local_time: true,
+          send_after_quiet_time: false,
+          quiet_start_hour: 0, quiet_start_minute: '00',
+          quiet_end_hour: 8, quiet_end_minute: '00',
+          trigger_events: [], exception_events: [],
+          trigger_delay_in_seconds: durationSecs,
+          duration_in_seconds: durationSecs,
+          reevaluate_segment_at_send_time: true,
+          evaluate_segment_at_enqueue_time: false,
+          delivery_time_without_zone: null,
+          delivery_day: null,
+          deliver_in_days: null,
+          optimal_time_notification: false,
+          delay_option: 'delay_for',
+          retry_window_seconds: 0
+        },
+        delivery_validation_failure_behavior: 'exit',
+        using_v2_filters: true,
+        filters: null,
+        exclusion_filters: null
+      });
+
+    } else if (type === 'message') {
+      if (!firstMessageStepId) firstMessageStepId = stepId;
+      const channels = step.channels || step.messages || {};
+      const email = channels.email || {};
+      const push = channels.push || {};
+
+      // Build messaging_actions
+      const messagingActions = [];
+
+      if (email.subject || email.body) {
+        messagingActions.push({
+          type: 'email',
+          message: {
+            subject: email.subject || '',
+            preheader: email.preheader || '',
+            from: email.from_address ? `${email.from_name || 'Braze'} <${email.from_address}>` : (email.from || ''),
+            reply_to: email.reply_to || '',
+            body: email.body || '',
+            plaintext_body: email.plaintext_body || '',
+            should_inline_css: email.should_inline_css !== false
+          }
+        });
+      }
+
+      if (push.ios || push.android) {
+        const ios = push.ios || {};
+        const android = push.android || {};
+        if (ios.alert || ios.title) {
+          messagingActions.push({
+            type: 'ios_push',
+            message: {
+              alert: ios.alert || '',
+              title: ios.title || '',
+              deep_link: ios.deep_link || '',
+              time_to_live: ios.time_to_live || 86400
+            }
+          });
+        }
+        if (android.alert || android.title) {
+          messagingActions.push({
+            type: 'android_push',
+            message: {
+              alert: android.alert || '',
+              title: android.title || '',
+              deep_link: android.deep_link || '',
+              time_to_live: android.time_to_live || 86400
+            }
+          });
+        }
+      }
+
+      brazeSteps.push({
+        step_id: stepId,
+        step_name: step.name || 'Message',
+        next_step_ids: nextIds,
+        row, column: col,
+        is_control_step: false,
+        type: 'MESSAGE',
+        id_eagerly_created: true,
+        push_max_enabled: false,
+        banner_priority_bucket: 2,
+        banner_priority_for_unpersisted_step: null,
+        is_disconnected: false,
+        messages: {
+          messaging_actions: messagingActions,
+          composition_mode: 'quick-push-multichannel'
+        }
+      });
+
+    } else if (type === 'action_path' || type === 'audience_path' || type === 'decision_split') {
+      // For branching steps — create as a basic FULL step pointing to first path's next step
+      const paths = (step.paths || step.action_path_settings?.paths || step.audience_path_settings?.paths || []);
+      const firstNextRef = paths[0]?.next_step_id || step.next_step_id;
+      const firstNextId = resolveNextId(firstNextRef);
+
+      brazeSteps.push({
+        step_id: stepId,
+        step_name: step.name || 'Branch',
+        next_step_ids: firstNextId ? [firstNextId] : [],
+        row, column: col,
+        is_control_step: false,
+        type: 'FULL',
+        id_eagerly_created: true,
+        push_max_enabled: false,
+        banner_priority_bucket: 2,
+        banner_priority_for_unpersisted_step: null,
+        ms_id: firstNextId || null,
+        forced_advancement_behavior: true,
+        messages: { messaging_actions: [], composition_mode: 'quick-push-multichannel' },
+        segment_ids: [],
+        attached_images_ids: [],
+        ignore_workflow_quiet_time: false,
+        trigger_schedule: {
+          start_time: startTime,
+          limit_end: false, end_time: null,
+          deliver_in_local_time: true,
+          send_after_quiet_time: false,
+          quiet_start_hour: 0, quiet_start_minute: '00',
+          quiet_end_hour: 8, quiet_end_minute: '00',
+          trigger_events: [], exception_events: [],
+          trigger_delay_in_seconds: 0, duration_in_seconds: 0,
+          reevaluate_segment_at_send_time: true,
+          evaluate_segment_at_enqueue_time: false,
+          delivery_time_without_zone: null, delivery_day: null, deliver_in_days: null,
+          optimal_time_notification: false,
+          delay_option: 'immediately',
+          retry_window_seconds: 0
+        },
+        delivery_validation_failure_behavior: 'exit',
+        using_v2_filters: true,
+        filters: null, exclusion_filters: null
+      });
+
+    } else if (type === 'exit') {
+      // Exit steps are not sent to Braze — they are implicit
+      // Skip
+    } else {
+      // Unknown step type — add as a generic FULL step
+      brazeSteps.push({
+        step_id: stepId,
+        step_name: step.name || 'Step',
+        next_step_ids: nextIds,
+        row, column: col,
+        is_control_step: false,
+        type: 'FULL',
+        id_eagerly_created: true,
+        push_max_enabled: false,
+        banner_priority_bucket: 2,
+        banner_priority_for_unpersisted_step: null,
+        ms_id: nextIds[0] || null,
+        forced_advancement_behavior: true,
+        messages: { messaging_actions: [], composition_mode: 'quick-push-multichannel' },
+        segment_ids: [],
+        attached_images_ids: [],
+        ignore_workflow_quiet_time: false,
+        trigger_schedule: {
+          start_time: startTime,
+          limit_end: false, end_time: null,
+          deliver_in_local_time: true,
+          send_after_quiet_time: false,
+          quiet_start_hour: 0, quiet_start_minute: '00',
+          quiet_end_hour: 8, quiet_end_minute: '00',
+          trigger_events: [], exception_events: [],
+          trigger_delay_in_seconds: 0, duration_in_seconds: 0,
+          reevaluate_segment_at_send_time: true,
+          evaluate_segment_at_enqueue_time: false,
+          delivery_time_without_zone: null, delivery_day: null, deliver_in_days: null,
+          optimal_time_notification: false,
+          delay_option: 'immediately',
+          retry_window_seconds: 0
+        },
+        delivery_validation_failure_behavior: 'exit',
+        using_v2_filters: true,
+        filters: null, exclusion_filters: null
+      });
+    }
+  });
+
+  // Fallback — if no steps from payload, use the original generic shell
+  if (brazeSteps.length === 0) {
+    const stepId1 = generateObjectId();
+    const stepId2 = generateObjectId();
+    firstMessageStepId = stepId2;
+    brazeSteps = [
+      {
+        step_id: stepId1,
+        step_name: 'Entry',
+        next_step_ids: [stepId2],
+        row: 0, column: 3,
+        is_control_step: false, type: 'FULL', id_eagerly_created: true,
+        push_max_enabled: false, banner_priority_bucket: 2,
+        banner_priority_for_unpersisted_step: null, ms_id: stepId2,
+        forced_advancement_behavior: true,
+        messages: { messaging_actions: [], composition_mode: 'quick-push-multichannel' },
+        segment_ids: [], attached_images_ids: [],
+        ignore_workflow_quiet_time: false,
+        trigger_schedule: {
+          start_time: startTime, limit_end: false, end_time: null,
+          deliver_in_local_time: true, send_after_quiet_time: false,
+          quiet_start_hour: 0, quiet_start_minute: '00', quiet_end_hour: 8, quiet_end_minute: '00',
+          trigger_events: [], exception_events: [],
+          trigger_delay_in_seconds: 0, duration_in_seconds: 0,
+          reevaluate_segment_at_send_time: true, evaluate_segment_at_enqueue_time: false,
+          delivery_time_without_zone: null, delivery_day: null, deliver_in_days: null,
+          optimal_time_notification: false, delay_option: 'immediately', retry_window_seconds: 0
+        },
+        delivery_validation_failure_behavior: 'exit',
+        using_v2_filters: true, filters: null, exclusion_filters: null
+      },
+      {
+        step_id: stepId2, step_name: 'Message', next_step_ids: [], row: 1, column: 3,
+        is_control_step: false, type: 'MESSAGE', id_eagerly_created: true,
+        push_max_enabled: false, banner_priority_bucket: 2,
+        banner_priority_for_unpersisted_step: null, is_disconnected: false
+      }
+    ];
+  }
+
+  // ── Build variants ────────────────────────────────────────────────────────
+  const copilotVariants = canvas.variants || [];
+  let variants;
+
+  if (copilotVariants.length >= 2) {
+    // Use copilot variants (treatment + control)
+    const variantIds = copilotVariants.map(() => generateObjectId());
+    variants = copilotVariants.map((v, i) => ({
+      id: variantIds[i],
+      name: v.name || `Variant ${i + 1}`,
+      send_percentage: v.percentage || v.weight || (i === 0 ? 90 : 10),
+      initial_send_percentage: v.percentage || v.weight || (i === 0 ? 90 : 10),
+      first_step_ids: [],
+      first_canvas_step_id: brazeSteps[0]?.step_id || null,
+      is_control: v.name?.toLowerCase().includes('control') || false
+    }));
+  } else {
+    const variantId = generateObjectId();
+    variants = [{
+      id: variantId,
+      name: 'Variant 1',
+      send_percentage: 100,
+      initial_send_percentage: 100,
+      first_step_ids: [],
+      first_canvas_step_id: brazeSteps[0]?.step_id || null,
+      is_control: false
+    }];
+  }
+
+  // ── Build schedule ────────────────────────────────────────────────────────
   const schedule = JSON.stringify({
     send_immediately: false,
     recurring: false,
-    frequency: "",
+    frequency: '',
     end_date: tomorrow,
     deliver_in_local_time: false,
-    end_condition: "never",
+    end_condition: 'never',
     optimal_time_notification: false,
     sunday: false, monday: false, tuesday: false,
     wednesday: false, thursday: false, friday: false, saturday: false,
     start_date_unix: null, end_date_unix: null, next_send_occurence: null
   });
 
+  // ── Build conversion behaviors ────────────────────────────────────────────
+  const conversionBehaviors = (canvas.send_settings?.conversion_events || []).map(e => ({
+    type: e.conversion_type || 'custom_event',
+    custom_event_name: e.custom_event_name || '',
+    conversion_deadline: e.conversion_deadline || 168
+  }));
+
+  // ── Build quiet time ──────────────────────────────────────────────────────
+  const quietHours = canvas.send_settings?.quiet_hours || {};
+  const quietTimeData = JSON.stringify({
+    has_quiet_time: quietHours.enabled || false,
+    send_after_quiet_time: false,
+    quiet_start_hour: quietHours.start_time ? parseInt(quietHours.start_time.split(':')[0]) : 21,
+    quiet_start_minute: quietHours.start_time ? quietHours.start_time.split(':')[1] : '00',
+    quiet_end_hour: quietHours.end_time ? parseInt(quietHours.end_time.split(':')[0]) : 8,
+    quiet_end_minute: quietHours.end_time ? quietHours.end_time.split(':')[1] : '00'
+  });
+
+  // ── Assemble fields ───────────────────────────────────────────────────────
   const fields = {
     authenticity_token: CONFIG.brazeCsrfToken,
     workflow_id: `"${workflowId}"`,
     create_version: 'false',
     api_workflow_id: `"${apiWorkflowId}"`,
-    workflow_name: `"${(canvasPayload.canvas?.name || canvasPayload.name || 'Copilot Canvas')}"`,
-    workflow_description: 'null',
-    segment_ids: JSON.stringify(canvasPayload.canvas?.entry_audience?.segment_ids || canvasPayload.segment_ids || []),
+    workflow_name: `"${(canvas.name || 'Copilot Canvas').replace(/"/g, '\\"')}"`,
+    workflow_description: canvas.description ? `"${canvas.description.replace(/"/g, '\\"')}"` : 'null',
+    segment_ids: JSON.stringify(canvas.entry_audience?.segment_ids || []),
     match_more_than_once: 'false',
     can_match_again_after_seconds: '0',
     schedule_type: '"time_based"',
@@ -323,7 +587,7 @@ async function createCanvas(canvasPayload) {
     enabled: 'false',
     is_draft: 'true',
     version: '"flow"',
-    tag_names: JSON.stringify(canvasPayload.tag_names || []),
+    tag_names: JSON.stringify(canvas.tags || []),
     has_recipients_limit: 'false',
     max_recipients: 'null',
     max_recipients_is_global: 'null',
@@ -348,16 +612,16 @@ async function createCanvas(canvasPayload) {
     last_deleted_summaries_at: '0',
     start_offloading_retargeting_data_at: '0',
     ready_to_offload_retargeting_data: 'null',
-    conversion_behaviors: '[]',
+    conversion_behaviors: JSON.stringify(conversionBehaviors),
     exit_criteria: '{"segment_ids":[],"exit_event":[],"filters_unchanged":true,"using_v2_filters":true}',
     filters_unchanged: 'true',
     using_v2_filters: 'true',
     schedule: schedule,
-    steps: steps,
-    step_count: '1',
+    steps: JSON.stringify(brazeSteps),
+    step_count: String(brazeSteps.length),
     deletion_move_to_map: '{}',
-    variations: variations,
-    quiet_time_data: '{"has_quiet_time":false,"send_after_quiet_time":false,"quiet_start_hour":0,"quiet_start_minute":"00","quiet_end_hour":8,"quiet_end_minute":"00"}',
+    variations: JSON.stringify(variants),
+    quiet_time_data: quietTimeData,
     is_save_or_launch_active_draft: 'false'
   };
 
@@ -390,13 +654,10 @@ async function createCanvas(canvasPayload) {
 
   console.log('Braze response status:', result.status);
   console.log('Braze response body:', JSON.stringify(result.body).slice(0, 500));
-  console.log('Braze session used:', CONFIG.brazeSessionId.slice(0, 8) + '...');
-  console.log('Braze CSRF used:', CONFIG.brazeCsrfToken.slice(0, 10) + '...');
-  console.log('Braze remember token set:', !!CONFIG.brazeRememberToken);
+  console.log('Steps mapped:', brazeSteps.length);
 
   return result;
 }
-
 // ─── CLAUDE API ───────────────────────────────────────────────────────────────
 
 async function callClaude(messages, systemPrompt) {
