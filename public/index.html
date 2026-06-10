@@ -167,14 +167,8 @@
       <div class="capability-list">
         <div class="capability-item" onclick="sendPrompt('Run the Canvas Metrics health check. For each active Canvas, classify it as one-time-entry or recurring based on its re-entry settings, apply the relevant metric filters, and surface the top 5 underperforming Canvases from the last 7 days with a diagnostic one-liner and recommended fix for each.')"><span class="cap-icon">📊</span> Canvas metrics check</div>
         <div class="capability-item" onclick="sendPrompt('Run a housekeeping audit of the workspace. Identify orphan segments, unused custom events, unused custom attributes, naming convention violations, dead/stale campaigns, stale draft campaigns, zero-member segments, and unused email templates. List specific assets by name.')"><span class="cap-icon">🧹</span> Housekeeping audit</div>
-        <div class="capability-item" onclick="sendPrompt('Run a workspace health check. Look for unsubscribe rate spikes, segment size anomalies in key segments, API error health (429/5xx rates), and duplicate profile surges. For any anomaly found, give the diagnostic hypothesis and likely cause.')"><span class="cap-icon">🩺</span> Workspace health check</div>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Scan Attributes</div>
-      <div class="capability-list">
         <div class="capability-item" onclick="scanAttributes()"><span class="cap-icon">🔍</span> Scan unused attributes</div>
+        <div class="capability-item" onclick="sendPrompt('Run a workspace health check. Look for unsubscribe rate spikes, segment size anomalies in key segments, API error health (429/5xx rates), and duplicate profile surges. For any anomaly found, give the diagnostic hypothesis and likely cause.')"><span class="cap-icon">🩺</span> Workspace health check</div>
       </div>
     </div>
 
