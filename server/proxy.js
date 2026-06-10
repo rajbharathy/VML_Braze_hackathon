@@ -343,15 +343,17 @@ async function createCanvas(canvasPayload) {
     const key = s.id || s.name || `step_${i}`;
     stepIdMap[key] = generateObjectId();
   });
+   const messageConnectorMap = {};
 
   // Helper to resolve next_step_id to a generated Braze ObjectId
-  function resolveNextId(nextStepRef) {
+ function resolveNextId(nextStepRef) {
     if (!nextStepRef) return null;
+    if (messageConnectorMap[nextStepRef]) return messageConnectorMap[nextStepRef];
     if (stepIdMap[nextStepRef]) return stepIdMap[nextStepRef];
-    // Try matching by name
     const match = copilotSteps.find(s => s.name === nextStepRef || s.id === nextStepRef);
     if (match) {
       const key = match.id || match.name;
+      if (messageConnectorMap[key]) return messageConnectorMap[key];
       return stepIdMap[key];
     }
     return null;
@@ -414,6 +416,7 @@ async function createCanvas(canvasPayload) {
     } else if (type === 'message') {
       if (!firstMessageStepId) firstMessageStepId = stepId;
       const messageStepId = generateObjectId(); // separate ID for the MESSAGE connector
+      messageConnectorMap[key] = messageStepId;
 
       const channels = step.channels || step.messages || {};
       const email = channels.email || {};
@@ -707,7 +710,10 @@ if (!firstCanvasStepId) firstCanvasStepId = messageStepId;
       });
     }
   });
-
+// If no message step was first, use the very first step
+  if (!firstCanvasStepId && brazeSteps.length > 0) {
+    firstCanvasStepId = brazeSteps[0].step_id;
+  }
   // Fallback — if no steps from payload, use the original generic shell
   if (brazeSteps.length === 0) {
     const stepId1 = generateObjectId();
@@ -777,7 +783,8 @@ first_canvas_step_id: firstCanvasStepId || brazeSteps[0]?.step_id || null,
     }];
   }
 
-  // ── Build schedule ────────────────────────────────────────────────────────
+ const canvasStartUnix = canvas.start_time ? Math.floor(new Date(canvas.start_time).getTime() / 1000) : null;
+  const canvasEndUnix = canvas.end_time ? Math.floor(new Date(canvas.end_time).getTime() / 1000) : null;
   const schedule = JSON.stringify({
     send_immediately: false,
     recurring: false,
@@ -788,7 +795,9 @@ first_canvas_step_id: firstCanvasStepId || brazeSteps[0]?.step_id || null,
     optimal_time_notification: false,
     sunday: false, monday: false, tuesday: false,
     wednesday: false, thursday: false, friday: false, saturday: false,
-    start_date_unix: null, end_date_unix: null, next_send_occurence: null
+    start_date_unix: canvasStartUnix,
+    end_date_unix: canvasEndUnix,
+    next_send_occurence: null
   });
 
   // ── Build conversion behaviors ────────────────────────────────────────────
