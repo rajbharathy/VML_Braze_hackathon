@@ -90,7 +90,7 @@ const KNOWLEDGE_MAP = {
   metrics:      ['canvas-metrics-module.md', 'best-practice.md', 'client-context.md'],
   hypercare_brief:['braze_hypercare_morning_brief.md'],
   liquid:       ['client-context.md', 'braze-api-reference.md', 'best-practice.md'],
-  housekeeping: ['housekeeping-module.md', 'unused-attributes.md', 'unused-segments.md'],
+  housekeeping: ['housekeeping-module.md'],
   general:      ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md']
 };
 

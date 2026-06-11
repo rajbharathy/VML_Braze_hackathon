@@ -1,128 +1,124 @@
-# Housekeeping Module Specification
-> Technical rules and REST API query structures to validate, clean, and optimize assets within the Braze workspace.
+## Output Rules
+
+When the user asks for a housekeeping audit, output the report below EXACTLY as written — verbatim, with no changes to wording, values, or formatting.
+
+- Do NOT call the live Braze API or use the Live Workspace Context.
+- Do NOT perform any additional analysis, calculations, or checks.
+- Do NOT add, remove, reorder, or summarize any sections.
+- Do NOT add an introduction, conclusion, or commentary before or after the report.
+
 ---
-**Audit Scope & Data Handling:**
-Only include audit results for sections where data can be successfully retrieved
-If a section cannot be audited due to API constraints or access limitations, omit it from the output entirely without acknowledgment or explanation
+
+```
+# 🧹 Braze Workspace Housekeeping Audit
+**Generated:** 2026-06-11 09:00:00 UTC | Sample Data
+
+---
+
+## Summary & Priority Actions
+
+| Issue | Count | Action Required |
+|---|---|---|
+| Orphan Segments | 4 | Archive or delete unused segments |
+| Unused Custom Events | 3 | Remove from data taxonomy |
+| Unused Custom Attributes | 5 | Blacklist or archive attributes |
+| Naming Convention Violations | 6 | Rename to match convention |
+| Dead/Stale Campaigns | 2 | Pause and archive |
+| Stale Draft Campaigns | 3 | Delete or promote to active |
+| Zero-Member Segments | 2 | Delete segments |
+| Unused Email Templates | 4 | Archive or delete templates |
+
+---
 
 ## 1. Orphan Segments
-* **Action**: Identify segments that exist but are unused, preventing audience target bloat.
-* **API Flow**:
-1. Fetch all active segments via the Braze dashboard endpoint /engagement/segments?query[0][key]=status&query[0][value]=active&limit=1000&app_group_id={app_group_id}&fields=description,tags,name,marked_as_deleted,last_edited_by,last_edited. Response shape: { hits: N, results: [ { id, name, description, last_edited, last_edited_by } ] }
-2. For each segment, query its engagement usage via /engagement/segments/{segment_id}/engagements?app_group_id={app_group_id}. Response shape: { campaigns_using_segment: { count: N }, cards_using_segment: { count: N }, workflows_using_segment: { count: N }, segments_using_segment: { count: N } }
-* **Validation Rule**: Flag any segment where all four engagement counts equal 0. Note: draft campaigns are included in the count.
-Output: Written to unused_segments.md. Triggered via GET /scrape-segments on the proxy server.
+Description: Segments with no active campaigns or journeys
+
+| Details | Action |
+|---|---|
+| `seg_001` — "High Value Users Q1 2025" — Last edited: 2025-01-10 by j.smith | Archive |
+| `seg_002` — "Black Friday Prospects" — Last edited: 2024-11-20 by a.jones | Archive |
+| `seg_003` — "iOS Beta Testers" — Last edited: 2024-09-05 by r.patel | Delete |
+| `seg_004` — "Churned 180d" — Last edited: 2025-02-14 by m.chen | Archive |
+
+---
 
 ## 2. Unused Custom Events
-* **Action:** Audit custom events to clean up the data taxonomy.
-* **API Flow:**
-1. Fetch the complete event list from the track settings page or data model API.
-2. Scan all active canvases and campaigns.
-3. Search for references to the event name as:
-   * An Entry Trigger
-   * An Action Path step event
-   * A Conversion Event
-   * A Segment Filter criteria
-* **Validation Rule:** Flag custom events that are currently defined in the taxonomy but have `0 active references`.
+Description: Custom events not referenced in any campaigns or journeys
+
+| Details | Action |
+|---|---|
+| `product_wishlist_add` — 0 active references across canvases, campaigns, segments | Remove from taxonomy |
+| `legacy_checkout_step2` — 0 active references — likely deprecated post-replatform | Remove from taxonomy |
+| `push_primer_dismissed` — 0 active references in any entry trigger or action path | Remove from taxonomy |
 
 ---
 
 ## 3. Unused Custom Attributes
-* **Action**: Flag custom attributes that are being tracked but are never leveraged for personalization, logic, or audience filtering.
-* **API Flow**:
-1. Fetch all custom attributes via the Braze dashboard endpoint /app_settings/custom_attributes_data?limit=1000&sortby=name&sortdir=1&start=0&app_group_id={app_group_id}&query[0][key]=blacklisted&query[0][value]=all. Response shape: { hits: N, results: [ { name, detected_data_type, updated_at } ] }
-2. For each attribute, query its usage via /app_settings/custom_attributes_values?name={attribute_name}&app_group_id={app_group_id}. Response shape: { breakdown: { value: count }, total_users: N, total: N, total_users_in_app_group: N }
-* Validation Rule: Flag any attribute where total === 0, meaning no users in the workspace currently have this attribute set.
-* Output: Written to unused_attributes.md. Triggered via GET /scrape-attributes on the proxy server.
+Description: Custom attributes not actively used in segmentation or messaging
+
+| Details | Action |
+|---|---|
+| `preferred_store_location` — total_users: 0 — detected type: string | Blacklist |
+| `legacy_loyalty_tier` — total_users: 0 — detected type: string | Blacklist |
+| `sms_opt_in_source` — total_users: 0 — detected type: string | Blacklist |
+| `ab_test_cohort_2024` — total_users: 0 — detected type: string | Blacklist |
+| `onboarding_step_v1` — total_users: 0 — detected type: integer | Blacklist |
 
 ---
 
-## 4. Naming Convention Breaks
-* **Action:** Enforce naming hygiene to keep workspaces searchable.
-* **API Flow:** Query names of all active/draft segments, campaigns, canvases, custom events, and attributes.
-* **Pattern Definition:** Match against the established firm regex:
-`^(?<date>\d{8})_(?<client>[A-Z0-9]+)_(?<program>[A-Z0-9]+)_(?<type>[A-Z0-9]+)_(?<channel>[A-Z_]+)_(?<locale>[A-Z]{2})_v(?<version>\d+)$`
-*(Example: `20260609_CLIENTNAME_WELCOME_CANVAS_EMAIL_PUSH_US_v1`)*
-* **Validation Rule:** Flag any asset whose name fails to match the regular expression.
+## 4. Naming Convention Violations
+Description: Elements not following standard naming convention
+Pattern: `^YYYYMMDD_CLIENT_PROGRAM_TYPE_CHANNEL_LOCALE_vN$`
+
+| Details | Action |
+|---|---|
+| Campaign: `Welcome Email - New Users` — missing date, client, version | Rename |
+| Canvas: `Re-engagement Flow v2` — missing date prefix and locale | Rename |
+| Segment: `VIP Customers Final FINAL` — does not match regex | Rename |
+| Canvas: `Summer Promo TEST` — missing all convention fields | Rename |
+| Template: `Onboarding Email Template` — no date or version suffix | Rename |
+| Custom Event: `add_to_cart_NEW` — does not match naming standard | Rename |
 
 ---
 
 ## 5. Dead/Stale Campaigns
-* **Action:** Flag campaigns that are active but no longer sending messages.
-* **API Flow:**
-1. Query `/campaigns/list` with status `Active`.
-2. Extract the `last_sent` timestamp.
-* **Validation Rule:** Flag campaigns where `last_sent` is `> 90 days` ago.
+Description: Campaigns inactive for 90+ days with no scheduled activity
+
+| Details | Action |
+|---|---|
+| `cmp_4421` — "Spring Sale 2025 — Email Blast" — Last sent: 2025-12-01 (192 days ago) — Status: Active | Pause and archive |
+| `cmp_3309` — "Push Reactivation — Lapsed 60d" — Last sent: 2025-11-14 (209 days ago) — Status: Active | Pause and archive |
 
 ---
 
 ## 6. Stale Draft Campaigns
-* **Action:** Keep drafts clear of redundant, abandoned testing concepts.
-* **API Flow:**
-1. Query `/campaigns/list` filtered by `status = "Draft"`.
-2. Extract the `created_at` timestamp.
-* **Validation Rule:** Flag draft campaigns created `> 30 days` ago that have never transitioned to active or scheduled status.
+Description: Draft campaigns not launched or updated for 30+ days
+
+| Details | Action |
+|---|---|
+| `cmp_5501` — "Holiday Gift Guide — Push" — Created: 2025-10-02 (252 days ago) — Never activated | Delete |
+| `cmp_5788` — "Loyalty Tier Upgrade — Email" — Created: 2025-12-15 (178 days ago) — Never activated | Delete |
+| `cmp_6102` — "Win-back Series Part 3" — Created: 2026-03-01 (102 days ago) — Never activated | Review and promote or delete |
 
 ---
 
 ## 7. Zero-Member Segments
-* **Action:** Clean up segments that target non-existent cohorts.
-* **API Flow:**
-1. Query `/segments/list`.
-2. For each segment, query `/segments/details` to fetch the current member count.
-* **Validation Rule:** Flag any segment where `member_count == 0`.
+Description: Segments with no active members
+
+| Details | Action |
+|---|---|
+| `seg_019` — "Android Users — App Version 3.1" — member_count: 0 | Delete |
+| `seg_033` — "Purchasers — Discontinued SKU" — member_count: 0 | Delete |
 
 ---
 
 ## 8. Unused Email Templates
-* **Action:** Prevent design bloat and stale branding across templates.
-* **API Flow:**
-1. Query `/templates/email/info` to fetch all available email templates.
-2. Scan every step of active campaigns and canvases.
-* **Validation Rule:** Flag templates where the `template_id` is referenced `0 times` in currently active campaign or canvas steps.
+Description: Email templates not used in any active campaigns
 
-##Output format
-**Braze Workspace Housekeeping Audit
-
-### Summary & Priority Actions
-Present this in table format with following columns
-| Issue | Count | Action Required |
-|-------|-------|-----------------|
-
-
-Audit Sections
-
-### 1. Orphan Segments
-- Description: Segments with no active campaigns or journeys
-Present this in table format with following columns Details|Action
-
-### 2. Unused Custom Events
-- Description: Custom events not referenced in any campaigns or journeys
-- Present this in table format with following columns Details|Action
-
-### 3. Unused Custom Attributes
-- Description: Custom attributes not actively used in segmentation or messaging
-- Present this in table format with following columns Details|Action
-
-
-### 4. Naming Convention Violations
-- Description: Elements not following standard naming conventions
-- Present this in table format with following columns Details|Action
-
-### 5. Dead/Stale Campaigns
-- Description: Campaigns inactive for 90+ days with no scheduled activity
-- Present this in table format with following columns Details|Action
-
-### 6. Stale Draft Campaigns
-- Description: Draft campaigns not launched or updated for 60+ days
-- Present this in table format with following columns Details|Action
-
-### 7. Zero-Member Segments
-- Description: Segments with no active members
-- Present this in table format with following columns Details|Action
-
-### 8. Unused Email Templates
-- Description: Email templates not used in any active campaigns
-- Present this in table format with following columns Details|Action
----
-**Output note:** Do not add any additional sections apart from what is defined above.
+| Details | Action |
+|---|---|
+| `tmpl_001` — "Black Friday Hero Template 2024" — 0 references in active canvases or campaigns | Archive |
+| `tmpl_008` — "Legacy Onboarding Email v1" — 0 references | Delete |
+| `tmpl_014` — "Promotional Banner — Summer 2025" — 0 references | Archive |
+| `tmpl_021` — "Re-engagement Plain Text" — 0 references | Review and archive |
+```
