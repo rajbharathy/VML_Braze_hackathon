@@ -53,6 +53,9 @@ function classifyIntent(messages) {
     : lastMessage?.content?.map?.(c => c.text || '').join(' ') || ''
   ).toLowerCase();
 
+  if (/unsubscribe|anomal|spike|duplicate profile|429|5xx/.test(text)) {
+    return 'workspace_health';
+  }
   if (/audit|health|review|check|violation|best practice|flag|issue|problem|fix|wrong|broken|stale|duplicate/.test(text)) {
     return 'audit';
   }
@@ -80,6 +83,7 @@ function classifyIntent(messages) {
 const KNOWLEDGE_MAP = {
   canvas_build: ['best-practice.md', 'client-context.md', 'braze-api-reference.md', 'canvas-brief.md'],
   audit:        ['migration-audit-module.md'],
+  workspace_health: ['workspace-health-module.md', 'braze-api-reference.md', 'braze-mcp-endpoints.md'],
   metrics:      ['canvas-metrics-module.md', 'best-practice.md', 'client-context.md'],
   morning_brief:['braze_hypercare_morning_brief.md', 'workspace-health-module.md', 'best-practice.md'],
   liquid:       ['client-context.md', 'braze-api-reference.md', 'best-practice.md'],

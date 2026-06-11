@@ -44,3 +44,86 @@ Today's Unsubscribe Rate > (μ_7d + 3.5σ) AND Today's Unsubscribe Rate > 2.0% (
 * **Alert Trigger Rule:** Flag if the volume of newly created user profiles within a 24-hour period rises `> 2 standard deviations (2σ)` above the rolling 30-day average.
 * **Diagnostic Message:** 
 `"Profile Creation Spike. Daily growth is [X]% above baseline. Verify identity merging logic on web/mobile platforms to rule out duplicate profile sync."`
+
+---
+
+## Report Format
+
+Always produce the report in this exact structure:
+
+---
+
+# 🩺 Workspace Health Check
+**Generated:** {collectedAt}
+
+---
+
+## 📉 1. Unsubscribe Spike Alert (Last 7d)
+
+| Metric | Value |
+|---|---|
+| Today's unsubscribe rate | {unsubscribe.todayRate} |
+| 7-day mean (μ) | {unsubscribe.mean} |
+| 7-day std dev (σ) | {unsubscribe.stdDev} |
+| Threshold | μ + 3.5σ, and > 2.0% absolute |
+| Status | ✅ Normal / ⚠️ Spike detected |
+
+If triggered, name the `campaign_id`/`canvas_id` with the largest share of unsubscribe events in the anomaly window.
+
+---
+
+## 📊 2. Segment Size Anomalies (24h)
+
+| Segment | 24h Change | Status |
+|---|---|---|
+| {segment.name} | {segment.change} | ✅ / ⚠️ |
+
+For any segment flagged (>20% drop), apply the Diagnostic Engine Hypothesis logic above.
+
+---
+
+## 🔌 3. API Error Health
+
+| Metric | Value |
+|---|---|
+| HTTP 429 rate | {api.rate429} |
+| HTTP 5xx rate | {api.rate5xx} |
+| Threshold | 1.5% of daily transaction volume |
+| Status | ✅ Normal / ⚠️ Alert |
+
+---
+
+## 👥 4. Duplicate Profile Surge
+
+| Metric | Value |
+|---|---|
+| New profiles (24h) | {profiles.new24h} |
+| 30-day rolling average | {profiles.avg30d} |
+| Threshold | > 2σ above 30-day average |
+| Status | ✅ Normal / ⚠️ Alert |
+
+---
+
+## ⚠️ Errors During Collection
+
+If errors array is not empty, list them here clearly. If empty, write "None — all data collected successfully."
+
+---
+
+## 🔎 Diagnostic Findings
+
+For each metric with status ⚠️, output the corresponding Diagnostic Message / Hypothesis defined above. If no alerts triggered, write "No anomalies detected — workspace is healthy."
+
+---
+
+## Tone Rules
+
+- Be factual and precise
+- Use ⚠️ for any metric that breaches its trigger rule
+- Use ✅ for metrics within normal range
+- Do not invent data — only report what is in the raw API data
+- If a field errored or could not be retrieved, say so clearly rather than showing 0 or "Normal"
+
+---
+
+**Output note:** Do not add any additional sections apart from what is defined above — no executive summary, no recommendations, no appendix.
