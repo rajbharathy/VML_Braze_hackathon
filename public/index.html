@@ -516,7 +516,8 @@ async function triggerCanvasBuild(btn, responseText) {
     });
     const buildData = await buildRes.json();
     if (buildData.status === 200 || buildData.status === 201) {
-      appendMessage('assistant', '✅ **Canvas built successfully in Braze.**\n\nThe Canvas has been created in your workspace. Open Braze to review it before activating.');
+    const linkText = buildData.canvasUrl ? `\n\n[Open in Braze](${buildData.canvasUrl})` : '';
+      appendMessage('assistant', `✅ **Canvas built successfully in Braze.**${linkText}\n\nThe Canvas has been created in your workspace. Open Braze to review it before activating.`);
       btn.textContent = '✅ Built in Braze';
     } else {
       appendMessage('assistant', `**Canvas build failed.** Braze returned status ${buildData.status}.\n\nRefresh your session credentials and try again.`);
