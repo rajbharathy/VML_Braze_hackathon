@@ -53,6 +53,9 @@ function classifyIntent(messages) {
     : lastMessage?.content?.map?.(c => c.text || '').join(' ') || ''
   ).toLowerCase();
 
+  if (/hypercare/.test(text)) {
+    return 'hypercare_brief';
+  }
   if (/unsubscribe|anomal|spike|duplicate profile|429|5xx/.test(text)) {
     return 'workspace_health';
   }
@@ -85,7 +88,7 @@ const KNOWLEDGE_MAP = {
   audit:        ['migration-audit-module.md'],
   workspace_health: ['workspace-health-module.md', 'braze-api-reference.md', 'braze-mcp-endpoints.md'],
   metrics:      ['canvas-metrics-module.md', 'best-practice.md', 'client-context.md'],
-  hypercare_brief:['braze_hypercare_morning_brief.md', 'braze-api-reference.md', 'braze-mcp-endpoints.md'],
+  hypercare_brief:['braze_hypercare_morning_brief.md'],
   liquid:       ['client-context.md', 'braze-api-reference.md', 'best-practice.md'],
   housekeeping: ['housekeeping-module.md', 'unused-attributes.md', 'unused-segments.md'],
   general:      ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md']
@@ -421,9 +424,13 @@ function loadSampleCanvasData() {
 
 const METRICS_INTENT_PATTERN = /metric|performance|open rate|click|conversion|revenue|report|analytics|results|stats|how did|how is/i;
 
-function fetchSampleCanvasContext(text) {
+function fetchSampleCanvasContext(text, intent) {
   const canvases = loadSampleCanvasData();
   if (!canvases.length) return '';
+
+  if (intent === 'hypercare_brief') {
+    return `\n\n---\n## SAMPLE CANVAS DATA (all canvases)\n\nCurrent date/time (UTC): ${new Date().toISOString()}\n\nUse this dataset for the Launch Hypercare Dashboard. Apply the Canvas Eligibility Rules (archived == false, draft == false, first_entry within the last 72 hours of the current date/time above) to determine which canvases to include.\n\n${JSON.stringify(canvases, null, 2)}`;
+  }
 
   const match = canvases.find(c => text.includes(c.canvas_id));
   if (match) {
@@ -456,7 +463,7 @@ const LIVE_DATA_FETCHERS = [
   }
 ];
 
-async function fetchExtraLiveData(messages) {
+async function fetchExtraLiveData(messages, intent) {
   const lastUserMessage = messages?.slice?.()?.reverse?.()?.find?.(m => m.role === 'user');
   const text = (typeof lastUserMessage?.content === 'string'
     ? lastUserMessage.content
@@ -474,7 +481,7 @@ async function fetchExtraLiveData(messages) {
       }
     }
   }
-  extra += fetchSampleCanvasContext(text);
+  extra += fetchSampleCanvasContext(text, intent);
   return extra;
 }
 
@@ -1314,7 +1321,7 @@ async function handleRequest(req, res) {
       const { messages, workspaceContext } = body;
 
       const intent = classifyIntent(messages);
-      const extraContext = await fetchExtraLiveData(messages);
+      const extraContext = await fetchExtraLiveData(messages, intent);
       const systemPrompt = buildSystemPrompt(workspaceContext || 'Workspace context not loaded.', intent) + extraContext;
       console.log('Intent classified:', intent);
       const result = await callClaude(messages, systemPrompt);
