@@ -1183,6 +1183,21 @@ async function handleRequest(req, res) {
     return;
   }
 
+  const STATIC_MIME_TYPES = {
+    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
+    '.css': 'text/css', '.js': 'application/javascript'
+  };
+  if (req.method === 'GET' && STATIC_MIME_TYPES[path.extname(pathname).toLowerCase()]) {
+    const publicDir = path.join(__dirname, '../public');
+    const filePath = path.join(publicDir, pathname);
+    if (filePath.startsWith(publicDir) && fs.existsSync(filePath)) {
+      res.writeHead(200, { 'Content-Type': STATIC_MIME_TYPES[path.extname(pathname).toLowerCase()] });
+      res.end(fs.readFileSync(filePath));
+      return;
+    }
+  }
+
   // ── Health check ──────────────────────────────────────────────────────────
   if (req.method === 'GET' && pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
