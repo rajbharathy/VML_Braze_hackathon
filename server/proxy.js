@@ -285,11 +285,12 @@ async function lookupEmailTemplate(templateId) {
 }
 async function loadWorkspaceContext() {
   try {
-    const [campaigns, canvases, segments, customAttributes] = await Promise.all([
+    const [campaigns, canvases, segments, customAttributes, customEvents] = await Promise.all([
       brazeGet('/campaigns/list?page=0&sort_direction=desc'),
       brazeGet('/canvas/list?page=0&sort_direction=desc'),
       brazeGet('/segments/list?page=0&sort_direction=desc'),
-      brazeGet('/custom_attributes?page=0')
+      brazeGet('/custom_attributes?page=0'),
+      brazeGet('/events/list?page=0')
     ]);
 
     const campaignList = campaigns.body?.campaigns?.slice(0, 20).map(c =>
@@ -308,7 +309,12 @@ async function loadWorkspaceContext() {
       `  - ${a.name} (type: ${a.data_type}${a.description ? ', desc: ' + a.description : ''})`
     ).join('\n') || 'Unable to load';
 
-    return `### Recent campaigns (up to 20)
+    const eventList = customEvents.body?.events?.slice(0, 30).map(e => `  - ${e}`).join('\n') || 'Unable to load';
+
+    return `### Collected at (UTC)
+${new Date().toISOString()}
+
+### Recent campaigns (up to 20)
 ${campaignList}
 
 ### Recent canvases (up to 20)
@@ -318,7 +324,10 @@ ${canvasList}
 ${segmentList}
 
 ### Custom attributes (up to 30)
-${attrList}`;
+${attrList}
+
+### Custom events (up to 30)
+${eventList}`;
 
   } catch (e) {
     return `Unable to load live workspace context: ${e.message}`;
