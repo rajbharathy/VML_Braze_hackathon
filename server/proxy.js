@@ -809,8 +809,8 @@ if (email.email_template_id && !email.body) {
       });
 
     } else if (type === 'action_path' || type === 'audience_path' || type === 'decision_split') {
-      const paths = step.paths || step.action_path_settings?.paths || step.audience_path_settings?.paths || [];
-      const window = step.window || step.action_path_settings?.window || {};
+     const paths = step.paths || step.action_path?.paths || step.action_path_settings?.paths || step.audience_path_settings?.paths || [];
+const window = step.window || step.action_path?.action_window || step.action_path?.window || step.action_path_settings?.window || {};
       const durationSecs = (() => {
         const val = window.duration || 1;
         const unit = (window.unit || window.duration_unit || 'days').toLowerCase();
