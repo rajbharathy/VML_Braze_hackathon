@@ -15,18 +15,6 @@ Always produce the report in this exact structure:
 
 ---
 
-## 🏢 Organisation Overview
-
-| Metric | Value |
-|---|---|
-| Number of Workspaces | ⚠️ Manual input required |
-| Company / Dashboard Users | ⚠️ Manual input required |
-| Total User Profiles | ⚠️ Manual input required |
-
-*These figures are not accessible via the Braze REST API and must be confirmed in the dashboard.*
-
----
-
 ## 🎯 Campaigns
 
 | Metric | Count |
