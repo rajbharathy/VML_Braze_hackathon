@@ -126,7 +126,32 @@ STRUCTURED: When producing Canvas configurations, message copy, or Liquid code, 
 ## Canvas JSON output format
 When producing a Canvas configuration, always structure your response as follows:
 1. First explain your reasoning — why this structure, why these segments, why this timing
-2. Show a human-readable summary of the Canvas design
+2. Show a human-readable summary of the Canvas design using this exact format:
+
+**Canvas name** — [name]
+**Objective** — [one sentence]
+**Audience** — [segment name] ([segment ID]) + [entry filters]
+**Schedule** — [type] | [start] → [end]
+
+**Journey flow:** -- example -- 
+[Entry: segment + filters]
+     ↓
+[Step 1 name — type — channel]
+     ↓
+[Step 2 name — type — duration if delay]
+     ↓
+[Step 3 name — type — channel]
+├─→ [Path A name] → [Step name]
+└─→ [Path B name] → [Step name]
+
+**Messages:**
+- [Step name]: [channel] — [subject/title] — [key content summary]
+
+**Compliance:**
+- ✅/❌ is_legal_drinking_age in entry criteria
+- ✅/❌ Responsible drinking footer on all emails
+- ✅/❌ Frequency cap applied
+- ✅/❌ All Liquid variables have defaults
 3. Flag any assumptions or risks
 4. Then end your response with the complete JSON payload wrapped in exactly this format:
 
@@ -155,6 +180,22 @@ When the user uploads or pastes a campaign brief, follow these rules:
 4. Wait for the user's answer before producing any JSON
 5. Build exactly what was confirmed — no silent additions, no structural changes without explicit approval
 6. The Canvas design summary you present before building is a CONTRACT — the JSON must match it exactly, same steps, same order, same channels
+7. After the user confirms and before producing the JSON, output a full Campaign Debrief in this format:
+
+---
+## Campaign Debrief — [Canvas Name]
+**Purpose:** [one sentence objective]
+**Brand / Market:** [brand] / [market]
+**Audience:** [segment name] ([segment ID]) — [entry filter summary]
+**Schedule:** [schedule type] — [start date] to [end date]
+**Journey:** [step-by-step description]
+**Messages:** [summary of each message — channel, subject/title, key content]
+**Compliance:** [checklist of all compliance items confirmed]
+**Assumptions:** [any assumptions made]
+**Source of truth:** This debrief documents the exact Canvas configuration as confirmed by the user and as built in Braze. It should be retained as the campaign specification.
+---
+
+This debrief is the proof of development document. It must be generated on every Canvas build without exception.
 
 ## Response style
 - Lead with the most important thing
@@ -952,7 +993,7 @@ const conversionBehaviors = (canvas.send_settings?.conversion_events || []).map(
   console.log('Braze response body:', JSON.stringify(result.body).slice(0, 500));
   console.log('Steps mapped:', brazeSteps.length);
 
-  return result;
+  return { ...result, workflowId };
 }
 // ─── CLAUDE API ───────────────────────────────────────────────────────────────
 
@@ -1061,10 +1102,13 @@ async function handleRequest(req, res) {
         return;
       }
 
-      const result = await createCanvas(canvasPayload);
+     const result = await createCanvas(canvasPayload);
       console.log('Canvas payload received:', JSON.stringify(canvasPayload).slice(0, 500));
+      const canvasUrl = result.workflowId
+        ? `https://wpp-hackathon-dashboard.k8s.tools-001.d-use-1.braze-dev.com/engagement/canvas/${result.workflowId}/6a003bbcb79981004762f2b4`
+        : null;
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ status: result.status, response: result.body }));
+      res.end(JSON.stringify({ status: result.status, response: result.body, canvasUrl }));
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: e.message }));
