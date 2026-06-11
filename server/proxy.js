@@ -172,7 +172,8 @@ CRITICAL rules for the JSON block:
 - Always wrap the root in a "canvas" key: { "canvas": { ... } }
 - Canvas step formats must exactly match the schemas in braze-api-reference.md — delay steps use delay.delay_type/duration/duration_unit, message steps use messages.email or messages.push_ios/push_android, action paths use paths[] array with filters[]
 - Never use delay.value, message_content, channels[], or next_step_ids.yes/no — these formats are not supported
-
+- segment_ids must contain segment NAMES as strings, never UUIDs. Write ["CORE_EMAIL_OPTED_IN"] not a UUID. The proxy resolves names to IDs automatically via live workspace lookup.
+---
 ## Brief compliance — CRITICAL
 When the user uploads or pastes a campaign brief, follow these rules:
 1. Read the brief and identify the exact steps specified
@@ -529,7 +530,10 @@ async function createCanvas(canvasPayload) {
 const resolvedSegmentIds = await Promise.all(
     rawSegmentIds.map(async id => {
       const uuidPattern = /^[0-9a-f-]{36}$/i;
-      if (uuidPattern.test(id)) return id;
+      if (uuidPattern.test(id)) {
+        console.warn(`Segment UUID "${id}" rejected — proxy requires segment names not UUIDs`);
+        return null;
+      }
       try {
         const resolved = await lookupSegmentId(id);
         if (resolved) {
