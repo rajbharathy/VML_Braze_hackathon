@@ -523,7 +523,8 @@ async function createCanvas(canvasPayload) {
 
   // ── Map copilot steps to Braze internal step format ──────────────────────
   const copilotSteps = canvas.steps || [];
-
+// Handle steps nested inside variants (copilot sometimes outputs this format)
+  const copilotSteps = canvas.steps || canvas.variants?.[0]?.steps || [];
   // Resolve segment names to sandbox IDs via live search
   const rawSegmentIds = canvas.entry_audience?.segment_ids || [];
 const resolvedSegmentIds = await Promise.all(
