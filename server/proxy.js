@@ -56,6 +56,9 @@ function classifyIntent(messages) {
   if (/hypercare/.test(text)) {
     return 'hypercare_brief';
   }
+  if (/housekeeping/.test(text)) {
+    return 'housekeeping';
+  }
   if (/unsubscribe|anomal|spike|duplicate profile|429|5xx/.test(text)) {
     return 'workspace_health';
   }
