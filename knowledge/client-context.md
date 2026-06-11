@@ -5,8 +5,11 @@
 ---
 
 ## CRITICAL — Segment IDs
-All segment IDs listed in this document are from the PRODUCTION workspace and are INVALID in the current sandbox environment.
-ALWAYS look up segment IDs from the LIVE WORKSPACE CONTEXT provided in the system prompt — never use IDs from this document.
+The segment names in this document are DEFINITIONS ONLY. They do not have IDs here.
+
+NEVER invent or guess a segment ID. NEVER use a UUID you have seen before.
+
+The ONLY valid segment IDs for this workspace are in the LIVE WORKSPACE CONTEXT section of the system prompt — look there and use those exact IDs. If a segment name from this document does not appear in the live workspace context, tell the user it does not exist in the sandbox rather than using a production ID.
 
 ---
 
