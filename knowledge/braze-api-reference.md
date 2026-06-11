@@ -93,7 +93,7 @@ X-CSRF-Token: {csrf_token}
     "start_time": "2025-06-10T09:00:00Z",
     "end_time": "2025-12-31T23:59:59Z",
     "entry_audience": {
-      "segment_ids": ["segment_id_1", "segment_id_2"],
+     "segment_ids": [["segment_id_1"], ["segment_id_2"]],
       "filter_group": {
         "filters": [],
         "operator": "AND"
@@ -448,7 +448,71 @@ Content-Type: application/json
   ]
 }
 ```
+---
 
+## Dashboard API — Additional Endpoints
+
+These endpoints use the Dashboard API (session authenticated) and are called by the proxy for segment resolution.
+
+### Segment search by name
+GET /engagement/remote_segment_search?app_group_id={app_group_id}&query={search_term}&limit=25&skip_count=0
+Cookie: _session_id={session_id}
+X-CSRF-Token: {csrf_token}
+X-Requested-With: XMLHttpRequest
+
+Use this to resolve a segment name to its ID. Pass the segment name as the query parameter.
+
+Response:
+```json
+{
+  "segments": [
+    {
+      "id": "6a282ee31196de006aab9356",
+      "name": "CORE_EMAIL_OPTED_IN",
+      "app_group_id": "6a003bbcb79981004762f2b4",
+      "is_archived": false,
+      "estimated_size": 0
+    }
+  ],
+  "limit": 10000000,
+  "more": false
+}
+```
+
+### Segment name and filter summary
+POST /engagement/segments_and_filters_sentence_array/{app_group_id}
+Cookie: _session_id={session_id}
+X-CSRF-Token: {csrf_token}
+X-Requested-With: XMLHttpRequest
+Content-Type: application/json
+{"segment_ids": ["6a282ee31196de006aab9356"], "filters": []}
+
+Returns human-readable segment summary including name, description, filter sentence, and associated app IDs.
+
+Response:
+```json
+{
+  "segments": ["CORE_EMAIL_OPTED_IN"],
+  "segments_details": [
+    {
+      "id": "6a282ee31196de006aab9356",
+      "name": "CORE_EMAIL_OPTED_IN",
+      "summary": "Is_legal_drinking_age is true and email subscription status is opted_in"
+    }
+  ]
+}
+```
+
+### Canvas save (create or update)
+POST /engagement/canvas?app_group_id={app_group_id}
+Cookie: _session_id={session_id}
+X-CSRF-Token: {csrf_token}
+X-Requested-With: XMLHttpRequest
+Content-Type: multipart/form-data
+AB-App-Group-Id: {app_group_id}
+AB-Version: {ab_version}
+
+Note: This endpoint uses multipart/form-data, not JSON. Each field is a separate form part. Session credentials expire — refresh from DevTools before each demo session.
 ---
 
 ## Copilot rules for API output
@@ -464,4 +528,4 @@ When producing any API payload or endpoint reference, the copilot must:
 7. **Liquid in message bodies** must follow the standards in best-practice.md — all variables with defaults, Connected Content with timeout and error handling
 8. **Duration units** accepted values: `minutes`, `hours`, `days`, `weeks`
 9. **Schedule types**: `scheduled`, `action_based`, `api_triggered`
-10. **Tag format**: always `key=value` e.g. `tag.env=prod` not just `prod`
+10. **Tag format**: simple strings only — no equals signs or special characters e.g. `aperol`, `uk`, `push` not `tag.env=prod`

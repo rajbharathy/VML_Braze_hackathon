@@ -264,6 +264,16 @@ async function brazeDashboardGet(urlPath) {
   });
 }
 
+async function lookupSegmentId(segmentName) {
+  const encoded = encodeURIComponent(segmentName);
+  const result = await brazeDashboardGet(
+    `/engagement/remote_segment_search?app_group_id=${ATTRIBUTES_APP_GROUP_ID}&query=${encoded}&limit=25&skip_count=0`
+  );
+  const segments = result.body?.segments || [];
+  const match = segments.find(s => s.name.toLowerCase() === segmentName.toLowerCase());
+  return match?.id || null;
+}
+
 async function loadWorkspaceContext() {
   try {
     const [campaigns, canvases, segments, customAttributes] = await Promise.all([
@@ -420,6 +430,26 @@ async function createCanvas(canvasPayload) {
 
   // ── Map copilot steps to Braze internal step format ──────────────────────
   const copilotSteps = canvas.steps || [];
+
+  // Resolve segment names to sandbox IDs via live search
+  const rawSegmentIds = canvas.entry_audience?.segment_ids || [];
+  const resolvedSegmentIds = await Promise.all(
+    rawSegmentIds.map(async id => {
+      const uuidPattern = /^[0-9a-f-]{36}$/i;
+      if (uuidPattern.test(id)) return id;
+      const resolved = await lookupSegmentId(id);
+      if (resolved) {
+        console.log(`Resolved segment "${id}" → ${resolved}`);
+        return resolved;
+      }
+      console.warn(`Segment "${id}" not found in sandbox — skipping`);
+      return null;
+    })
+  );
+  const validSegmentIds = resolvedSegmentIds.filter(Boolean);
+
+  // Build a lookup from copilot step id/name → generated Braze stepId
+  const stepIdMap = {};
 
   // Build a lookup from copilot step id/name → generated Braze stepId
   const stepIdMap = {};
@@ -914,7 +944,7 @@ const conversionBehaviors = (canvas.send_settings?.conversion_events || []).map(
     api_workflow_id: `"${apiWorkflowId}"`,
     workflow_name: `"${(canvas.name || 'Copilot Canvas').replace(/"/g, '\\"')}"`,
     workflow_description: canvas.description ? `"${canvas.description.replace(/"/g, '\\"')}"` : 'null',
-    segment_ids: JSON.stringify((canvas.entry_audience?.segment_ids || []).map(id => [id])),
+   segment_ids: JSON.stringify(validSegmentIds.map(id => [id])),
     match_more_than_once: 'false',
     can_match_again_after_seconds: '0',
     schedule_type: '"time_based"',
