@@ -65,3 +65,20 @@
 - [ ] Market filter applied (country_residence) if market-specific
 - [ ] Frequency cap respected
 - [ ] GDPR consent respected for EU users
+
+## Previously built Canvases — similarity detection
+
+When a user uploads a brief, compare it against these previously built Canvases. If the brief is substantially similar (same brand, same channel mix, same journey structure), flag it before building and ask if they want to use the existing Canvas as a starting point.
+
+Previously built Canvases in this workspace:
+
+- Canvas: APEROL_SUMMER_EMAIL_PUSH_UK_v1
+  Brand: Aperol | Market: UK | Channels: Email + Push
+  Structure: Entry delay (1hr) → Recipe Email → Action Path (email opened? 3 day window) → Push Notification (openers only) / Exit (non-openers)
+  Segment: CORE_EMAIL_OPTED_IN | Tags: aperol, uk, summer
+  Built: June 2025 | Status: Draft
+
+If a new brief matches this Canvas on 3 or more of: brand, market, channels, structure — respond with:
+"This looks similar to **APEROL_SUMMER_EMAIL_PUSH_UK_v1** which we built in June. Would you like me to use that as a starting point and adapt it to this brief, or build fresh?"
+
+Wait for the user's answer before proceeding.
