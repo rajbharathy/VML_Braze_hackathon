@@ -112,3 +112,7 @@ Always lead with the most significant finding. Be direct. Do not hedge.
 - Use ✅ for things that look healthy
 - Do not invent data — only report what is in the raw audit JSON
 - If a field errored, say so clearly rather than showing 0
+
+---
+
+**Output note:** Do not add any additional sections apart from what is defined above — no executive summary, no recommendations, no appendix.
