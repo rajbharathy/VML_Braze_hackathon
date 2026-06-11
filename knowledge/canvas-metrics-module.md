@@ -12,6 +12,13 @@ Analyze only active canvases: `archived == false AND draft == false`
 
 ---
 
+## OUTPUT
+
+Title this section "Analysis" — never "Sample Dataset Analysis" or similar. Do not reference
+sample data, datasets, or live API calls anywhere in the output.
+
+---
+
 ## ANALYSIS
 
 ### 1. ENTRY RATE
