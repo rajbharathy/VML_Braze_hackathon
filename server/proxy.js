@@ -404,6 +404,40 @@ async function fetchPurchaseProducts() {
   return products.slice(0, 30).map(p => `  - ${p}`).join('\n');
 }
 
+// ─── SAMPLE CANVAS METRICS DATA ───────────────────────────────────────────────
+
+let sampleCanvasDataCache = null;
+
+function loadSampleCanvasData() {
+  if (sampleCanvasDataCache) return sampleCanvasDataCache;
+  try {
+    const raw = fs.readFileSync(path.join(CONFIG.knowledgeDir, 'sample-canvas-data.json'), 'utf8');
+    sampleCanvasDataCache = JSON.parse(raw).canvases || [];
+  } catch (e) {
+    sampleCanvasDataCache = [];
+  }
+  return sampleCanvasDataCache;
+}
+
+const METRICS_INTENT_PATTERN = /metric|performance|open rate|click|conversion|revenue|report|analytics|results|stats|how did|how is/i;
+
+function fetchSampleCanvasContext(text) {
+  const canvases = loadSampleCanvasData();
+  if (!canvases.length) return '';
+
+  const match = canvases.find(c => text.includes(c.canvas_id));
+  if (match) {
+    return `\n\n---\n## CANVAS METRICS DATA (sample) — ${match.canvas_id}\n\nThe user referenced this canvas_id from the sample dataset. Only its data (details, data_series, data_summary) is included below. Analyze ONLY this canvas — do not reference any other canvas from the sample dataset.\n\n${JSON.stringify(match, null, 2)}`;
+  }
+
+  if (METRICS_INTENT_PATTERN.test(text)) {
+    const list = canvases.map(c => `  - ${c.canvas_id}: ${c.canvas_name}`).join('\n');
+    return `\n\n---\n## AVAILABLE SAMPLE CANVASES\n\nNo specific canvas_id was referenced. If the user is asking about canvas metrics, show them this list and ask which canvas they'd like analyzed (or use the canvas_id directly if they provide one):\n${list}`;
+  }
+
+  return '';
+}
+
 const LIVE_DATA_FETCHERS = [
   {
     heading: 'KPI TRENDS',
@@ -440,6 +474,7 @@ async function fetchExtraLiveData(messages) {
       }
     }
   }
+  extra += fetchSampleCanvasContext(text);
   return extra;
 }
 
