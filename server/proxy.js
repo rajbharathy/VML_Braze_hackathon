@@ -170,7 +170,8 @@ CRITICAL rules for the JSON block:
 - Always include is_legal_drinking_age == true in entry criteria for Campari Group
 - schedule_type must be one of: "time_based", "action_based", "api_triggered"
 - Always wrap the root in a "canvas" key: { "canvas": { ... } }
-- The <canvas_json> block must be the very last thing in your response
+- Canvas step formats must exactly match the schemas in braze-api-reference.md — delay steps use delay.delay_type/duration/duration_unit, message steps use messages.email or messages.push_ios/push_android, action paths use paths[] array with filters[]
+- Never use delay.value, message_content, channels[], or next_step_ids.yes/no — these formats are not supported
 
 ## Brief compliance — CRITICAL
 When the user uploads or pastes a campaign brief, follow these rules:
@@ -273,7 +274,14 @@ async function lookupSegmentId(segmentName) {
   const match = segments.find(s => s.name.toLowerCase() === segmentName.toLowerCase());
   return match?.id || null;
 }
-
+async function lookupEmailTemplate(templateId) {
+  const result = await brazeGet(`/templates/email/info?email_template_id=${templateId}`);
+  return {
+    subject: result.body?.subject || '',
+    body: result.body?.body || '',
+    plaintext_body: result.body?.plaintext_body || ''
+  };
+}
 async function loadWorkspaceContext() {
   try {
     const [campaigns, canvases, segments, customAttributes] = await Promise.all([
@@ -561,7 +569,8 @@ async function createCanvas(canvasPayload) {
   let firstMessageStepId = null;
   let firstCanvasStepId = null;
 
-  copilotSteps.forEach((step, i) => {
+  for (let i = 0; i < copilotSteps.length; i++) {
+    const step = copilotSteps[i];
     const key = step.id || step.name || `step_${i}`;
     const stepId = stepIdMap[key];
     const nextId = resolveNextId(step.next_step_id || step.next_step);
@@ -575,8 +584,8 @@ async function createCanvas(canvasPayload) {
       const durationSecs = (() => {
         const d = step.delay || {};
         const inner = typeof d.duration === 'object' ? d.duration : d;
-        const val = inner.duration || d.duration || 0;
-        const unit = (inner.unit || inner.duration_unit || d.unit || d.duration_unit || 'minutes').toLowerCase();
+       const val = inner.duration || inner.value || d.duration || d.value || 0;
+const unit = (inner.unit || inner.duration_unit || d.unit || d.duration_unit || 'minutes').toLowerCase();
         if (unit === 'minutes') return val * 60;
         if (unit === 'hours') return val * 3600;
         if (unit === 'days') return val * 86400;
@@ -615,15 +624,33 @@ async function createCanvas(canvasPayload) {
       const messageStepId = generateObjectId(); // separate ID for the MESSAGE connector
       messageConnectorMap[key] = messageStepId;
 
-      const channels = step.channels || step.messages || {};
+      const channels = step.message_content || step.channels || step.messages || {};
       const email = channels.email || {};
       const push = channels.push || {};
       const pushIos = push.ios || channels.push_ios || {};
       const pushAndroid = push.android || channels.push_android || {};
-
+const pushAlert = push.alert || push.body || '';
+const pushTitle = push.title || '';
+if (pushAlert && !pushIos.alert) pushIos.alert = pushAlert;
+if (pushTitle && !pushIos.title) pushIos.title = pushTitle;
+if (pushAlert && !pushAndroid.alert) pushAndroid.alert = pushAlert;
+if (pushTitle && !pushAndroid.title) pushAndroid.title = pushTitle;
       const messagingActions = [];
 
-      if (email.subject || email.body) {
+if (email.email_template_id && !email.body) {
+        try {
+          const template = await lookupEmailTemplate(email.email_template_id);
+          if (template.body) {
+            email.body = template.body;
+            email.subject = email.subject || template.subject;
+            email.plaintext_body = email.plaintext_body || template.plaintext_body;
+          }
+        } catch (e) {
+          console.warn(`Failed to load template ${email.email_template_id}: ${e.message}`);
+        }
+      }
+
+     if (email.subject || email.body) {
         const fromRaw = email.from || email.from_address || 'test_user@mail.development.braze.com';
         const fromAddress = fromRaw.replace(/.*<(.+)>.*/, '$1').replace(/<[^>]*>/g, '').trim();
         const fromName = fromRaw.includes('<') ? fromRaw.replace(/<.*>/, '').trim() : 'Braze';
@@ -906,7 +933,7 @@ if (!firstCanvasStepId) firstCanvasStepId = messageStepId;
         filters: null, exclusion_filters: null
       });
     }
-  });
+  }
 // If no message step was first, use the very first step
   if (!firstCanvasStepId && brazeSteps.length > 0) {
     firstCanvasStepId = brazeSteps[0].step_id;

@@ -514,6 +514,15 @@ AB-Version: {ab_version}
 
 Note: This endpoint uses multipart/form-data, not JSON. Each field is a separate form part. Session credentials expire — refresh from DevTools before each demo session.
 ---
+## CRITICAL — Canvas JSON format compliance
+The step formats defined in this file are the ONLY valid formats accepted by the proxy. Do not invent alternative formats. Specifically:
+
+- Delay steps MUST use `delay.delay_type`, `delay.duration.duration`, `delay.duration.duration_unit` — never `delay.value` or `delay.type`
+- Message steps MUST use `messages.email`, `messages.push_ios`, `messages.push_android` — never `message_content` or `channels`
+- Action path steps MUST use `paths[]` array with `filters[]` — never `next_step_ids.yes/no`
+- Segment IDs in `entry_audience.segment_ids` must be segment NAMES as strings — the proxy resolves them to IDs automatically. Never write a UUID.
+
+---
 
 ## Copilot rules for API output
 
