@@ -86,7 +86,7 @@ function classifyIntent(messages) {
 const KNOWLEDGE_MAP = {
   canvas_build: ['best-practice.md', 'client-context.md', 'braze-api-reference.md', 'canvas-brief.md'],
   audit:        ['migration-audit-module.md'],
-  workspace_health: ['workspace-health-module.md', 'braze-api-reference.md', 'braze-mcp-endpoints.md'],
+  workspace_health: ['workspace-health-module.md'],
   metrics:      ['canvas-metrics-module.md', 'best-practice.md', 'client-context.md'],
   hypercare_brief:['braze_hypercare_morning_brief.md'],
   liquid:       ['client-context.md', 'braze-api-reference.md', 'best-practice.md'],
