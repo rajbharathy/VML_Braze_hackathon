@@ -52,7 +52,8 @@
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   .messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('bg-chat.jpg') center/cover no-repeat; }
   .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; padding: 40px; }
-  .welcome-icon { width: 64px; height: 64px; background: var(--brand-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px; }
+  .welcome-icon { width: 64px; height: 64px; background: var(--brand-light); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px; padding: 10px; }
+  .welcome-icon img { width: 100%; height: 100%; object-fit: contain; }
   .welcome h2 { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.02em; }
   .welcome p { font-size: 14px; color: var(--text-secondary); max-width: 380px; line-height: 1.6; margin-bottom: 28px; }
   .prompt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 520px; }
@@ -64,7 +65,8 @@
   .message { display: flex; gap: 12px; max-width: 820px; }
   .message.user { align-self: flex-end; flex-direction: row-reverse; }
   .avatar { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
-  .avatar.assistant { background: var(--brand); color: #fff; }
+  .avatar.assistant { background: #fff; border: 1px solid var(--border); padding: 3px; }
+  .avatar.assistant img { width: 100%; height: 100%; object-fit: contain; }
   .avatar.user { background: var(--surface-3); color: var(--text-secondary); }
   .bubble { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; line-height: 1.65; color: var(--text-primary); box-shadow: var(--shadow); max-width: 680px; }
   .message.user .bubble { background: var(--brand); border-color: var(--brand-dark); color: #fff; }
@@ -192,7 +194,7 @@
   <main class="main">
     <div class="messages" id="messages">
       <div class="welcome" id="welcome">
-        <div class="welcome-icon">⚡</div>
+        <div class="welcome-icon"><img src="logo-icon.png" alt="Braze Buddy"></div>
         <h2>Braze Copilot</h2>
         <p>An opinionated AI practitioner. I know your best practice playbook, your client's data model, and their ecosystem. Ask me anything — or upload a brief to build a Canvas.</p>
         <div class="prompt-grid">
@@ -419,7 +421,11 @@ function appendMessage(role, content) {
   div.className = `message ${role}`;
   const avatar = document.createElement('div');
   avatar.className = `avatar ${role}`;
-  avatar.textContent = role === 'assistant' ? '⚡' : '👤';
+  if (role === 'assistant') {
+    avatar.innerHTML = '<img src="logo-icon.png" alt="">';
+  } else {
+    avatar.textContent = '👤';
+  }
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
  
@@ -457,7 +463,7 @@ function appendThinking() {
   const messages = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = 'message assistant';
-  div.innerHTML = `<div class="avatar assistant">⚡</div><div class="thinking"><div class="thinking-dots"><span></span><span></span><span></span></div>Thinking...</div>`;
+  div.innerHTML = `<div class="avatar assistant"><img src="logo-icon.png" alt=""></div><div class="thinking"><div class="thinking-dots"><span></span><span></span><span></span></div>Thinking...</div>`;
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
   return div;
