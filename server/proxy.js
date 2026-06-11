@@ -53,11 +53,11 @@ function classifyIntent(messages) {
     : lastMessage?.content?.map?.(c => c.text || '').join(' ') || ''
   ).toLowerCase();
 
-  if (/brief|build|canvas|create|journey|campaign|push|email|sms|message|step|delay|action path|audience path|segment|schedule|launch|deploy/.test(text)) {
-    return 'canvas_build';
-  }
   if (/audit|health|review|check|violation|best practice|flag|issue|problem|fix|wrong|broken|stale|duplicate/.test(text)) {
     return 'audit';
+  }
+  if (/brief|build|canvas|create|journey|campaign|push|email|sms|message|step|delay|action path|audience path|segment|schedule|launch|deploy/.test(text)) {
+    return 'canvas_build';
   }
   if (/metric|performance|open rate|click|conversion|revenue|report|analytics|results|stats|how did|how is/.test(text)) {
     return 'metrics';
