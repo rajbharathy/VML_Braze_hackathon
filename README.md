@@ -141,7 +141,7 @@ No external dependencies. No build step. Runs anywhere Node is installed.
 ## The demo script (draft — refine on Day 2)
 
 1. **Open the copilot** — workspace loads, show campaign/canvas counts
-2. **Morning brief** — "Give me a morning brief on the workspace"
+2. **Hypercare brief** — "Give me a hypercare brief on the workspace"
    - Copilot audits live data and flags issues unprompted
 3. **Audit** — "What are the top 3 things I should fix today?"
    - Copilot gives opinionated, specific, best-practice-grounded answers

@@ -66,7 +66,7 @@ function classifyIntent(messages) {
     return 'metrics';
   }
   if (/morning|brief|summary|today|overnight|what happened|update|status/.test(text)) {
-    return 'morning_brief';
+    return 'hypercare_brief';
   }
   if (/liquid|personalise|personalize|variable|default|attribute|template|code|syntax/.test(text)) {
     return 'liquid';
@@ -85,7 +85,7 @@ const KNOWLEDGE_MAP = {
   audit:        ['migration-audit-module.md'],
   workspace_health: ['workspace-health-module.md', 'braze-api-reference.md', 'braze-mcp-endpoints.md'],
   metrics:      ['canvas-metrics-module.md', 'best-practice.md', 'client-context.md'],
-  morning_brief:['braze_hypercare_morning_brief.md', 'workspace-health-module.md', 'best-practice.md'],
+  hypercare_brief:['braze_hypercare_morning_brief.md', 'braze-api-reference.md', 'braze-mcp-endpoints.md'],
   liquid:       ['client-context.md', 'braze-api-reference.md', 'best-practice.md'],
   housekeeping: ['housekeeping-module.md', 'unused-attributes.md', 'unused-segments.md'],
   general:      ['best-practice.md', 'client-context.md', 'ecosystem-architecture.md']
