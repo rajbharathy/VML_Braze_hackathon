@@ -526,17 +526,22 @@ async function createCanvas(canvasPayload) {
 
   // Resolve segment names to sandbox IDs via live search
   const rawSegmentIds = canvas.entry_audience?.segment_ids || [];
-  const resolvedSegmentIds = await Promise.all(
+const resolvedSegmentIds = await Promise.all(
     rawSegmentIds.map(async id => {
       const uuidPattern = /^[0-9a-f-]{36}$/i;
       if (uuidPattern.test(id)) return id;
-      const resolved = await lookupSegmentId(id);
-      if (resolved) {
-        console.log(`Resolved segment "${id}" → ${resolved}`);
-        return resolved;
+      try {
+        const resolved = await lookupSegmentId(id);
+        if (resolved) {
+          console.log(`Resolved segment "${id}" → ${resolved}`);
+          return resolved;
+        }
+        console.warn(`Segment "${id}" not found in sandbox — skipping`);
+        return null;
+      } catch (e) {
+        console.warn(`Segment lookup failed for "${id}": ${e.message} — skipping`);
+        return null;
       }
-      console.warn(`Segment "${id}" not found in sandbox — skipping`);
-      return null;
     })
   );
   const validSegmentIds = resolvedSegmentIds.filter(Boolean);
@@ -577,7 +582,7 @@ async function createCanvas(canvasPayload) {
     const nextIds = nextId ? [nextId] : [];
     const row = i;
     const col = 3;
-
+if (!firstCanvasStepId) firstCanvasStepId = stepId;
     const type = (step.type || '').toLowerCase();
 
     if (type === 'delay') {
@@ -787,7 +792,7 @@ if (email.email_template_id && !email.body) {
         filters: null,
         exclusion_filters: null
       });
-if (!firstCanvasStepId) firstCanvasStepId = messageStepId;
+
       // MESSAGE connector step — different step_id, points to next step
       brazeSteps.push({
         step_id: messageStepId,
@@ -934,10 +939,7 @@ if (!firstCanvasStepId) firstCanvasStepId = messageStepId;
       });
     }
   }
-// If no message step was first, use the very first step
-  if (!firstCanvasStepId && brazeSteps.length > 0) {
-    firstCanvasStepId = brazeSteps[0].step_id;
-  }
+
   // Fallback — if no steps from payload, use the original generic shell
   if (brazeSteps.length === 0) {
     const stepId1 = generateObjectId();
