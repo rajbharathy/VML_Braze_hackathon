@@ -316,6 +316,91 @@ ${attrList}`;
   }
 }
 
+// ─── ADDITIONAL LIVE DATA (Braze MCP-equivalent endpoints) ───────────────────
+// Fetched on-demand only when the user's question matches one of these patterns —
+// existing workspace context and knowledge base loading are unaffected.
+
+function formatKpiSeries(body, field) {
+  const points = body?.data || [];
+  if (!points.length) return '  Unable to load';
+  return points.map(p => `  - ${p.time}: ${p[field]}`).join('\n');
+}
+
+async function fetchKpiTrends() {
+  const [dau, mau, newUsers, uninstalls] = await Promise.all([
+    brazeGet('/kpi/dau/data_series?length=14'),
+    brazeGet('/kpi/mau/data_series?length=14'),
+    brazeGet('/kpi/new_users/data_series?length=14'),
+    brazeGet('/kpi/uninstalls/data_series?length=14')
+  ]);
+  return `### Daily Active Users (last 14 days)
+${formatKpiSeries(dau.body, 'dau')}
+
+### Monthly Active Users (last 14 days)
+${formatKpiSeries(mau.body, 'mau')}
+
+### New Users (last 14 days)
+${formatKpiSeries(newUsers.body, 'new_users')}
+
+### Uninstalls (last 14 days)
+${formatKpiSeries(uninstalls.body, 'uninstalls')}`;
+}
+
+async function fetchCatalogs() {
+  const result = await brazeGet('/catalogs');
+  const catalogs = result.body?.catalogs || [];
+  if (!catalogs.length) return '  No catalogs found';
+  return catalogs.map(c =>
+    `  - ${c.name}: ${c.description || 'no description'} (fields: ${(c.fields || []).map(f => f.name).join(', ') || 'none'})`
+  ).join('\n');
+}
+
+async function fetchPurchaseProducts() {
+  const result = await brazeGet('/purchases/product_list?page=0');
+  const products = result.body?.products || [];
+  if (!products.length) return '  No products found';
+  return products.slice(0, 30).map(p => `  - ${p}`).join('\n');
+}
+
+const LIVE_DATA_FETCHERS = [
+  {
+    heading: 'KPI TRENDS',
+    pattern: /\b(dau|mau|daily active users?|monthly active users?|active users?|new users?|uninstalls?)\b/i,
+    fetch: fetchKpiTrends
+  },
+  {
+    heading: 'CATALOGS',
+    pattern: /\bcatalogs?\b/i,
+    fetch: fetchCatalogs
+  },
+  {
+    heading: 'PURCHASE DATA',
+    pattern: /\b(purchase|purchases|product list|revenue series|quantity series)\b/i,
+    fetch: fetchPurchaseProducts
+  }
+];
+
+async function fetchExtraLiveData(messages) {
+  const lastUserMessage = messages?.slice?.()?.reverse?.()?.find?.(m => m.role === 'user');
+  const text = (typeof lastUserMessage?.content === 'string'
+    ? lastUserMessage.content
+    : lastUserMessage?.content?.map?.(c => c.text || '').join(' ') || ''
+  );
+
+  let extra = '';
+  for (const fetcher of LIVE_DATA_FETCHERS) {
+    if (fetcher.pattern.test(text)) {
+      try {
+        const data = await fetcher.fetch();
+        extra += `\n\n---\n## ${fetcher.heading} (live)\n\n${data}`;
+      } catch (e) {
+        extra += `\n\n---\n## ${fetcher.heading}\n\nUnable to fetch live data: ${e.message}`;
+      }
+    }
+  }
+  return extra;
+}
+
 // ─── CUSTOM ATTRIBUTE USAGE SCRAPER ───────────────────────────────────────────
 
 async function scrapeUnusedAttributes() {
@@ -448,8 +533,6 @@ async function createCanvas(canvasPayload) {
   );
   const validSegmentIds = resolvedSegmentIds.filter(Boolean);
 
-  // Build a lookup from copilot step id/name → generated Braze stepId
-  const stepIdMap = {};
 
   // Build a lookup from copilot step id/name → generated Braze stepId
   const stepIdMap = {};
@@ -1100,7 +1183,8 @@ async function handleRequest(req, res) {
       const { messages, workspaceContext } = body;
 
       const intent = classifyIntent(messages);
-      const systemPrompt = buildSystemPrompt(workspaceContext || 'Workspace context not loaded.', intent);
+      const extraContext = await fetchExtraLiveData(messages);
+      const systemPrompt = buildSystemPrompt(workspaceContext || 'Workspace context not loaded.', intent) + extraContext;
       console.log('Intent classified:', intent);
       const result = await callClaude(messages, systemPrompt);
 
