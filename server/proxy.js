@@ -285,12 +285,14 @@ async function lookupEmailTemplate(templateId) {
 }
 async function loadWorkspaceContext() {
   try {
-    const [campaigns, canvases, segments, customAttributes, customEvents] = await Promise.all([
+    const [campaigns, canvases, segments, customAttributes, customEvents, campaignsAll, canvasesAll] = await Promise.all([
       brazeGet('/campaigns/list?page=0&sort_direction=desc'),
       brazeGet('/canvas/list?page=0&sort_direction=desc'),
       brazeGet('/segments/list?page=0&sort_direction=desc'),
       brazeGet('/custom_attributes?page=0'),
-      brazeGet('/events/list?page=0')
+      brazeGet('/events/list?page=0'),
+      brazeGet('/campaigns/list?page=0&sort_direction=desc&include_archived=true'),
+      brazeGet('/canvas/list?page=0&sort_direction=desc&include_archived=true')
     ]);
 
     const campaignList = campaigns.body?.campaigns?.slice(0, 20).map(c =>
@@ -311,8 +313,26 @@ async function loadWorkspaceContext() {
 
     const eventList = customEvents.body?.events?.slice(0, 30).map(e => `  - ${e}`).join('\n') || 'Unable to load';
 
+    const campaignActive = campaigns.body?.campaigns?.length;
+    const campaignTotal = campaignsAll.body?.campaigns?.length;
+    const campaignArchived = (campaignTotal != null && campaignActive != null) ? campaignTotal - campaignActive : null;
+
+    const canvasActive = canvases.body?.canvases?.length;
+    const canvasTotal = canvasesAll.body?.canvases?.length;
+    const canvasArchived = (canvasTotal != null && canvasActive != null) ? canvasTotal - canvasActive : null;
+
     return `### Collected at (UTC)
 ${new Date().toISOString()}
+
+### Campaign status counts
+Total: ${campaignTotal ?? 'Unable to load'}
+Active (non-archived): ${campaignActive ?? 'Unable to load'}
+Archived: ${campaignArchived ?? 'Unable to load'}
+
+### Canvas status counts
+Total: ${canvasTotal ?? 'Unable to load'}
+Active (non-archived): ${canvasActive ?? 'Unable to load'}
+Archived: ${canvasArchived ?? 'Unable to load'}
 
 ### Recent campaigns (up to 20)
 ${campaignList}
