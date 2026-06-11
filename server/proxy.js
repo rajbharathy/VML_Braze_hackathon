@@ -1216,8 +1216,22 @@ async function callClaude(messages, systemPrompt) {
     model: 'claude-sonnet-4-5',
     max_tokens: 8192,
     system: systemPrompt,
-    messages
+    messages,
+    mcp_servers: [
+      {
+        "type":"url",
+        "name":"braze-mcp",
+        "url": "https://vmlmap-braze-mcp-wrapper-979737143073.europe-west1.run.app/mcp"
+      }
+    ],
+    tools:[
+      {
+        "type": "mcp_toolset",
+        "mcp_server_name": "braze-mcp"
+      }
+    ]
   };
+
   const bodyStr = JSON.stringify(body);
   return httpsRequest({
     hostname: 'api.anthropic.com',
@@ -1227,7 +1241,8 @@ async function callClaude(messages, systemPrompt) {
       'x-api-key': CONFIG.anthropicApiKey,
       'anthropic-version': '2023-06-01',
       'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(bodyStr)
+      'Content-Length': Buffer.byteLength(bodyStr),
+      "anthropic-beta": "mcp-client-2025-11-20"
     }
   }, bodyStr, 180000);
 }
